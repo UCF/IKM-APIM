@@ -48,6 +48,14 @@ class General_model extends CI_Model
 		return $query;
 
 	}
+	function get_term_info_long($long){
+		$this->db->from('TERM_XREF');
+		$this->db->like('TERM_DESCR',$long,'none',FALSE);
+		
+		$query = $this->db->get();
+		return $query;
+		
+	}
 	function get_access($plan){
 		$this->db->from('Acad_Prog_Lookup');
 		$this->db->like('Acad_Plan',$plan,'none',FALSE);

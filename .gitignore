@@ -1,3 +1,9 @@
 web.config
 /application/config/database.php
 /application/models/Ion_auth_model.php
+*/config/development
+*/logs/log-*.php
+!*/logs/index.html
+*/cache/*
+!*/cache/index.html
+!*/cache/.htaccess

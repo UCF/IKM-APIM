@@ -581,6 +581,7 @@ class Main extends CI_Controller {
 					$sub_regional = '';
 					$adm = array('true','false');
 					$admk = array_rand($adm);
+					$status_change = '';
 					
 					//set the regional data vars
 					$altamonte = 0;
@@ -595,7 +596,12 @@ class Main extends CI_Controller {
 					$valenciaeast = 0;
 					$valenciaosce = 0;
 					$valenciawest = 0;
-						
+					
+					//set status change date for Inactives and Suspends only
+					if($sub_row->Status == 'I' || $sub_row->Status == 'S'){
+						$status_change = ucfirst(strtolower($sub_row->Cancelled_Year));
+					}
+					
 					//check for and set Regional flag with the custom system library
 					$subplan_regions = $this->corelib->subplan_locations($row->Acad_Plan,$sub_row->Sub_Plan);
 					if($subplan_regions){
@@ -700,6 +706,7 @@ class Main extends CI_Controller {
 							  "CIP" => $row->CIP_Code,
 							  "HEGIS" => $sub_row->HEGIS_Code,
 							  "Status" => $sub_row->Status,
+							  "StatusChange" => $status_change,
 							  "Access" => $access,
 							  "Plan Type" => $sub_row->Sub_Pl_Typ,
 							  "Degree" => $row->Degree,

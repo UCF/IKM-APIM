@@ -48,6 +48,8 @@ function __construct()
 			foreach ($plan_data->result() as $key => $row){
 				$id++;			
 				$access = '';
+				$termStartShort = '';
+				$statusStartShort = '';
 				$status_change = '';
 				$avail = true;
 				$regional = 'No';
@@ -71,7 +73,19 @@ function __construct()
 				$valenciaeast = 0;
 				$valenciaosce = 0;
 				$valenciawest = 0;
+				
+				//get start term and status term change short (if applicable);
+				if($row->Term != ''){
+					$term_s = ucfirst(strtolower($row->Term));
+					$term_short = $this->General_model->get_term_info_long($term_s);
 					
+					if($term_short->num_rows()){
+						$trow = $term_short->row();						
+						$termStartShort = $trow->PS_STRM;
+					}
+					
+				}
+				
 				
 				//get the access information
 				$access_data = $this->General_model->get_access($row->Acad_Plan);
@@ -83,7 +97,20 @@ function __construct()
 				
 				//set status change date for Inactives and Suspends only
 				if($row->Status == 'I' || $row->Status == 'S'){ 
-					$status_change = ucfirst(strtolower($row->Cancelled_Year)); 
+					$status_change = ucfirst(strtolower($row->Cancelled_Year));
+					
+					//cancelled year
+					if($row->Cancelled_Year != ''){
+						
+						$cterm_s = ucfirst(strtolower($row->Cancelled_Year));
+						$cterm_short = $this->General_model->get_term_info_long($cterm_s);
+					
+						if($cterm_short->num_rows()){
+							$crow = $cterm_short->row();
+							$statusStartShort = $crow->PS_STRM;
+						}
+					
+					}
 				}
 				
 				//check for and set Regional flag with the custom system library
@@ -209,6 +236,7 @@ function __construct()
 				
 				$meta_data = array(
 						"TermStart"=> ucfirst(strtolower($row->Term)),
+						"TermStartShort" => $termStartShort,
 						"Regional"=> $regional,
 						"SubPlan"=> $subplan,
 						"PlanLongName"=> $plan_long_name,
@@ -220,6 +248,7 @@ function __construct()
 						"Dept." => $row->AcadOrgDescr,
 						"Status" => $row->Status,
 						"StatusChangeTerm" => $status_change,
+						"StatusChangeTermShort" => $statusStartShort,
 						"Access" => $access,
 						"Admission" => $admission,
 						"ReAdmit" => $readmit,
@@ -252,172 +281,6 @@ function __construct()
 					);
 				$itemlist[] = $item;
 				
-				
-				//get the Subs associated with the plans
-				/*$sub_plan_data = $this->General_model->subplan_all($row->Acad_Plan);
-				
-				if($sub_plan_data->num_rows()){			
-					foreach($sub_plan_data->result() as $sub_key => $sub_row){
-						$id++;
-						$sub_regional = '';
-						$adm = array('true','false');
-						$admk = array_rand($adm);
-						
-						//set the regional data vars
-						$altamonte = 0;
-						$cocoa= 0;
-						$daytona = 0;
-						$leesburg = 0;
-						$melbourne = 0;
-						$ocala = 0;
-						$palmbay = 0;
-						$sanford = 0;
-						$southlake = 0;
-						$valenciaeast = 0;
-						$valenciaosce = 0;
-						$valenciawest = 0;
-							
-						//check for and set Regional flag with the custom system library
-						$subplan_regions = $this->corelib->subplan_locations($row->Acad_Plan,$sub_row->Sub_Plan);
-						if($subplan_regions){
-							$sub_regional = 'Yes';
-							foreach ($subplan_regions->result() as $spl_key => $spl_row){
-								$sublocale = trim($spl_row->Location_Code);
-						
-								switch($sublocale){
-									case 'ALTSPRNG':
-										$altamonte = 1;
-										break;
-									case "COCOA":
-										$cocoa = 1;
-										break;
-									case "DAYTONA":
-										$daytona = 1;
-										break;
-									case "LEESBURG":
-										$leesburg = 1;
-										break;
-									case "MELBOURNE":
-										$melbourne = 1;
-										break;
-									case "OCALA":
-										$ocala = 1;
-										break;
-									case "PALM BAY":
-										$palmbay = 1;
-										break;
-									case "LAKE MARY":
-										$sanford = 1;
-										break;
-									case "SOUTH LAKE":
-										$southlake = 1;
-										break;
-									case "OSCEOLA":
-										$valenciaosce = 1;
-										break;
-									case "METROWEST":
-										$valenciawest = 1;
-										break;
-									case "VALENCIA":
-										$valenciaeast = 1;
-										break;
-								}
-							}
-						
-						}
-						//get the plan extras; set zeros if no record exists
-						$subplan_extra = $this->General_model->get_sub_plan_extra($row->Acad_Plan,$sub_row->Sub_Plan);
-						
-						if(!$subplan_extra->num_rows()){
-							$admission = 0;
-							$readmit = 0;
-							$flvc = 0;
-							$orient = 0;
-							$online = 0;
-							$psm = 0;
-							$stem = 0;
-							$mtr = 0;
-							$professional = 0;
-							$totThesis = 0;
-							$totNonThesis = 0;
-							$totCert = 0;
-							$totDoc = 0;
-							$tot6971 = 0;
-							$totDissert = 0;
-							$sub_long_name = '';
-						} else {
-							$subplan_extra_row = $subplan_extra->row();
-							$sub_long_name = $subplan_extra_row->Long_Name;
-							$admission = $subplan_extra_row->Admission;
-							$readmit = $subplan_extra_row->Readmit;
-							$flvc = $subplan_extra_row->FLVC;
-							$online = $subplan_extra_row->Online;
-							$orient = $subplan_extra_row->Orientation;
-							$psm = $subplan_extra_row->psm;
-							$stem = $subplan_extra_row->STEM;	
-							$professional = $subplan_extra_row->professional;				
-							$mtr = $subplan_extra_row->MTR;
-							$totThesis = $subplan_extra_row->Total_Thesis;
-							$totNonThesis = $subplan_extra_row->Total_NonThesis;
-							$tot6971 = $subplan_extra_row->Total_Thesis6971;
-							$totCert = $subplan_extra_row->Total_Grad_Certificate;
-							$totDoc = $subplan_extra_row->Total_Doctoral;
-							$totDissert = $subplan_extra_row->Total_Dissertation;
-						}				
-						
-						$sub_item = array("id" => $id,
-								  "Plan"=> $sub_row->Acad_Plan,
-								  "PlanLongName"=> $plan_long_name,
-								  "SubPlanLongName"=>$sub_long_name,
-								  "TermStart"=> ucfirst(strtolower($sub_row->Term)),
-								  "Regional"=>$sub_regional,
-								  "Stratemph"=> $row->AREA,
-								  "Subplan"=> $sub_row->Sub_Plan,
-								  "Plan Name"=> $sub_row->UCF_Name,
-								  "College" => $row->College,
-								  "Career" => $row->Career,
-								  "CIP" => $row->CIP_Code,
-								  "HEGIS" => $sub_row->HEGIS_Code,
-								  "Status" => $sub_row->Status,
-								  "Access" => $access,
-								  "Plan Type" => $sub_row->Sub_Pl_Typ,
-								  "Degree" => $row->Degree,
-								  "Dept." => $row->AcadOrgDescr,
-								  "Admission" => $admission,
-								  "ReAdmit" => $readmit,
-								  "FLVC" => $flvc,
-								  "Orientation" => $orient,
-								  "Online" => $online,
-								  "PSM" => $psm,
-								  "STEM" => $stem,
-								  "Professional" => $professional,
-								  "MTR" => $mtr,
-									"CR"=> 0,
-								  "TotThesis" => $totThesis,
-								  "TotNonThesis" => $totNonThesis,
-								  "Tot6971" => $tot6971,
-								  "TotCert" => $totCert,
-								  "TotDoc" => $totDoc,
-								  "TotDissert" => $totDissert,
-									"ALTSPRNG" => $altamonte,
-									"COCOA" => $cocoa,
-									"DAYTONA" => $daytona,
-									"LEESBURG" => $leesburg,
-									"MELBOURNE" => $melbourne,
-									"OCALA" => $ocala,
-									"PALMBAY" => $palmbay,
-									"LAKEMARY" => $sanford,
-									"SOUTHLAKE" => $southlake,
-									"OSCEOLA" => $valenciaosce,
-									"METROWEST" => $valenciawest,
-									"VALENCIA" => $valenciaeast,
-								  "avail" => $avail,
-								  "info" => 'T'
-							);
-						$itemlist[] = $sub_item;
-				
-					}
-				}*/
 			}
 			
 			$result_count = count($itemlist);
@@ -440,6 +303,9 @@ function __construct()
 			$meta = array();
 			$meta_data = array();
 			$campuses = array();
+			$termStartShort = '';
+			$statusStartShort = '';
+			$status_change = '';
 		
 			//set the regional data vars
 			$altamonte = 0;
@@ -454,7 +320,38 @@ function __construct()
 			$valenciaeast = 0;
 			$valenciaosce = 0;
 			$valenciawest = 0;
+			
+			//get start term and status term change short (if applicable);
+			if($sub_row->Term != ''){
+				$term_s = ucfirst(strtolower($sub_row->Term));
+				$term_short = $this->General_model->get_term_info_long($term_s);
+					
+				if($term_short->num_rows()){
+					$trow = $term_short->row();
+					$termStartShort = $trow->PS_STRM;
+				}
+					
+			}
 				
+		
+			//set status change date for Inactives and Suspends only
+			if($sub_row->Status == 'I' || $sub_row->Status == 'S'){
+				$status_change = ucfirst(strtolower($sub_row->Cancelled_Year));
+					
+				//cancelled year
+				if($sub_row->Cancelled_Year != ''){
+			
+					$cterm_s = ucfirst(strtolower($sub_row->Cancelled_Year));
+					$cterm_short = $this->General_model->get_term_info_long($cterm_s);
+						
+					if($cterm_short->num_rows()){
+						$crow = $cterm_short->row();
+						$statusStartShort = $crow->PS_STRM;
+					}
+						
+				}
+			}
+			
 			//check for and set Regional flag with the custom system library
 			$subplan_regions = $this->corelib->subplan_locations($acad_plan,$sub_row->Sub_Plan);
 			if($subplan_regions){
@@ -565,8 +462,11 @@ function __construct()
 			
 					"SubPlanLongName"=>$sub_long_name,
 					"TermStart"=> ucfirst(strtolower($sub_row->Term)),
+					"TermStartShort" => $termStartShort,
 					"Regional"=>$sub_regional,					
 					"Status" => $sub_row->Status,
+					"StatusChangeTerm" => $status_change,
+					"StatusChangeTermShort" => $statusStartShort,
 					"Plan Type" => $sub_row->Sub_Pl_Typ,
 					"Admission" => $admission,
 					"ReAdmit" => $readmit,
