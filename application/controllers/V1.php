@@ -25,19 +25,21 @@ function __construct()
 		$this->load->config('main', TRUE);
 	}
 
-	public function test()
+	public function main()
 		{
 			$final_data = '';
 		
 			//get user information
 			$user = $this->ion_auth->user()->row();
 			
+			//get the uri call
+			$filters = $this->uri->uri_to_assoc(3);
+				
 			
-			$college = $this->input->get('college');		
-			if($college == '') { $college = '%'; }
+			if($filters['college'] == 'all') { $college = '%'; } else { $college = strtoupper($filters['college']); }
 			
-			$career = $this->input->get('career');
-			if($career == '') { $career = '%'; }
+		
+			if($filters['career'] == 'all') { $career = '%'; } else { $career = strtoupper($filters['career']); }
 					
 			$plan_data = $this->General_model->acadplan_all('ASC','Acad_Plan',$college,$career);	
 					
@@ -112,6 +114,15 @@ function __construct()
 					
 					}
 				}
+				
+				//get college name
+				$college_name = $this->General_model->colleges($row->College);
+				if($college_name->num_rows()){
+					$coll_row =  $college_name->row();
+					$college_name_full = $coll_row->College_Name;					
+				}
+				
+			
 				
 				//check for and set Regional flag with the custom system library
 				$plan_regions = $this->corelib->plan_locations($row->Acad_Plan);
@@ -216,7 +227,10 @@ function __construct()
 						
 					$sub_plans = $this->subplan($sub_data,$row->Acad_Plan);
 				}
-					
+				
+				//fix certs
+				if($row->Degree == 'CRT' || $row->Degree == 'CER'){ $row->Level = 'Certificate'; }
+				
 				//put the regionals in  own sublevels
 				$region_item = array(
 						"ALTSPRNG" => $altamonte,
@@ -241,11 +255,8 @@ function __construct()
 						"SubPlan"=> $subplan,
 						"PlanLongName"=> $plan_long_name,
 						"Stratemph"=> $row->AREA,						
-						"College" => $row->College,
-						"Career" => $row->Career,
 						"Plan Type" => '',
-						"Degree" => $row->Degree,
-						"Dept." => $row->AcadOrgDescr,
+						"Degree" => $row->Degree,						
 						"Status" => $row->Status,
 						"StatusChangeTerm" => $status_change,
 						"StatusChangeTermShort" => $statusStartShort,
@@ -273,6 +284,12 @@ function __construct()
 						"id" => $id,
 						"Plan"=> $row->Acad_Plan,
 						"PlanName"=> $row->UCF_Name,
+						"CollegeShort" => $row->College,
+						"College_Full" => $college_name_full,
+						"DeptShort" => $row->AcadOrg,
+						"Dept_Full" => $row->AcadOrgDescr,
+						"Career" => $row->Career,
+						"Level" => $row->Level,
 						"CIP" => $row->CIP_Code,
 						"HEGIS" => $row->HEGIS_Code,
 	                    "Meta Data"=> $meta,

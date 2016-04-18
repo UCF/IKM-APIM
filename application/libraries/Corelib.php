@@ -44,6 +44,7 @@ class Corelib {
 		$cell_map = array(
 				'PlanLongName' => 'Long_Name',
 				'SubPlanLongName' => 'Long_Name',
+				'DeptLongName' => 'Dept_Long',
 				'Admission' => 'Admission',
 				'ReAdmit' => 'Readmit',
 				'FLVC' => 'FLVC',
@@ -59,7 +60,18 @@ class Corelib {
 				'TotNonThesis' => 'Total_NonThesis',
 				'TotCert' => 'Total_Grad_Certificate',
 				'TotDoc' => 'Total_Doctoral',
-				'TotDissert' => 'Total_Dissertation'
+				'TotDissert' => 'Total_Dissertation',
+				'ALTSPRNG' => 'ALTSPRING',
+				'COCOA' => 'COCOA',
+				'DAYTONA' => 'DAYTONA',
+				'LEESBURG' => 'LEESBURG',
+				'OCALA' => 'OCALA',
+				'PALMBAY' => 'PALMABAY',
+				'LAKEMARY' => 'LAKEMARY',
+				'SOUTHLAKE' => 'SOUTHLAKE',
+				'VALENCIA' => 'VALENCIA',
+				'OSCEOLA' => 'OSCEOLA',
+				'METROWEST' => 'METROWEST'
 		);
 		
 		return $cell_map[$cell];

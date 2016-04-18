@@ -18,6 +18,7 @@
 
 <body>
 	<div id="header"></div>
+	
 	<div id="login">
 
 		<h2><span class="fontawesome-lock"></span>Sign In</h2>

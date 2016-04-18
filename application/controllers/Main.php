@@ -43,6 +43,7 @@ class Main extends CI_Controller {
 			$s = '';
 			$ugs = '';
 			$grads = '';
+			$prof = '';
 			$security_group = array();			
 			
 			//get user & group information
@@ -82,6 +83,7 @@ class Main extends CI_Controller {
 					$s = 'selected'; 
 					$ugs = '';
 					$grads = '';
+					$prof = '';
 				}
 					
 			}
@@ -97,6 +99,7 @@ class Main extends CI_Controller {
 			$data['s'] = $s;
 			$data['ugs'] = $ugs;
 			$data['grads'] = $grads;
+			$data['prof'] = $prof;
 			$data['user_groups'] = $security_group;
 			$data['tips'] = $tip;
 						
@@ -138,6 +141,97 @@ class Main extends CI_Controller {
 			$this->load->view('regional-edit', $data);
 		}
 	}
+	public function update_regional()
+	{
+		$deletes = array();
+		$adds = array();
+		$locales = array();
+	
+		//get vars coming in from form and set them accordingly
+		$plan = $this->input->get('plan');
+		$subplan = $this->input->get('subplan');
+	
+		$ALTSPRNG = $this->input->get('ALTSPRNG');
+		$COCOA = $this->input->get('COCOA');
+		$DAYTONA = $this->input->get('DAYTONA');
+		$LEESBURG = $this->input->get('LEESBURG');
+		$OCALA = $this->input->get('OCALA');
+		$PALMBAY = $this->input->get('PALMBAY');
+		$LAKEMARY = $this->input->get('LAKEMARY');
+		$SOUTHLAKE = $this->input->get('SOUTHLAKE');
+		$OSCEOLA = $this->input->get('OSCEOLA');
+		$METROWEST = $this->input->get('METROWEST');
+		$VALENCIA = $this->input->get('VALENCIA');
+	
+		if($ALTSPRNG == 'true'){ $ALTSPRNG = 1; } else { $ALTSPRNG = 0; }
+		if($COCOA == 'true'){ $COCOA = 1; } else { $COCOA = 0; }
+		if($DAYTONA == 'true'){ $DAYTONA = 1; } else { $DAYTONA = 0; }
+		if($LEESBURG == 'true'){ $LEESBURG = 1; } else { $LEESBURG = 0; }
+		if($OCALA == 'true'){ $OCALA = 1; } else { $OCALA = 0; }
+		if($PALMBAY == 'true'){ $PALMBAY = 1; } else { $PALMBAY = 0; }
+		if($LAKEMARY == 'true'){ $LAKEMARY = 1; } else { $LAKEMARY = 0; }
+		if($SOUTHLAKE == 'true'){ $SOUTHLAKE = 1; } else { $SOUTHLAKE = 0; }
+		if($OSCEOLA == 'true'){ $OSCEOLA = 1; } else { $OSCEOLA = 0; }
+		if($METROWEST == 'true'){ $METROWEST = 1; } else { $METROWEST = 0; }
+		if($VALENCIA == 'true'){ $VALENCIA = 1; } else { $VALENCIA = 0; }
+	
+		//get the variables for the locations and put them into an array based on location and choice
+		$region_vars = array("ALTSPRNG","COCOA","DAYTONA","LEESBURG","OCALA","PALMBAY","LAKEMARY","SOUTHLAKE","OSCEOLA","METROWEST","VALENCIA");
+		$region_result = compact($region_vars);
+			
+	
+		//put the results into the proper delete or add array - for batch edit
+		foreach ($region_result as $reg_key => $reg_row){
+			if($reg_key == 'PALMBAY'){ $reg_key = 'PALM BAY'; }
+			if($reg_key == 'LAKEMARY'){ $reg_key = 'LAKE MARY'; }
+			if($reg_key == 'SOUTHLAKE'){ $reg_key = 'SOUTH LAKE'; }
+				
+			if($reg_row == 0){
+				$deletes[$reg_key] = $reg_row;
+			} else {
+				$adds[$reg_key] = $reg_row;
+			}
+		}
+	
+	
+		//datetime creation
+		$date = date("Y-m-d H:i:s");
+	
+		if($subplan == ''){
+			//this will edit the plan_region_link table only
+			//delete ALL from the table first
+			$delete = $this->General_model->delete_plan_region($plan);
+				
+			//insert set  up and insert
+			foreach ($adds as $a_key => $a_row){
+				$refid = $plan.'.'.$a_key;
+				$locales['Acad_Plan'] = $plan;
+				$locales['Location_Code'] = $a_key;
+				$locales['REFID'] = $refid;
+	
+				$insert = $this->General_model->insert_plan_region($locales);
+			}
+		} else {
+			//this will edit the subplan_region_link table only
+			//delete ALL from the table first
+			$delete = $this->General_model->delete_subplan_region($plan,$subplan);
+				
+			//insert set  up and insert
+			foreach ($adds as $a_key => $a_row){
+				$refid = $plan.'.'.$subplan.'.'.$a_key;
+				$locales['Acad_Plan'] = $plan;
+				$locales['Sub_Plan'] = $subplan;
+				$locales['Location_Code'] = $a_key;
+				$locales['REFID'] = $refid;
+	
+				$insert = $this->General_model->insert_subplan_region($locales);
+			}
+				
+		}
+	
+		echo true;
+	
+	}
 	public function update_main(){
 			//update only the column that is under edit
 		
@@ -156,6 +250,7 @@ class Main extends CI_Controller {
 			$subplan = $this->input->get('subplan');
 			$planlongname = $this->input->get('planlongname');
 			$subplanlongname = $this->input->get('subplanlongname');
+			$deptlongname = $this->input->get('deptlongname');
 			$admiss = $this->input->get('adm');
 			$readmit = $this->input->get('readmit');
 			$flvc = $this->input->get('flvc');
@@ -172,6 +267,17 @@ class Main extends CI_Controller {
 			$totCert = $this->input->get('totCert');
 			$totDoc = $this->input->get('totDoc');
 			$totDissert = $this->input->get('totDissert');
+			/*$altspring = $this->input->get('ALTSPRING');
+			$daytona = $this->input->get('COCOA');
+			$daytona = $this->input->get('DAYTONA');
+			$leesburg = $this->input->get('LEESBURG');
+			$ocala = $this->input->get('OCALA');
+			$palmbay = $this->input->get('PALMBAY');
+			$lakemary = $this->input->get('LAKEMARY');
+			$southlake = $this->input->get('SOUTHLAKE');
+			$valencia = $this->input->get('VALENCIA');
+			$osceola= $this->input->get('OSCEOLA');
+			$metrowest = $this->input->get('METROWEST');*/
 	
 			//datetime creation
 			$date = date("Y-m-d H:i:s");
@@ -187,6 +293,17 @@ class Main extends CI_Controller {
 			if($professional == 'true'){ $professional = 1; } else { $professional = 0; }
 			if($mtr == 'true'){ $mtr = 1; } else { $mtr = 0; }
 			if($cr == 'true'){ $cr = 1; } else { $cr = 0; }
+			/*if($altspring == 'true'){ $altspring = 1; } else { $altspring = 0; }
+			if($daytona == 'true'){ $daytona = 1; } else { $daytona = 0; }
+			if($leesburg == 'true'){ $leesburg = 1; } else { $leesburg = 0; }
+			if($ocala == 'true'){ $ocala = 1; } else { $ocala = 0; }
+			if($palmbay == 'true'){ $palmbay = 1; } else { $palmbay = 0; }
+			if($lakemary == 'true'){ $lakemary = 1; } else { $lakemary = 0; }
+			if($southlake == 'true'){ $southlake = 1; } else { $southlake = 0; }
+			if($valencia == 'true'){ $valencia = 1; } else { $valencia = 0; }
+			if($osceola == 'true'){ $osceola = 1; } else { $osceolag = 0; }
+			if($metrowest == 'true'){ $metrowest = 1; } else { $metrowest = 0; }*/
+			
 			
 			if($cell_under_change != ''){
 				//get the official column name under change.  reverse this later from above $batch
@@ -215,7 +332,19 @@ class Main extends CI_Controller {
 							'Total_Grad_Certificate' => $totCert,
 							'Total_Dissertation' => $totDissert,
 							'Total_Doctoral' => $totDoc,
-							'Long_Name' => $planlongname	
+							'Long_Name' => $planlongname,
+							'Dept_Long' => $deptlongname,
+							/*'ALTSPRNG' => $altspring,
+							'COCOA' => $daytona,
+							'DAYTONA' => $daytona,
+							'LEESBURG' => $leesburg,
+							'OCALA' => $ocala,
+							'PALMBAY' => $palmbay,
+							'LAKEMARY' => $lakemary,
+							'SOUTHLAKE' => $southlake,
+							'VALENCIA' => $valencia,
+							'OSCEOLA' => $osceola,
+							'METROWEST' => $metrowest*/
 					);
 				
 				
@@ -288,7 +417,18 @@ class Main extends CI_Controller {
 							'Total_Grad_Certificate' => $totCert,
 							'Total_Dissertation' => $totDissert,
 							'Total_Doctoral' => $totDoc,
-							'Long_Name' => $subplanlongname
+							'Long_Name' => $subplanlongname,
+							/*'ALTSPRNG' => $altspring,
+							'COCOA' => $daytona,
+							'DAYTONA' => $daytona,
+							'LEESBURG' => $leesburg,
+							'OCALA' => $ocala,
+							'PALMBAY' => $palmbay,
+							'LAKEMARY' => $lakemary,
+							'SOUTHLAKE' => $southlake,
+							'VALENCIA' => $valencia,
+							'OSCEOLA' => $osceola,
+							'METROWEST' => $metrowest*/
 					);
 	
 				$extra = $this->General_model->get_sub_plan_extra($plan,$subplan);
@@ -337,7 +477,7 @@ class Main extends CI_Controller {
 			$all_group = $this->config->item('all', 'main');
 			$user_groups = $this->ion_auth->get_users_groups($user->id)->result();
 			if (!$this->ion_auth->in_group($all_group)){
-				if($this->ion_auth->in_group('READ') || $this->ion_auth->in_group('Regional') || $this->ion_auth->in_group('Orientation')){
+				if($this->ion_auth->in_group('READ') || $this->ion_auth->in_group('Orientation')){
 					$auth = 4;
 				} else {
 					//not in all so look for college
@@ -353,6 +493,7 @@ class Main extends CI_Controller {
 						if($urow->name == 'Online'){ $auth = 5; }
 						if($urow->name == 'FLVC'){ $auth = 6; }
 						if($urow->name == 'Registrar'){ $auth = 7; }
+						if($urow->name == 'Regional'){ $auth = 8; }
 						
 					}
 					$college_get = $this->General_model->colleges();
@@ -480,9 +621,11 @@ class Main extends CI_Controller {
 				$totDissert = 0;				
 				$recent = '';
 				$plan_long_name = '';
+				$dept_long_name = '';
 			} else {
 				$plan_extra_row = $plan_extra->row();
 				$plan_long_name = $plan_extra_row->Long_Name;
+				$dept_long_name = $plan_extra_row->Dept_Long;
 				$admission = $plan_extra_row->Admission;
 				$readmit = $plan_extra_row->Readmit;
 				$flvc = $plan_extra_row->FLVC;
@@ -515,11 +658,13 @@ class Main extends CI_Controller {
 				} 
 				
 			
-				
+			//fix cert level
+			if($row->Degree == 'CRT' || $row->Degree == 'CER'){ $row->Level = 'Certificate'; }
 			
 			$item = array(	"id" => $id,
 					"Plan"=> $row->Acad_Plan,
 					"PlanLongName"=> $plan_long_name,
+					"DeptLongName"=> $dept_long_name,
 					"SubPlanLongName" => '',
 					"TermStart"=> ucfirst(strtolower($row->Term)),
 					"Regional"=> $regional,
@@ -527,7 +672,10 @@ class Main extends CI_Controller {
 					"Subplan" => '',
 					"PlanName"=> $row->UCF_Name,
 					"College" => $row->College,
+					"Dept" => $row->AcadOrg,
+					"DeptLong" => $row->AcadOrgDescr,
 					"Career" => $row->Career,
+					"Level" => $row->Level,
 					"CIP" => $row->CIP_Code,
 					"HEGIS" => $row->HEGIS_Code,
 					"Plan Type" => '',
@@ -695,6 +843,7 @@ class Main extends CI_Controller {
 					$sub_item = array("id" => $id,
 							  "Plan"=> $sub_row->Acad_Plan,
 							  "PlanLongName"=> $plan_long_name,
+							  "DeptLongName"=> $dept_long_name,
 							  "SubPlanLongName"=>$sub_long_name,
 							  "TermStart"=> ucfirst(strtolower($sub_row->Term)),
 							  "Regional"=>$sub_regional,
@@ -702,15 +851,17 @@ class Main extends CI_Controller {
 							  "Subplan"=> $sub_row->Sub_Plan,
 							  "PlanName"=> $sub_row->UCF_Name,
 							  "College" => $row->College,
+							  "DeptShort" => $row->AcadOrg,
+							  "Dept." => $row->AcadOrgDescr,
 							  "Career" => $row->Career,
+							  "Level" => $row->Level,
 							  "CIP" => $row->CIP_Code,
 							  "HEGIS" => $sub_row->HEGIS_Code,
 							  "Status" => $sub_row->Status,
 							  "StatusChange" => $status_change,
 							  "Access" => $access,
 							  "Plan Type" => $sub_row->Sub_Pl_Typ,
-							  "Degree" => $row->Degree,
-							  "Dept." => $row->AcadOrgDescr,
+							  "Degree" => $row->Degree,							  
 							  "Admission" => $admission,
 							  "ReAdmit" => $readmit,
 							  "FLVC" => $flvc,

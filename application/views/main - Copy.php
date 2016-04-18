@@ -152,21 +152,10 @@
 			updata = updata + "&flvc=" + rowdata.FLVC + "&readmit=" + rowdata.ReAdmit + "&online=" + rowdata.Online +"&orient=" + rowdata.Orientation + "&deptlongname=" + rowdata.DeptLongName;
 			updata = updata + "&psm=" + rowdata.PSM + "&mtr=" + rowdata.MTR + "&cr=" + rowdata.CR + "&stem=" + rowdata.STEM +"&professional=" + rowdata.Professional + "&totThesis=" + rowdata.TotThesis + "&totNonThesis=" + rowdata.TotNonThesis;
 			updata = updata + "&tot6971=" + rowdata.Tot6971 + "&totCert=" + rowdata.TotCert + "&totDoc=" + rowdata.TotDoc +"&totDissert=" + rowdata.TotDissert;
-			updata = updata + "&ALTSPRNG=" + rowdata.ALTSPRNG + "&COCOA=" + rowdata.COCOA + "&DAYTONA=" + rowdata.DAYTONA +"&LEESBURG=" + rowdata.LEESBURG;
-			updata = updata + "&OCALA=" + rowdata.OCALA + "&PALMBAY=" + rowdata.PALMBAY + "&LAKEMARY=" + rowdata.LAKEMARY +"&SOUTHLAKE=" + rowdata.SOUTHLAKE;
-			updata = updata + "&OSCEOLA=" + rowdata.OSCEOLA + "&METROWEST=" + rowdata.METROWEST + "&VALENCIA=" + rowdata.VALENCIA;
-
-			//set the url based on if it's regional or not
-			var regions = ["ALTSPRNG","COCOA","DAYTONA","LEESBURG","OCALA","PALMBAY","LAKEMARY","SOUTHLAKE","OSCEOLA","METROWEST","VALENCIA"];
-			if(regions.indexOf(prev_cellName) != -1){
-					var upURL = '../main/update_regional';
-				} else {
-					var upURL = '../main/update_main';
-					}
 			
 			$.ajax({
 		                dataType: 'json',
-		                url: upURL,
+		                url: '../main/update_main',
 		                data: updata,
 						cache: false,
 		                success: function (updata, status, xhr) {
@@ -251,10 +240,6 @@
 			if(data.check == 7 && datafield != 'ReAdmit'){
 					return false;
 				}
-
-			//for regional
-			if(data.check == 8){ return false; }
-			
 		};
 		var gradbeginedit = function (row, datafield, columntype, value,defaultHtml) {
 			var data = $('#mainData').jqxGrid('getrowdata', row);
@@ -268,33 +253,12 @@
 			} 			
 			if(data.Career == 'GRAD' && data.check == 0){
 				return false;				
-			}		
+			}
+		
 
 			if(data.check == 5 || data.check == 6){
 				return false;
 			}
-
-			if(data.check == 8){ return false; }	
-			
-		};
-		var regbeginedit = function (row, datafield, columntype, value,defaultHtml) {
-			var data = $('#mainData').jqxGrid('getrowdata', row);
-			
-			if(data.check == 8 || data.check == 3){
-				return true;				
-			} else {
-				return false;
-			}
-
-			if(data.Career == 'UGRD' && datafield == 'MTR'){
-					return false;
-				} 
-
-			if(data.Career == 'UGRD' && datafield == 'CR'){
-				return false;
-				} 
-			
-			
 		};
 				
 		var info = function(column){
@@ -412,10 +376,8 @@
 
 			//specific for orientation - HEGIS and regions
 			//no grad will be set because they will have their career hard set on entry
-			if ($.inArray("Orientation",groups) != -1 || $.inArray("Regional",groups) != -1 || $.inArray("All",groups) != -1) { 
-					if($.inArray("Orientation",groups) != -1 || $.inArray("All",groups) != -1){
-						$("#mainData").jqxGrid('showcolumn','HEGIS');
-					}
+			if ($.inArray("Orientation",groups) != -1) { 
+					$("#mainData").jqxGrid('showcolumn','HEGIS');
 
 					$("#mainData").jqxGrid('showcolumn','ALTSPRNG');
 					$("#mainData").jqxGrid('showcolumn','COCOA');
@@ -427,30 +389,7 @@
 					$("#mainData").jqxGrid('showcolumn','SOUTHLAKE');
 					$("#mainData").jqxGrid('showcolumn','OSCEOLA');
 					$("#mainData").jqxGrid('showcolumn','METROWEST');
-					$("#mainData").jqxGrid('showcolumn','VALENCIA');
-
-					//more business for regional
-					if($.inArray("Regional",groups) != -1){
-						$("#mainData").jqxGrid('showcolumn','Online');
-						
-						$("#mainData").jqxGrid('hidecolumn','Admission');
-						$("#mainData").jqxGrid('hidecolumn','ReAdmit');
-						$("#mainData").jqxGrid('hidecolumn','Access');
-						$("#mainData").jqxGrid('hidecolumn','FLVC');
-						$("#mainData").jqxGrid('hidecolumn','Regional');
-						
-						$("#mainData").jqxGrid('hidecolumn','Professional');
-						$("#mainData").jqxGrid('hidecolumn','PSM');
-						$("#mainData").jqxGrid('hidecolumn','TotThesis');
-						$("#mainData").jqxGrid('hidecolumn','Tot6971');
-						$("#mainData").jqxGrid('hidecolumn','TotNonThesis');
-						$("#mainData").jqxGrid('hidecolumn','TotCert');
-						$("#mainData").jqxGrid('hidecolumn','TotDoc');
-						$("#mainData").jqxGrid('hidecolumn','TotDissert');
-						$("#mainData").jqxGrid('hidecolumn','PlanLongName');
-						$("#mainData").jqxGrid('hidecolumn','SubPlanLongName');
-						$("#mainData").jqxGrid('hidecolumn','DeptLongName');	
-					}	
+					$("#mainData").jqxGrid('showcolumn','VALENCIA');		
 
 				} 
 			
@@ -510,8 +449,8 @@
 			{ text: 'STEM', columngroup: 'General', datafield: 'STEM', columntype: 'checkbox', width: 75,filterable: false, cellbeginedit: cellbeginedit, rendered: toolTip},
 			
 			//alert(grad_set);
-			{ text: 'Mrkt. Rate Tuition', columngroup: 'GraduateStudies', datafield: 'MTR', columntype: 'checkbox', hidden: grad_hide, width: 75,filterable: false, cellbeginedit: regbeginedit, rendered: toolTip},			
-			{ text: 'Cost Recovery', columngroup: 'GraduateStudies', datafield: 'CR', columntype: 'checkbox', hidden: grad_hide, width: 75,filterable: false, cellbeginedit: regbeginedit, rendered: toolTip},			
+			{ text: 'Mrkt. Rate Tuition', columngroup: 'GraduateStudies', datafield: 'MTR', columntype: 'checkbox', hidden: grad_hide, width: 75,filterable: false, cellbeginedit: cellbeginedit, rendered: toolTip},			
+			{ text: 'Cost Recovery', columngroup: 'GraduateStudies', datafield: 'CR', columntype: 'checkbox', hidden: grad_hide, width: 75,filterable: false, cellbeginedit: cellbeginedit, rendered: toolTip},			
 			{ text: 'Plan Name Extra', columngroup: 'GraduateStudies', datafield: 'PlanLongName', columntype: 'input', hidden: grad_hide, width: 140,filterable: true, cellbeginedit: gradbeginedit, rendered: toolTip},
 			{ text: 'SubPlan Name Extra', columngroup: 'GraduateStudies', datafield: 'SubPlanLongName', columntype: 'input', hidden: grad_hide, width: 95,filterable: true, cellbeginedit: gradbeginedit, rendered: toolTip},			
 			{ text: 'Dept. Name Extra', columngroup: 'GraduateStudies', datafield: 'DeptLongName', columntype: 'input', hidden: grad_hide, width: 95,filterable: true, cellbeginedit: gradbeginedit, rendered: toolTip},			
@@ -524,18 +463,18 @@
 			{ text: 'Professional', columngroup: 'GraduateStudies', datafield: 'Professional', columntype: 'checkbox', hidden: grad_hide, width: 75,filterable: false, cellbeginedit: gradbeginedit, rendered: toolTip, rendered: toolTip},
 			{ text: 'PSM', columngroup: 'GraduateStudies', datafield: 'PSM', columntype: 'checkbox', width: 75,filterable: false, cellbeginedit: gradbeginedit, rendered: toolTip},
 				
-			//Regional fields
-			{ text: 'Altamonte Springs', columngroup: 'RegionalCampus', datafield: 'ALTSPRNG', columntype: 'checkbox', hidden: true, width: 75,filterable: false, cellbeginedit: regbeginedit, rendered: toolTip},
-			{ text: 'Cocoa', columngroup: 'RegionalCampus', datafield: 'COCOA', columntype: 'checkbox', hidden: true, width: 75,filterable: false, cellbeginedit: regbeginedit, rendered: toolTip},
-			{ text: 'Daytona', columngroup: 'RegionalCampus', datafield: 'DAYTONA', columntype: 'checkbox', hidden:true, width: 75,filterable: false, cellbeginedit: regbeginedit, rendered: toolTip},
-			{ text: 'Leesburg', columngroup: 'RegionalCampus', datafield: 'LEESBURG', columntype: 'checkbox', hidden: true, width: 75,filterable: false, cellbeginedit: regbeginedit, rendered: toolTip},
-			{ text: 'Ocala', columngroup: 'RegionalCampus', datafield: 'OCALA', columntype: 'checkbox', hidden: true, width: 75,filterable: false, cellbeginedit: regbeginedit, rendered: toolTip},
-			{ text: 'Palm Bay', columngroup: 'RegionalCampus', datafield: 'PALMBAY', columntype: 'checkbox', hidden: true, width: 75,filterable: false, cellbeginedit: regbeginedit, rendered: toolTip},
-			{ text: 'Sanford/LM', columngroup: 'RegionalCampus', datafield: 'LAKEMARY', columntype: 'checkbox', hidden: true, width: 75,filterable: false, cellbeginedit: regbeginedit, rendered: toolTip},
-			{ text: 'South Lake', columngroup: 'RegionalCampus', datafield: 'SOUTHLAKE', columntype: 'checkbox', hidden: true, width: 75,filterable: false, cellbeginedit: regbeginedit, rendered: toolTip},
-			{ text: 'Valencia East', columngroup: 'RegionalCampus', datafield: 'VALENCIA', columntype: 'checkbox', hidden: true, width: 75,filterable: false, cellbeginedit: regbeginedit, rendered: toolTip},
-			{ text: 'Valencia Osceola', columngroup: 'RegionalCampus', datafield: 'OSCEOLA', columntype: 'checkbox', hidden: true, width: 75,filterable: false, cellbeginedit: regbeginedit, rendered: toolTip},
-			{ text: 'Valencia West', columngroup: 'RegionalCampus', datafield: 'METROWEST', columntype: 'checkbox', hidden: true, width: 75,filterable: false, cellbeginedit: regbeginedit, rendered: toolTip},
+			//REgional fields
+			{ text: 'Altamonte Springs', columngroup: 'RegionalCampus', datafield: 'ALTSPRNG', columntype: 'checkbox', hidden: true, width: 75,filterable: false, cellbeginedit: cellbeginedit, rendered: toolTip},
+			{ text: 'Cocoa', columngroup: 'RegionalCampus', datafield: 'COCOA', columntype: 'checkbox', hidden: true, width: 75,filterable: false, cellbeginedit: cellbeginedit, rendered: toolTip},
+			{ text: 'Daytona', columngroup: 'RegionalCampus', datafield: 'DAYTONA', columntype: 'checkbox', hidden:true, width: 75,filterable: false, cellbeginedit: cellbeginedit, rendered: toolTip},
+			{ text: 'Leesburg', columngroup: 'RegionalCampus', datafield: 'LEESBURG', columntype: 'checkbox', hidden: true, width: 75,filterable: false, cellbeginedit: cellbeginedit, rendered: toolTip},
+			{ text: 'Ocala', columngroup: 'RegionalCampus', datafield: 'OCALA', columntype: 'checkbox', hidden: true, width: 75,filterable: false, cellbeginedit: cellbeginedit, rendered: toolTip},
+			{ text: 'Palm Bay', columngroup: 'RegionalCampus', datafield: 'PALMBAY', columntype: 'checkbox', hidden: true, width: 75,filterable: false, cellbeginedit: cellbeginedit, rendered: toolTip},
+			{ text: 'Sanford/LM', columngroup: 'RegionalCampus', datafield: 'LAKEMARY', columntype: 'checkbox', hidden: true, width: 75,filterable: false, cellbeginedit: cellbeginedit, rendered: toolTip},
+			{ text: 'South Lake', columngroup: 'RegionalCampus', datafield: 'SOUTHLAKE', columntype: 'checkbox', hidden: true, width: 75,filterable: false, cellbeginedit: cellbeginedit, rendered: toolTip},
+			{ text: 'Valencia East', columngroup: 'RegionalCampus', datafield: 'VALENCIA', columntype: 'checkbox', hidden: true, width: 75,filterable: false, cellbeginedit: cellbeginedit, rendered: toolTip},
+			{ text: 'Valencia Osceola', columngroup: 'RegionalCampus', datafield: 'OSCEOLA', columntype: 'checkbox', hidden: true, width: 75,filterable: false, cellbeginedit: cellbeginedit, rendered: toolTip},
+			{ text: 'Valencia West', columngroup: 'RegionalCampus', datafield: 'METROWEST', columntype: 'checkbox', hidden: true, width: 75,filterable: false, cellbeginedit: cellbeginedit, rendered: toolTip},
 				
 			//{ text: 'Last Change Date', datafield: 'recentchange', cellsformat: 'MM.dd.yyyy HH:mm:ss tt', width: 125,filterable: false, //cellbeginedit: cellbeginedit,  cellsrenderer: cellsrenderer},
 			{ text: 'avail', datafield: 'avail', hidden: true, cellbeginedit: cellbeginedit}		
@@ -543,7 +482,7 @@
 		    columngroups: [
 					{ text: '', align: 'center', name: 'General' },
                   	{ text: 'Graduate Studies', align: 'center', name: 'GraduateStudies' },
-                  	{ text: 'Regional Locations', align: 'center', name: 'RegionalCampus' }
+                  	{ text: 'Regional Campus', align: 'center', name: 'RegionalCampus' }
 		    ],
 		    ready: function () {			
 				addfilter();
@@ -648,52 +587,48 @@
 			var filter1 = filtergroup.createfilter('stringfilter', filtervalue, filtercondition);
 			
 			if (filtervalue == 'UGRD'){
-				if($.inArray("Regional",groups) != -1){ } else {
-					$("#mainData").jqxGrid('showcolumn','Admission');
-					$("#mainData").jqxGrid('showcolumn','ReAdmit');
-					$("#mainData").jqxGrid('showcolumn','Access');
-					$("#mainData").jqxGrid('showcolumn','FLVC');
-					
-					$("#mainData").jqxGrid('hidecolumn','Professional');
-					$("#mainData").jqxGrid('hidecolumn','PSM');
-					$("#mainData").jqxGrid('hidecolumn','MTR');
-					$("#mainData").jqxGrid('hidecolumn','CR');
-					$("#mainData").jqxGrid('hidecolumn','TotThesis');
-					$("#mainData").jqxGrid('hidecolumn','Tot6971');
-					$("#mainData").jqxGrid('hidecolumn','TotNonThesis');
-					$("#mainData").jqxGrid('hidecolumn','TotCert');
-					$("#mainData").jqxGrid('hidecolumn','TotDoc');
-					$("#mainData").jqxGrid('hidecolumn','TotDissert');
-					$("#mainData").jqxGrid('hidecolumn','PlanLongName');
-					$("#mainData").jqxGrid('hidecolumn','SubPlanLongName');
-					$("#mainData").jqxGrid('hidecolumn','DeptLongName');
-				}
+				$("#mainData").jqxGrid('showcolumn','Admission');
+				$("#mainData").jqxGrid('showcolumn','ReAdmit');
+				$("#mainData").jqxGrid('showcolumn','Access');
+				$("#mainData").jqxGrid('showcolumn','FLVC');
+				
+				$("#mainData").jqxGrid('hidecolumn','Professional');
+				$("#mainData").jqxGrid('hidecolumn','PSM');
+				$("#mainData").jqxGrid('hidecolumn','MTR');
+				$("#mainData").jqxGrid('hidecolumn','CR');
+				$("#mainData").jqxGrid('hidecolumn','TotThesis');
+				$("#mainData").jqxGrid('hidecolumn','Tot6971');
+				$("#mainData").jqxGrid('hidecolumn','TotNonThesis');
+				$("#mainData").jqxGrid('hidecolumn','TotCert');
+				$("#mainData").jqxGrid('hidecolumn','TotDoc');
+				$("#mainData").jqxGrid('hidecolumn','TotDissert');
+				$("#mainData").jqxGrid('hidecolumn','PlanLongName');
+				$("#mainData").jqxGrid('hidecolumn','SubPlanLongName');
+				$("#mainData").jqxGrid('hidecolumn','DeptLongName');
 			}
 
 			if (filtervalue == 'GRAD' || filtervalue == 'PROF' ) {
+				
+				//for removing ugrad columms if set
+				$("#mainData").jqxGrid('hidecolumn','Admission');
+				$("#mainData").jqxGrid('hidecolumn','ReAdmit');
+				$("#mainData").jqxGrid('hidecolumn','Access');
+				$("#mainData").jqxGrid('hidecolumn','FLVC');
 
-				if($.inArray("Regional",groups) != -1){ } else {
-					//for removing ugrad columms if set
-					$("#mainData").jqxGrid('hidecolumn','Admission');
-					$("#mainData").jqxGrid('hidecolumn','ReAdmit');
-					$("#mainData").jqxGrid('hidecolumn','Access');
-					$("#mainData").jqxGrid('hidecolumn','FLVC');
-	
-					$("#mainData").jqxGrid('showcolumn','Professional');
-					$("#mainData").jqxGrid('showcolumn','PSM');
-					$("#mainData").jqxGrid('showcolumn','MTR');
-					$("#mainData").jqxGrid('showcolumn','CR');
-					$("#mainData").jqxGrid('showcolumn','TotThesis');
-					$("#mainData").jqxGrid('showcolumn','Tot6971');
-					$("#mainData").jqxGrid('showcolumn','TotNonThesis');
-					$("#mainData").jqxGrid('showcolumn','TotCert');
-					$("#mainData").jqxGrid('showcolumn','TotDoc');
-					$("#mainData").jqxGrid('showcolumn','TotDissert');
-					$("#mainData").jqxGrid('showcolumn','PlanLongName');
-					$("#mainData").jqxGrid('showcolumn','SubPlanLongName');
-					$("#mainData").jqxGrid('showcolumn','DeptLongName');
-				}
-					
+				$("#mainData").jqxGrid('showcolumn','Professional');
+				$("#mainData").jqxGrid('showcolumn','PSM');
+				$("#mainData").jqxGrid('showcolumn','MTR');
+				$("#mainData").jqxGrid('showcolumn','CR');
+				$("#mainData").jqxGrid('showcolumn','TotThesis');
+				$("#mainData").jqxGrid('showcolumn','Tot6971');
+				$("#mainData").jqxGrid('showcolumn','TotNonThesis');
+				$("#mainData").jqxGrid('showcolumn','TotCert');
+				$("#mainData").jqxGrid('showcolumn','TotDoc');
+				$("#mainData").jqxGrid('showcolumn','TotDissert');
+				$("#mainData").jqxGrid('showcolumn','PlanLongName');
+				$("#mainData").jqxGrid('showcolumn','SubPlanLongName');
+				$("#mainData").jqxGrid('showcolumn','DeptLongName');
+				
 			}	
 					
 			if ( filtervalue == '') {

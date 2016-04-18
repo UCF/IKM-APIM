@@ -18,7 +18,7 @@ class General_model extends CI_Model
 	
 		$this->db->from('Academic_Plans');
 		$this->db->join($this->tables['strategic_emphasis'],$this->tables['strategic_emphasis'].'.CIP = Academic_Plans.CIP_Code','left');
-	    //add degree plan left join for diploma name
+		$this->db->join('Degree_Name','Degree_Name.Degree = Academic_Plans.Degree','left');
 		$this->db->where('Plan_Type !=','MIN');
 		if($college != '%'){
 			$this->db->like('College',$college, 'none', FALSE);
