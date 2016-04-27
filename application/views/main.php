@@ -123,7 +123,9 @@
 				{ name: 'SOUTHLAKE', type: 'boolean'},
 				{ name: 'OSCEOLA', type: 'boolean'},
 				{ name: 'METROWEST', type: 'boolean'},
-				{ name: 'VALENCIA', type: 'boolean'}
+				{ name: 'VALENCIA', type: 'boolean'},
+				{ name: 'loadas', type: 'string'},
+				{ name: 'loadasnames' }
 		    ],
 		    
 		    id: 'id',
@@ -154,7 +156,7 @@
 			updata = updata + "&tot6971=" + rowdata.Tot6971 + "&totCert=" + rowdata.TotCert + "&totDoc=" + rowdata.TotDoc +"&totDissert=" + rowdata.TotDissert;
 			updata = updata + "&ALTSPRNG=" + rowdata.ALTSPRNG + "&COCOA=" + rowdata.COCOA + "&DAYTONA=" + rowdata.DAYTONA +"&LEESBURG=" + rowdata.LEESBURG;
 			updata = updata + "&OCALA=" + rowdata.OCALA + "&PALMBAY=" + rowdata.PALMBAY + "&LAKEMARY=" + rowdata.LAKEMARY +"&SOUTHLAKE=" + rowdata.SOUTHLAKE;
-			updata = updata + "&OSCEOLA=" + rowdata.OSCEOLA + "&METROWEST=" + rowdata.METROWEST + "&VALENCIA=" + rowdata.VALENCIA;
+			updata = updata + "&OSCEOLA=" + rowdata.OSCEOLA + "&METROWEST=" + rowdata.METROWEST + "&VALENCIA=" + rowdata.VALENCIA + "&loadas=" + rowdata.loadas;
 
 			//set the url based on if it's regional or not
 			var regions = ["ALTSPRNG","COCOA","DAYTONA","LEESBURG","OCALA","PALMBAY","LAKEMARY","SOUTHLAKE","OSCEOLA","METROWEST","VALENCIA"];
@@ -200,6 +202,8 @@
 			
 			var data = $('#mainData').jqxGrid('getrowdata', row);
 
+			//set the planlong and subplan long false for now
+			
 						
 			if(data.avail == false || data.check == 4){ //check for Regional, read-only, or orientation - they only get to see data
 				return false;
@@ -219,15 +223,33 @@
 			var gradRestricted = ["FLVC","Online","Admission","ReAdmit","Mrkt. Rate Tuition","Cost Recovery"];
 
 			//stop ugrad college folks from editing certain fields
-			var ugradRestricted = ["FLVC","Online","Mrkt. Rate Tuition","Cost Recovery"];
+			var ugradRestricted = ["FLVC","Online","Mrkt. Rate Tuition","Cost Recovery","PlanLongName","SubPlanLongName"];
 			
 			if(data.check == 2 && gradRestricted.indexOf(datafield) != -1){
 					return false;
 				}
 			if(data.check == 0 && ugradRestricted.indexOf(datafield) != -1){
+					
 					return false;
 				}
 
+			//for Application
+			if(data.check == 9 && data.Career == 'UGRD' && (datafield == 'PlanLongName' || datafield == 'SubPlanLongName')){
+					return true;
+				}
+			if(data.check == 9 && data.Career == 'GRAD' && (datafield == 'PlanLongName' || datafield == 'SubPlanLongName')){
+					return false;
+				}
+
+			if(data.check == 2 && (data.Career == 'GRAD' || data.Career == 'PROF') && (datafield == 'PlanLongName' || datafield == 'SubPlanLongName')){
+					return true;
+				}
+			if(data.check == 2 && (data.Career == 'UGRD' || data.Career == 'PROF') && (datafield == 'PlanLongName' || datafield == 'SubPlanLongName')){
+					return false;
+				}
+		
+			
+						
 			//for online
 			if(data.check == 5 && datafield == 'Online'){
 					return true;
@@ -254,12 +276,17 @@
 
 			//for regional
 			if(data.check == 8){ return false; }
+
+			//open up for all
+			if(data.check == 3){
+				return true;
+			}
 			
 		};
 		var gradbeginedit = function (row, datafield, columntype, value,defaultHtml) {
 			var data = $('#mainData').jqxGrid('getrowdata', row);
 			
-			if(data.check == 4){
+			if(data.check == 4 || data.check == 7 || data.check == 9){
 				return false;				
 			} 
 			//no undergrad records can have the grad parts edited
@@ -274,7 +301,9 @@
 				return false;
 			}
 
-			if(data.check == 8){ return false; }	
+			if(data.check == 8){ return false; }
+
+			
 			
 		};
 		var regbeginedit = function (row, datafield, columntype, value,defaultHtml) {
@@ -361,15 +390,25 @@
 		var addfilter = function () {
 		     var filtergroup = new $.jqx.filter();
 		     var Careerfiltergroup = new $.jqx.filter();
+		     var Statusfiltergroup = new $.jqx.filter();
 		     
 		     var filter_or_operator = 1;
 		     var filtervalue = $('#pcoll').val();
 		     var filtervalue2 = $('#pcareer').val();
+		     var filtervalue3 = $('#status-check').val();
 		     var filtercondition = 'contains';
-		     var filtercondition2 = 'contains';
-		     var filter1 = filtergroup.createfilter('stringfilter', filtervalue, filtercondition);
-		     var filter2 = filtergroup.createfilter('stringfilter', filtervalue2, filtercondition2);
 		     
+		     var filter1 = filtergroup.createfilter('stringfilter', filtervalue, filtercondition);
+		     var filter2 = filtergroup.createfilter('stringfilter', filtervalue2, filtercondition);
+		     var filter3 = filtergroup.createfilter('stringfilter', filtervalue3, filtercondition);
+
+			 //hide suspend term column
+		     if(filtervalue3 == 'A'){
+					$("#mainData").jqxGrid('hidecolumn','StatusChange');
+				} else {
+					$("#mainData").jqxGrid('showcolumn','StatusChange');
+				}
+				
 			 //filter for grad vs ungrad first entry
 			 if (filtervalue2 == 'UGRD'){
 									
@@ -383,9 +422,9 @@
 				$("#mainData").jqxGrid('hidecolumn','TotCert');
 				$("#mainData").jqxGrid('hidecolumn','TotDoc');
 				$("#mainData").jqxGrid('hidecolumn','TotDissert');
-				$("#mainData").jqxGrid('hidecolumn','PlanLongName');
-				$("#mainData").jqxGrid('hidecolumn','SubPlanLongName');
-				$("#mainData").jqxGrid('hidecolumn','DeptLongName');
+
+				$("#mainData").jqxGrid('hidecolumn','DeptLongName');	
+				
 			}
 			if (filtervalue2 == 'GRAD' || filtervalue == 'PROF') {
 				//for removing ugrad columms if set
@@ -405,8 +444,7 @@
 				$("#mainData").jqxGrid('showcolumn','TotCert');
 				$("#mainData").jqxGrid('showcolumn','TotDoc');
 				$("#mainData").jqxGrid('showcolumn','TotDissert');
-				$("#mainData").jqxGrid('showcolumn','PlanLongName');
-				$("#mainData").jqxGrid('showcolumn','SubPlanLongName');
+				
 				$("#mainData").jqxGrid('showcolumn','DeptLongName');	
 			}
 
@@ -417,6 +455,7 @@
 						$("#mainData").jqxGrid('showcolumn','HEGIS');
 					}
 
+					$("#mainData").jqxGrid('showcolumn','MAIN');
 					$("#mainData").jqxGrid('showcolumn','ALTSPRNG');
 					$("#mainData").jqxGrid('showcolumn','COCOA');
 					$("#mainData").jqxGrid('showcolumn','DAYTONA');
@@ -456,11 +495,13 @@
 			
 		     filtergroup.addfilter(filter_or_operator, filter1);
 		     Careerfiltergroup.addfilter(filter_or_operator, filter2);
+		     Statusfiltergroup.addfilter(filter_or_operator, filter3);
 		     
 		     //alert(filtervalue2);
 		     // add the filters.
 		     $("#mainData").jqxGrid('addfilter', 'College', filtergroup);
 		     $("#mainData").jqxGrid('addfilter', 'Career', Careerfiltergroup);
+		     $("#mainData").jqxGrid('addfilter', 'Status', Statusfiltergroup);
 		     // apply the filters.
 		     $("#mainData").jqxGrid('applyfilters');
 			
@@ -500,20 +541,38 @@
 			{ text: 'Degree', columngroup: 'General', datafield: 'Degree', renderer: info,  width: 70, editable: false, cellbeginedit: cellbeginedit,  cellsrenderer: cellsrenderer, rendered: toolTip},
 			{ text: 'Career', columngroup: 'General', datafield: 'Career', renderer: info,  width: 70, editable: false, cellbeginedit: cellbeginedit,  cellsrenderer: cellsrenderer, rendered: toolTip},
 			{ text: 'Level', columngroup: 'General', datafield: 'Level', renderer: info,  width: 70, editable: false, cellbeginedit: cellbeginedit,  cellsrenderer: cellsrenderer, rendered: toolTip},			
-			{ text: 'Status', columngroup: 'General', datafield: 'Status', width: 56, cellsalign: 'center', editable: false, cellclassname: statusback, cellbeginedit: cellbeginedit,  cellsrenderer: cellsrenderer, rendered: toolTip},
+			{ text: 'Status', columngroup: 'General', datafield: 'Status', width: 56, filterable: false, cellsalign: 'center', editable: false, cellclassname: statusback, cellbeginedit: cellbeginedit,  cellsrenderer: cellsrenderer, rendered: toolTip},
 			{ text: 'Susp./Inact. Date', align: 'center', columngroup: 'General', datafield: 'StatusChange', width: 99, editable: false, cellbeginedit: cellbeginedit,  cellsrenderer: cellsrenderer, rendered: toolTip},		
 			{ text: 'Access', columngroup: 'General', datafield: 'Access', width: 80, editable: false, cellclassname: accessback, cellbeginedit: cellbeginedit,  cellsrenderer: cellsrenderer, rendered: toolTip},
 			{ text: 'Admission', columngroup: 'General', datafield: 'Admission', columntype: 'checkbox', width: 70,filterable: false, cellbeginedit: cellbeginedit, rendered: toolTip},
+			{ text: 'Load As', columngroup: 'General',datafield: 'loadas', width: 160, columntype: "dropdownlist",
+				initeditor: function (row, cellvalue, editor, celltext, cellwidth, cellheight) {
+					var array = new Array();
+					var selectedIndex = -1;
+					$.each(Adapter.records[row].loadasnames, function(index)
+				            {
+				                if (this == cellvalue)
+				                    selectedIndex = index;
+				                array.push({"loadas": this});
+				            });
+					
+                	//editor.jqxDropDownList({ source: Adapter.records[row].loadasnames });
+					editor.jqxDropDownList({ source: array, selectedIndex: selectedIndex });
+					
+
+                }
+            },
 			{ text: 'Re-Admit', columngroup: 'General', datafield: 'ReAdmit', columntype: 'checkbox', width: 67,filterable: false, cellbeginedit: cellbeginedit, rendered: toolTip},
 			{ text: 'FLVC Transient', columngroup: 'General', datafield: 'FLVC', columntype: 'checkbox', width: 55,filterable: false, cellbeginedit: cellbeginedit, rendered: toolTip},
 			{ text: 'UCF Online', columngroup: 'General', datafield: 'Online', columntype: 'checkbox', width: 75,filterable: false, cellbeginedit: cellbeginedit, rendered: toolTip},
 			{ text: 'STEM', columngroup: 'General', datafield: 'STEM', columntype: 'checkbox', width: 75,filterable: false, cellbeginedit: cellbeginedit, rendered: toolTip},
-			
+
+			{ text: 'Plan Name Extra', columngroup: 'General', datafield: 'PlanLongName', columntype: 'input', hidden: grad_hide, width: 140,filterable: true, cellbeginedit: cellbeginedit, rendered: toolTip},
+			{ text: 'SubPlan Name Extra', columngroup: 'General', datafield: 'SubPlanLongName', columntype: 'input', hidden: grad_hide, width: 95,filterable: true, cellbeginedit: cellbeginedit, rendered: toolTip},			
+
 			//alert(grad_set);
 			{ text: 'Mrkt. Rate Tuition', columngroup: 'GraduateStudies', datafield: 'MTR', columntype: 'checkbox', hidden: grad_hide, width: 75,filterable: false, cellbeginedit: regbeginedit, rendered: toolTip},			
 			{ text: 'Cost Recovery', columngroup: 'GraduateStudies', datafield: 'CR', columntype: 'checkbox', hidden: grad_hide, width: 75,filterable: false, cellbeginedit: regbeginedit, rendered: toolTip},			
-			{ text: 'Plan Name Extra', columngroup: 'GraduateStudies', datafield: 'PlanLongName', columntype: 'input', hidden: grad_hide, width: 140,filterable: true, cellbeginedit: gradbeginedit, rendered: toolTip},
-			{ text: 'SubPlan Name Extra', columngroup: 'GraduateStudies', datafield: 'SubPlanLongName', columntype: 'input', hidden: grad_hide, width: 95,filterable: true, cellbeginedit: gradbeginedit, rendered: toolTip},			
 			{ text: 'Dept. Name Extra', columngroup: 'GraduateStudies', datafield: 'DeptLongName', columntype: 'input', hidden: grad_hide, width: 95,filterable: true, cellbeginedit: gradbeginedit, rendered: toolTip},			
 			{ text: 'Tot. Dissertation Hrs.', columngroup: 'GraduateStudies', datafield: 'TotDissert', cellsalign: 'center', columntype: 'input', hidden: grad_hide, width: 75,filterable: false, cellbeginedit: gradbeginedit, rendered: toolTip},
 			{ text: 'Tot. Thesis Hrs.', columngroup: 'GraduateStudies', datafield: 'TotThesis', cellsalign: 'center', columntype: 'input', hidden: grad_hide, width: 75,filterable: false, cellbeginedit: gradbeginedit, rendered: toolTip},
@@ -525,6 +584,7 @@
 			{ text: 'PSM', columngroup: 'GraduateStudies', datafield: 'PSM', columntype: 'checkbox', width: 75,filterable: false, cellbeginedit: gradbeginedit, rendered: toolTip},
 				
 			//Regional fields
+			{ text: 'Main Campus', columngroup: 'RegionalCampus', datafield: 'MAIN', columntype: 'checkbox', hidden: true, width: 75,filterable: false, cellbeginedit: regbeginedit, rendered: toolTip},
 			{ text: 'Altamonte Springs', columngroup: 'RegionalCampus', datafield: 'ALTSPRNG', columntype: 'checkbox', hidden: true, width: 75,filterable: false, cellbeginedit: regbeginedit, rendered: toolTip},
 			{ text: 'Cocoa', columngroup: 'RegionalCampus', datafield: 'COCOA', columntype: 'checkbox', hidden: true, width: 75,filterable: false, cellbeginedit: regbeginedit, rendered: toolTip},
 			{ text: 'Daytona', columngroup: 'RegionalCampus', datafield: 'DAYTONA', columntype: 'checkbox', hidden:true, width: 75,filterable: false, cellbeginedit: regbeginedit, rendered: toolTip},
@@ -543,7 +603,7 @@
 		    columngroups: [
 					{ text: '', align: 'center', name: 'General' },
                   	{ text: 'Graduate Studies', align: 'center', name: 'GraduateStudies' },
-                  	{ text: 'Regional Locations', align: 'center', name: 'RegionalCampus' }
+                  	{ text: 'Regional Campuses', align: 'center', name: 'RegionalCampus' }
 		    ],
 		    ready: function () {			
 				addfilter();
@@ -589,7 +649,8 @@
 	        	exportinfo = $("#mainData").jqxGrid('exportdata', 'xls');			
 				download(exportinfo, 'Exported Data', 'application/excel');
 		    });
-	    
+
+	    //FILTERS
 		$( "#pcoll" ).change(function() {	
 			//filter the table based on college choice
 			$("#mainData").jqxGrid('removefilter', 'College'); //clear the filter first
@@ -609,6 +670,8 @@
 			$("#mainData").jqxGrid('applyfilters');			
 				
 		});
+
+		
 		
 		$('#ponline-check').change(function(){
 			var filtergroup = new $.jqx.filter();
@@ -632,9 +695,7 @@
 			} else {
 				// add the filters.
 				$("#mainData").jqxGrid('removefilter', 'Subplan');
-			}	
-
-				
+			}					
 		});
 		
 		$( "#pcareer" ).change(function() {	
@@ -664,8 +725,7 @@
 					$("#mainData").jqxGrid('hidecolumn','TotCert');
 					$("#mainData").jqxGrid('hidecolumn','TotDoc');
 					$("#mainData").jqxGrid('hidecolumn','TotDissert');
-					$("#mainData").jqxGrid('hidecolumn','PlanLongName');
-					$("#mainData").jqxGrid('hidecolumn','SubPlanLongName');
+					
 					$("#mainData").jqxGrid('hidecolumn','DeptLongName');
 				}
 			}
@@ -726,12 +786,38 @@
 			$("#mainData").jqxGrid('applyfilters');			
 			
 		});
-		
+
+		$( "#status-check" ).change(function() {	
+			
+			$("#mainData").jqxGrid('removefilter', 'Status');
+			
+			var filtergroup = new $.jqx.filter();
+			var filter_or_operator = 1;
+			var filtervalue = $('#status-check').val();
+			var filtercondition = 'contains';
+			var filter1 = filtergroup.createfilter('stringfilter', filtervalue, filtercondition);
+
+			//remove suspended if it's active
+			if(filtervalue == 'A'){
+					$("#mainData").jqxGrid('hidecolumn','StatusChange');
+				} else {
+					$("#mainData").jqxGrid('showcolumn','StatusChange');
+				}
+			
+			filtergroup.addfilter(filter_or_operator, filter1);
+			
+			// add the filters.
+			$("#mainData").jqxGrid('addfilter', 'Status', filtergroup);
+			
+			// apply the filters.
+			$("#mainData").jqxGrid('applyfilters');			
+			
+		});
 		$('#clearfilterbutton').click(function () {
 		  		//remove only the column filters.
 				
 				//filters not to touch if initiated
-				var Restricted = ["College","Career","Subplan"];
+				var Restricted = ["College","Career","Subplan","Status"];
 
 				//get the applied filters
 				var myStringArray = $("#mainData").jqxGrid('getfilterinformation');
@@ -751,10 +837,9 @@
 
 </script>	
 
-	<div id="page_title">Program.......</div>
+	<div id="page_title">Welcome</div>
 	
-	<div id="page_summary">"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
-	Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+	<div id="page_summary">"Welcome to the Academic Program Inventory Managment System! 
 	</div>
 <div id="option_area">	
 	<div id="area1">
@@ -796,6 +881,16 @@
 					<?php } ?>
 					
 				</select> 
+			</li>
+			
+			<li>
+				<label>Status:</label>
+				<select id="status-check" name="stat-check" class="styled-select">
+					<option value="A" selected>Active</option>
+					<option value="I" >Inactive</option>
+					<option value="S" >Suspended</option>
+				</select>
+				
 			</li>
 			<li>
 				<label>UCF Online:</label>

@@ -71,7 +71,8 @@ class Corelib {
 				'SOUTHLAKE' => 'SOUTHLAKE',
 				'VALENCIA' => 'VALENCIA',
 				'OSCEOLA' => 'OSCEOLA',
-				'METROWEST' => 'METROWEST'
+				'METROWEST' => 'METROWEST',
+				'loadas' => 'Show_As'
 		);
 		
 		return $cell_map[$cell];

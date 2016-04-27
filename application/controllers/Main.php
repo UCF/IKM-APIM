@@ -65,10 +65,10 @@ class Main extends CI_Controller {
 				$s = 'selected';
 			} else {
 				//this is to remove the all choice 
-				$sbit = 0;				
-				//get specific college(s)
+				$sbit = 0;
 				
-							
+				//ugrad lock - start certain groups in undergrad
+				//get specific college(s)							
 				$colleges = $this->General_model->colleges();
 				foreach ($colleges->result() as $key => $row){
 					if(in_array($row->College,$security_group)){
@@ -77,7 +77,9 @@ class Main extends CI_Controller {
 				}
 								
 				if(in_array('GRAD',$security_group)){ $graduate = TRUE; $grads = 'selected'; }
-				if($default != "" || in_array('UGRD',$security_group)){ $under_graduate = TRUE; $ugs = 'selected'; }
+				if($default != "" || in_array('UGRD',$security_group) || in_array('Applications',$security_group) ){ 
+					$under_graduate = TRUE; $ugs = 'selected'; 
+				}
 				
 				if ($graduate === TRUE && $under_graduate === TRUE) { 
 					$s = 'selected'; 
@@ -92,7 +94,7 @@ class Main extends CI_Controller {
 			$tip = $this->config->item('Tips','main');
 			
 		
-			$data['title'] = 'IKM - Program Inventory';
+			$data['title'] = 'IKM - Academic Program Inventory Manager';
 			$data['colleges'] = $colleges;
 			$data['name'] = $name;
 			$data['default'] = $default;
@@ -233,7 +235,7 @@ class Main extends CI_Controller {
 	
 	}
 	public function update_main(){
-			//update only the column that is under edit
+		
 		
 		if (!$this->ion_auth->logged_in()){
 		} else {
@@ -267,6 +269,7 @@ class Main extends CI_Controller {
 			$totCert = $this->input->get('totCert');
 			$totDoc = $this->input->get('totDoc');
 			$totDissert = $this->input->get('totDissert');
+			$loadas = urldecode($this->input->get('loadas'));
 			/*$altspring = $this->input->get('ALTSPRING');
 			$daytona = $this->input->get('COCOA');
 			$daytona = $this->input->get('DAYTONA');
@@ -334,6 +337,7 @@ class Main extends CI_Controller {
 							'Total_Doctoral' => $totDoc,
 							'Long_Name' => $planlongname,
 							'Dept_Long' => $deptlongname,
+							'Show_As' => $loadas
 							/*'ALTSPRNG' => $altspring,
 							'COCOA' => $daytona,
 							'DAYTONA' => $daytona,
@@ -418,6 +422,7 @@ class Main extends CI_Controller {
 							'Total_Dissertation' => $totDissert,
 							'Total_Doctoral' => $totDoc,
 							'Long_Name' => $subplanlongname,
+							'Show_As' => $loadas
 							/*'ALTSPRNG' => $altspring,
 							'COCOA' => $daytona,
 							'DAYTONA' => $daytona,
@@ -494,6 +499,7 @@ class Main extends CI_Controller {
 						if($urow->name == 'FLVC'){ $auth = 6; }
 						if($urow->name == 'Registrar'){ $auth = 7; }
 						if($urow->name == 'Regional'){ $auth = 8; }
+						if($urow->name == 'Admissions'){ $auth = 9; }		
 						
 					}
 					$college_get = $this->General_model->colleges();
@@ -521,6 +527,8 @@ class Main extends CI_Controller {
 			$status_change = '';
 			$avail = true;
 			$regional = '';
+			$loadas_arr = array();
+			$loadas_arr[] ='';
 			
 			//set the regional data vars
 			$altamonte = 0;
@@ -535,7 +543,26 @@ class Main extends CI_Controller {
 			$valenciaeast = 0;
 			$valenciaosce = 0;
 			$valenciawest = 0;
-				
+			
+			//get the unique plan subplans (based on cip) and add do some array work for addition to final json 
+			$unique_plans_name = $this->General_model->get_all_plans_cip($row->CIP_Code,$row->Career);
+			if($unique_plans_name->num_rows()){
+				foreach($unique_plans_name->result() as $cip_key => $cip_row){
+					//add to array
+					$loadas_arr[] = $cip_row->UCF_Name;
+					
+					//get the subplans
+					$unique_subplans_name = $this->General_model->get_all_subplans_cip($cip_row->Acad_Plan);
+					if($unique_subplans_name->num_rows()){
+						foreach($unique_subplans_name->result() as $sub_n_key => $sub_n_row){
+							$loadas_arr[] = $sub_n_row->UCF_Name;	
+						}						
+					}
+				}			
+			}
+			
+			//print_r($loadas_arr);
+		
 			
 			//get the access information
 			$access_data = $this->General_model->get_access($row->Acad_Plan);
@@ -622,11 +649,13 @@ class Main extends CI_Controller {
 				$recent = '';
 				$plan_long_name = '';
 				$dept_long_name = '';
+				$loadas = '';
 			} else {
 				$plan_extra_row = $plan_extra->row();
 				$plan_long_name = $plan_extra_row->Long_Name;
 				$dept_long_name = $plan_extra_row->Dept_Long;
 				$admission = $plan_extra_row->Admission;
+				$loadas = $plan_extra_row->Show_As;
 				$readmit = $plan_extra_row->Readmit;
 				$flvc = $plan_extra_row->FLVC;
 				$orient = $plan_extra_row->Orientation;
@@ -685,6 +714,8 @@ class Main extends CI_Controller {
 					"StatusChange" => $status_change,
 					"Access" => $access,
 					"Admission" => $admission,
+					"loadas" => $loadas,
+					"loadasnames" => $loadas_arr,
 					"ReAdmit" => $readmit,
 					"FLVC" => $flvc,
 					"Online" => $online,
@@ -819,6 +850,7 @@ class Main extends CI_Controller {
 						$tot6971 = 0;
 						$totDissert = 0;
 						$sub_long_name = '';
+						$loadas = '';
 					} else {
 						$subplan_extra_row = $subplan_extra->row();
 						$sub_long_name = $subplan_extra_row->Long_Name;
@@ -838,6 +870,7 @@ class Main extends CI_Controller {
 						$totCert = $subplan_extra_row->Total_Grad_Certificate;
 						$totDoc = $subplan_extra_row->Total_Doctoral;
 						$totDissert = $subplan_extra_row->Total_Dissertation;
+						$loadas = $subplan_extra_row->Show_As;
 					}				
 					
 					$sub_item = array("id" => $id,
@@ -863,6 +896,8 @@ class Main extends CI_Controller {
 							  "Plan Type" => $sub_row->Sub_Pl_Typ,
 							  "Degree" => $row->Degree,							  
 							  "Admission" => $admission,
+							  "loadas" => $loadas,
+							  "loadasnames" => $loadas_arr,
 							  "ReAdmit" => $readmit,
 							  "FLVC" => $flvc,
 							  "Orientation" => $orient,

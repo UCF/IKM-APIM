@@ -18,8 +18,12 @@
 
 <body>
 	<div id="header"></div>
-	
+	<div id="title">
+		<h1> Academic Program Inventory Manager</h1>
+	</div>
 	<div id="login">
+	
+		
 
 		<h2><span class="fontawesome-lock"></span>Sign In</h2>
 

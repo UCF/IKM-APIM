@@ -82,10 +82,11 @@ foreach($group as $ukey => $urow){
 		<ul class="menu">
 			
 				<li><a href="<?= site_url('/') ?>"><strong>Home</strong></a> 
-				<?php if (in_array('Regional',$groups) || $this->ion_auth->in_group($all_group)){ ?> | <li><a href="<?= site_url('regional') ?>"><strong>Regional Edit</strong></a></li>
-				<?php } else { echo "<li></li>"; }?>
-				<?php if ($this->ion_auth->in_group($all_group)){ ?> | <li><a href="<?= site_url('auth') ?>"><strong>User Management</strong></a></li>
+				
+				<li></li>
+				<?php if ($this->ion_auth->in_group($all_group)){ ?> <li><a href="<?= site_url('auth') ?>"><strong>User Management</strong></a></li>
 				<?php } ?>
+				<li><a href=""><strong>Feedback</strong></a></li>
 				
 				<span id="logged">Logged in as: <span class="logged"><?php echo $name; ?></span><span>  
 				(<a href="<?= site_url('auth/logout') ?>"><strong>Logout</strong></a>)</span></span>

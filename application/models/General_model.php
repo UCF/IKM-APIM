@@ -90,6 +90,28 @@ class General_model extends CI_Model
 
 		return $query;
 	}
+	function get_all_plans_cip($cip,$career){
+		$this->db->select('DISTINCT Acad_Plan, UCF_Name');
+		$this->db->from('Academic_Plans');
+		$this->db->where('Plan_Type !=','MIN');
+		$this->db->like('CIP_Code',$cip,'none',FALSE);
+		$this->db->like('Career',$career,'none',FALSE);
+		$this->db->like('Status','A','none',FALSE);
+		$query = $this->db->get();
+		
+		return $query;
+		
+	}
+	function get_all_subplans_cip($plan){
+		$this->db->select('DISTINCT Acad_Plan, Sub_Plan, UCF_Name');
+		$this->db->from('Sub_Plans');
+		$this->db->like('Acad_plan',$plan,'none',FALSE);
+		$this->db->like('Status','A','none',FALSE);
+		$query = $this->db->get();
+	
+		return $query;
+	
+	}
 	function insert_plan_extra($batch){
 		//use a batch insert
 		$this->db->insert($this->tables['plans_extended'], $batch);

@@ -43,6 +43,14 @@ input {
 	border-bottom: 1px solid #cccccc;
 }
 
+#title {
+	margin: 50px auto;
+	width: 590px;
+}
+#title h1 {
+	color: #413d3d;
+	
+}
 /* ---------- LOGIN ---------- */
 
 #login {
