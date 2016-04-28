@@ -19,7 +19,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 */
 //$config['base_url'] = 'pi.localhost';
 //$config['base_url'] = "http://".$_SERVER['HTTP_HOST'];
-$allowed_domains = array('apimqa.ikm.ucf.edu','pi.localhost');
+$allowed_domains = array('apim.ikm.ucf.edu','apimqa.ikm.ucf.edu','pi.localhost');
 $default_domain  = 'pi.localhost';
 
 if (in_array($_SERVER['HTTP_HOST'], $allowed_domains, TRUE))
