@@ -86,7 +86,7 @@ foreach($group as $ukey => $urow){
 				<li></li>
 				<?php if ($this->ion_auth->in_group($all_group)){ ?> <li><a href="<?= site_url('auth') ?>"><strong>User Management</strong></a></li>
 				<?php } ?>
-				<li><a href=""><strong>Feedback</strong></a></li>
+				<li><a href="<?= site_url('main/feedback') ?>"><strong>Feedback</strong></a></li>
 				
 				<span id="logged">Logged in as: <span class="logged"><?php echo $name; ?></span><span>  
 				(<a href="<?= site_url('auth/logout') ?>"><strong>Logout</strong></a>)</span></span>

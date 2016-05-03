@@ -113,6 +113,9 @@
 				{ name: 'check', type: 'number' }, { name:'StatusChange', type: 'string' },
 				{ name: 'PlanLongName', type: 'string' },{ name: 'SubPlanLongName', type: 'string' },{ name: 'DeptLongName', type: 'string' },
 				{ name: 'CR', type: 'boolean'},
+				{ name: 'MAIN', type: 'boolean'},
+				{ name: 'ROSEN', type: 'boolean'},
+				{ name: 'NONA', type: 'boolean'},
 				{ name: 'ALTSPRNG', type: 'boolean'},
 				{ name: 'COCOA', type: 'boolean'},
 				{ name: 'DAYTONA', type: 'boolean'},
@@ -157,6 +160,7 @@
 			updata = updata + "&ALTSPRNG=" + rowdata.ALTSPRNG + "&COCOA=" + rowdata.COCOA + "&DAYTONA=" + rowdata.DAYTONA +"&LEESBURG=" + rowdata.LEESBURG;
 			updata = updata + "&OCALA=" + rowdata.OCALA + "&PALMBAY=" + rowdata.PALMBAY + "&LAKEMARY=" + rowdata.LAKEMARY +"&SOUTHLAKE=" + rowdata.SOUTHLAKE;
 			updata = updata + "&OSCEOLA=" + rowdata.OSCEOLA + "&METROWEST=" + rowdata.METROWEST + "&VALENCIA=" + rowdata.VALENCIA + "&loadas=" + rowdata.loadas;
+			updata = updata + "&main=" + rowdata.MAIN + "&nona=" + rowdata.NONA + "&rosen=" + rowdata.ROSEN;
 
 			//set the url based on if it's regional or not
 			var regions = ["ALTSPRNG","COCOA","DAYTONA","LEESBURG","OCALA","PALMBAY","LAKEMARY","SOUTHLAKE","OSCEOLA","METROWEST","VALENCIA"];
@@ -219,8 +223,8 @@
 				return false;
 			}
 
-			//stop grad from editing certain fields
-			var gradRestricted = ["FLVC","Online","Admission","ReAdmit","Mrkt. Rate Tuition","Cost Recovery"];
+			//stop grad from editing certain fields that don't belong to them
+			var gradRestricted = ["FLVC","Online","loadas","loadasnames","ReAdmit","Mrkt. Rate Tuition","Cost Recovery"];
 
 			//stop ugrad college folks from editing certain fields
 			var ugradRestricted = ["FLVC","Online","Mrkt. Rate Tuition","Cost Recovery","PlanLongName","SubPlanLongName"];
@@ -247,9 +251,7 @@
 			if(data.check == 2 && (data.Career == 'UGRD' || data.Career == 'PROF') && (datafield == 'PlanLongName' || datafield == 'SubPlanLongName')){
 					return false;
 				}
-		
 			
-						
 			//for online
 			if(data.check == 5 && datafield == 'Online'){
 					return true;
@@ -309,20 +311,23 @@
 		var regbeginedit = function (row, datafield, columntype, value,defaultHtml) {
 			var data = $('#mainData').jqxGrid('getrowdata', row);
 			
-			if(data.check == 8 || data.check == 3){
-				return true;				
-			} else {
-				return false;
-			}
-
 			if(data.Career == 'UGRD' && datafield == 'MTR'){
-					return false;
-				} 
+				return false;
+			} 
 
 			if(data.Career == 'UGRD' && datafield == 'CR'){
 				return false;
 				} 
 			
+			if(data.check == 8 && (datafield == 'NONA' || datafield == 'ROSEN')){
+				return false;
+			}
+			
+			if(data.check == 8 || data.check == 3){
+					return true;				
+				} else {
+					return false;
+				}
 			
 		};
 				
@@ -423,13 +428,19 @@
 				$("#mainData").jqxGrid('hidecolumn','TotDoc');
 				$("#mainData").jqxGrid('hidecolumn','TotDissert');
 
-				$("#mainData").jqxGrid('hidecolumn','DeptLongName');	
+				$("#mainData").jqxGrid('hidecolumn','DeptLongName');
+
+				if ($.inArray("Admisson",groups) != -1){
+					} else {
+						$("#mainData").jqxGrid('hidecolumn','PlanLongName');
+						$("#mainData").jqxGrid('hidecolumn','SubPlanLongName');
+					}
 				
 			}
 			if (filtervalue2 == 'GRAD' || filtervalue == 'PROF') {
 				//for removing ugrad columms if set
 				
-				$("#mainData").jqxGrid('hidecolumn','Admission');
+				$("#mainData").jqxGrid('hidecolumn','loadas');
 				$("#mainData").jqxGrid('hidecolumn','ReAdmit');
 				$("#mainData").jqxGrid('hidecolumn','Access');
 				$("#mainData").jqxGrid('hidecolumn','FLVC');
@@ -456,6 +467,8 @@
 					}
 
 					$("#mainData").jqxGrid('showcolumn','MAIN');
+					$("#mainData").jqxGrid('showcolumn','ROSEN');
+					$("#mainData").jqxGrid('showcolumn','NONA');
 					$("#mainData").jqxGrid('showcolumn','ALTSPRNG');
 					$("#mainData").jqxGrid('showcolumn','COCOA');
 					$("#mainData").jqxGrid('showcolumn','DAYTONA');
@@ -545,7 +558,7 @@
 			{ text: 'Susp./Inact. Date', align: 'center', columngroup: 'General', datafield: 'StatusChange', width: 99, editable: false, cellbeginedit: cellbeginedit,  cellsrenderer: cellsrenderer, rendered: toolTip},		
 			{ text: 'Access', columngroup: 'General', datafield: 'Access', width: 80, editable: false, cellclassname: accessback, cellbeginedit: cellbeginedit,  cellsrenderer: cellsrenderer, rendered: toolTip},
 			{ text: 'Admission', columngroup: 'General', datafield: 'Admission', columntype: 'checkbox', width: 70,filterable: false, cellbeginedit: cellbeginedit, rendered: toolTip},
-			{ text: 'Load As', columngroup: 'General',datafield: 'loadas', width: 160, columntype: "dropdownlist",
+			{ text: 'Load As', columngroup: 'General',datafield: 'loadas', cellbeginedit: cellbeginedit, width: 160, columntype: "dropdownlist",
 				initeditor: function (row, cellvalue, editor, celltext, cellwidth, cellheight) {
 					var array = new Array();
 					var selectedIndex = -1;
@@ -584,7 +597,10 @@
 			{ text: 'PSM', columngroup: 'GraduateStudies', datafield: 'PSM', columntype: 'checkbox', width: 75,filterable: false, cellbeginedit: gradbeginedit, rendered: toolTip},
 				
 			//Regional fields
-			{ text: 'Main Campus', columngroup: 'RegionalCampus', datafield: 'MAIN', columntype: 'checkbox', hidden: true, width: 75,filterable: false, cellbeginedit: regbeginedit, rendered: toolTip},
+			{ text: 'Lake Nona', columngroup: 'OtherLocations', datafield: 'NONA', columntype: 'checkbox', hidden: true, width: 75,filterable: false, cellbeginedit: regbeginedit, rendered: toolTip},
+			{ text: 'Rosen', columngroup: 'OtherLocations', datafield: 'ROSEN', columntype: 'checkbox', hidden: true, width: 75,filterable: false, cellbeginedit: regbeginedit, rendered: toolTip},
+			{ text: 'Main Campus', columngroup: 'OtherLocations', datafield: 'MAIN', columntype: 'checkbox', hidden: true, width: 75,filterable: false, cellbeginedit: regbeginedit, rendered: toolTip},
+			
 			{ text: 'Altamonte Springs', columngroup: 'RegionalCampus', datafield: 'ALTSPRNG', columntype: 'checkbox', hidden: true, width: 75,filterable: false, cellbeginedit: regbeginedit, rendered: toolTip},
 			{ text: 'Cocoa', columngroup: 'RegionalCampus', datafield: 'COCOA', columntype: 'checkbox', hidden: true, width: 75,filterable: false, cellbeginedit: regbeginedit, rendered: toolTip},
 			{ text: 'Daytona', columngroup: 'RegionalCampus', datafield: 'DAYTONA', columntype: 'checkbox', hidden:true, width: 75,filterable: false, cellbeginedit: regbeginedit, rendered: toolTip},
@@ -603,7 +619,8 @@
 		    columngroups: [
 					{ text: '', align: 'center', name: 'General' },
                   	{ text: 'Graduate Studies', align: 'center', name: 'GraduateStudies' },
-                  	{ text: 'Regional Campuses', align: 'center', name: 'RegionalCampus' }
+                  	{ text: 'Regional Campuses', align: 'center', name: 'RegionalCampus' },
+                  	{ text: 'Other Locations', align: 'center', name: 'OtherLocations' }
 		    ],
 		    ready: function () {			
 				addfilter();
@@ -714,6 +731,7 @@
 					$("#mainData").jqxGrid('showcolumn','ReAdmit');
 					$("#mainData").jqxGrid('showcolumn','Access');
 					$("#mainData").jqxGrid('showcolumn','FLVC');
+					$("#mainData").jqxGrid('showcolumn','loadas');
 					
 					$("#mainData").jqxGrid('hidecolumn','Professional');
 					$("#mainData").jqxGrid('hidecolumn','PSM');
@@ -734,11 +752,13 @@
 
 				if($.inArray("Regional",groups) != -1){ } else {
 					//for removing ugrad columms if set
-					$("#mainData").jqxGrid('hidecolumn','Admission');
+					
+					$("#mainData").jqxGrid('hidecolumn','loadas');
 					$("#mainData").jqxGrid('hidecolumn','ReAdmit');
 					$("#mainData").jqxGrid('hidecolumn','Access');
 					$("#mainData").jqxGrid('hidecolumn','FLVC');
-	
+
+					$("#mainData").jqxGrid('showcolumn','Admission');
 					$("#mainData").jqxGrid('showcolumn','Professional');
 					$("#mainData").jqxGrid('showcolumn','PSM');
 					$("#mainData").jqxGrid('showcolumn','MTR');
@@ -762,6 +782,7 @@
 				$("#mainData").jqxGrid('showcolumn','ReAdmit');
 				$("#mainData").jqxGrid('showcolumn','Access');
 				$("#mainData").jqxGrid('showcolumn','FLVC');
+				$("#mainData").jqxGrid('showcolumn','loadas');
 				
 				$("#mainData").jqxGrid('showcolumn','Professional');
 				$("#mainData").jqxGrid('showcolumn','MTR');
@@ -923,6 +944,5 @@
 	</div>
 </div>
 <?php
-
 	$this->load->view("footer");
 ?>

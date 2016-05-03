@@ -77,7 +77,7 @@ class Main extends CI_Controller {
 				}
 								
 				if(in_array('GRAD',$security_group)){ $graduate = TRUE; $grads = 'selected'; }
-				if($default != "" || in_array('UGRD',$security_group) || in_array('Applications',$security_group) ){ 
+				if($default != "" || in_array('UGRD',$security_group) || in_array('Admissions',$security_group) ){ 
 					$under_graduate = TRUE; $ugs = 'selected'; 
 				}
 				
@@ -270,6 +270,9 @@ class Main extends CI_Controller {
 			$totDoc = $this->input->get('totDoc');
 			$totDissert = $this->input->get('totDissert');
 			$loadas = urldecode($this->input->get('loadas'));
+			$main_campus = $this->input->get('main');
+			$rosen_campus = $this->input->get('rosen');
+			$nona_campus = $this->input->get('lakenona');
 			/*$altspring = $this->input->get('ALTSPRING');
 			$daytona = $this->input->get('COCOA');
 			$daytona = $this->input->get('DAYTONA');
@@ -296,6 +299,9 @@ class Main extends CI_Controller {
 			if($professional == 'true'){ $professional = 1; } else { $professional = 0; }
 			if($mtr == 'true'){ $mtr = 1; } else { $mtr = 0; }
 			if($cr == 'true'){ $cr = 1; } else { $cr = 0; }
+			if($main_campus == 'true'){ $main_campus = 1; } else { $main_campus = 0; }
+			if($rosen_campus == 'true'){ $rosen_campus = 1; } else { $rosen_campus = 0; }
+			if($nona_campus == 'true'){ $nona_campus = 1; } else { $nona_campus = 0; }
 			/*if($altspring == 'true'){ $altspring = 1; } else { $altspring = 0; }
 			if($daytona == 'true'){ $daytona = 1; } else { $daytona = 0; }
 			if($leesburg == 'true'){ $leesburg = 1; } else { $leesburg = 0; }
@@ -337,7 +343,10 @@ class Main extends CI_Controller {
 							'Total_Doctoral' => $totDoc,
 							'Long_Name' => $planlongname,
 							'Dept_Long' => $deptlongname,
-							'Show_As' => $loadas
+							'Show_As' => $loadas,
+							'Main_Campus' => $main_campus,
+							'Rosen_Campus' => $rosen_campus,
+							'Lake_Nona_Campus' => $nona_campus
 							/*'ALTSPRNG' => $altspring,
 							'COCOA' => $daytona,
 							'DAYTONA' => $daytona,
@@ -422,7 +431,10 @@ class Main extends CI_Controller {
 							'Total_Dissertation' => $totDissert,
 							'Total_Doctoral' => $totDoc,
 							'Long_Name' => $subplanlongname,
-							'Show_As' => $loadas
+							'Show_As' => $loadas,
+							'Main_Campus' => $main_campus,
+							'Rosen_Campus' => $rosen_campus,
+							'Lake_Nona_Campus' => $nona_campus
 							/*'ALTSPRNG' => $altspring,
 							'COCOA' => $daytona,
 							'DAYTONA' => $daytona,
@@ -499,7 +511,7 @@ class Main extends CI_Controller {
 						if($urow->name == 'FLVC'){ $auth = 6; }
 						if($urow->name == 'Registrar'){ $auth = 7; }
 						if($urow->name == 'Regional'){ $auth = 8; }
-						if($urow->name == 'Admissions'){ $auth = 9; }		
+						if($urow->name == 'Admissions'){ $auth = 4; } //read only for right now		
 						
 					}
 					$college_get = $this->General_model->colleges();
@@ -650,6 +662,9 @@ class Main extends CI_Controller {
 				$plan_long_name = '';
 				$dept_long_name = '';
 				$loadas = '';
+				$main = '';
+				$rosen = '';
+				$nona = '';
 			} else {
 				$plan_extra_row = $plan_extra->row();
 				$plan_long_name = $plan_extra_row->Long_Name;
@@ -671,8 +686,11 @@ class Main extends CI_Controller {
 				$totDoc = $plan_extra_row->Total_Doctoral;
 				$totDissert = $plan_extra_row->Total_Dissertation;
 				$tot6971 = $plan_extra_row->Total_Thesis6971;
-				$totCert = $plan_extra_row->Total_Grad_Certificate;			
-
+				$totCert = $plan_extra_row->Total_Grad_Certificate;
+				$main = $plan_extra_row->Main_Campus;
+				$rosen = $plan_extra_row->Rosen_Campus;
+				$nona = $plan_extra_row->Lake_Nona_Campus;
+				
 				$recent = $plan_extra_row->Recent_Change;
 				//$timestamp = strtotime($plan_extra_row->Recent_Change);
 				//$recent = date('m/d/yyy', $timestamp);
@@ -731,6 +749,9 @@ class Main extends CI_Controller {
 					"TotCert" => $totCert,
 					"TotDoc" => $totDoc,
 					"TotDissert" => $totDissert,
+					"MAIN" => $main,
+					"ROSEN" => $rosen,
+					"NONA" => $nona,
 					"ALTSPRNG" => $altamonte,
 					"COCOA" => $cocoa,
 					"DAYTONA" => $daytona,
@@ -851,6 +872,9 @@ class Main extends CI_Controller {
 						$totDissert = 0;
 						$sub_long_name = '';
 						$loadas = '';
+						$main = '';
+						$rosen = '';
+						$nona = '';
 					} else {
 						$subplan_extra_row = $subplan_extra->row();
 						$sub_long_name = $subplan_extra_row->Long_Name;
@@ -871,6 +895,9 @@ class Main extends CI_Controller {
 						$totDoc = $subplan_extra_row->Total_Doctoral;
 						$totDissert = $subplan_extra_row->Total_Dissertation;
 						$loadas = $subplan_extra_row->Show_As;
+						$main = $plan_extra_row->Main_Campus;
+						$rosen = $plan_extra_row->Rosen_Campus;
+						$nona = $plan_extra_row->Lake_Nona_Campus;
 					}				
 					
 					$sub_item = array("id" => $id,
@@ -913,18 +940,21 @@ class Main extends CI_Controller {
 							  "TotCert" => $totCert,
 							  "TotDoc" => $totDoc,
 							  "TotDissert" => $totDissert,
-								"ALTSPRNG" => $altamonte,
-								"COCOA" => $cocoa,
-								"DAYTONA" => $daytona,
-								"LEESBURG" => $leesburg,
-								"MELBOURNE" => $melbourne,
-								"OCALA" => $ocala,
-								"PALMBAY" => $palmbay,
-								"LAKEMARY" => $sanford,
-								"SOUTHLAKE" => $southlake,
-								"OSCEOLA" => $valenciaosce,
-								"METROWEST" => $valenciawest,
-								"VALENCIA" => $valenciaeast,
+							  "MAIN" => $main,
+							  "ROSEN" => $rosen,
+							  "NONA" => $nona,
+							  "ALTSPRNG" => $altamonte,
+							  "COCOA" => $cocoa,
+							  "DAYTONA" => $daytona,
+							  "LEESBURG" => $leesburg,
+							  "MELBOURNE" => $melbourne,
+							  "OCALA" => $ocala,
+							  "PALMBAY" => $palmbay,
+							  "LAKEMARY" => $sanford,
+							  "SOUTHLAKE" => $southlake,
+							  "OSCEOLA" => $valenciaosce,
+							  "METROWEST" => $valenciawest,
+							  "VALENCIA" => $valenciaeast,
 							  "avail" => $avail,
 							  "info" => 'T',
 							  "check" => $auth
@@ -988,10 +1018,13 @@ class Main extends CI_Controller {
 		echo $plan . " " . $subplan . "<p>Other things</p>";
 	}
 	public function export()
-	{
-	
+	{	
 		$data['export'] = $career = $this->input->get('data');
 		$data['filename'] = 'Exported List';	
 		$this->load->view('export', $data);
+	}
+	public function feedback(){		
+		$data['title'] = 'IKM - Academic Program Inventory Manager - Feeback Form';
+		$this->load->view('feedback', $data);		
 	}
 }

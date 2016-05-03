@@ -34,14 +34,30 @@ function __construct()
 			
 			//get the uri call
 			$filters = $this->uri->uri_to_assoc(3);
+			
 				
-			
-			if($filters['college'] == 'all') { $college = '%'; } else { $college = strtoupper($filters['college']); }
-			
-		
+			//parse the url filters
+			if($filters['college'] == 'all') { $college = '%'; } else { $college = strtoupper($filters['college']); }	
 			if($filters['career'] == 'all') { $career = '%'; } else { $career = strtoupper($filters['career']); }
+			
+			if($filters['status'] == 'all') { $status = '%'; } else { $status = strtoupper($filters['status']); }
+			
+			//fix status a bit
+			switch($status){
+				case 'ACTIVE':
+					$status = 'A';
+					break;
+				case 'INACTIVE':
+					$status = 'I';
+					break;
+				case 'SUSPENDED':
+					$status = 'S';
+					break;
+				default:
+					$status = 'A';
+			}
 					
-			$plan_data = $this->General_model->acadplan_all('ASC','Acad_Plan',$college,$career);	
+			$plan_data = $this->General_model->acadplan_all('ASC','Acad_Plan',$college,$career,$status);	
 					
 			$itemlist = array();
 			$id = 0;
