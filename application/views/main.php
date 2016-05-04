@@ -97,7 +97,7 @@
 				{ name: 'College',type: 'string'},{ name: 'CIP', type:'string'},
 				{ name: 'HEGIS',type: 'string'},{ name: 'Plan',type: 'string'},
 				{ name: 'Subplan',type: 'string'},{ name: 'PlanName',type: 'string'},
-				{ name: 'Plan Type',type: 'string'},{ name: 'Degree',type: 'string'},
+				{ name: 'Plan Type',type: 'string'},{ name: 'Degree',type: 'string'},{ name: 'ProgCode',type: 'string'},
 				{ name: 'Dept.',type: 'string'},{ name: 'Status',type: 'string'},
 				{ name: 'Access',type: 'string'},{ name: 'Admission', type: 'boolean'},
 				{ name: 'ReAdmit', type: 'boolean'},{ name: 'FLVC', type: 'boolean'},
@@ -416,7 +416,8 @@
 				
 			 //filter for grad vs ungrad first entry
 			 if (filtervalue2 == 'UGRD'){
-									
+
+				$("#mainData").jqxGrid('hidecolumn','ProgCode');
 				$("#mainData").jqxGrid('hidecolumn','Professional');
 				$("#mainData").jqxGrid('hidecolumn','PSM');
 				$("#mainData").jqxGrid('hidecolumn','MTR');
@@ -444,7 +445,8 @@
 				$("#mainData").jqxGrid('hidecolumn','ReAdmit');
 				$("#mainData").jqxGrid('hidecolumn','Access');
 				$("#mainData").jqxGrid('hidecolumn','FLVC');
-				
+
+				$("#mainData").jqxGrid('showcolumn','ProgCode');
 				$("#mainData").jqxGrid('showcolumn','Professional');
 				$("#mainData").jqxGrid('showcolumn','PSM');
 				$("#mainData").jqxGrid('showcolumn','MTR');
@@ -490,7 +492,7 @@
 						$("#mainData").jqxGrid('hidecolumn','Access');
 						$("#mainData").jqxGrid('hidecolumn','FLVC');
 						$("#mainData").jqxGrid('hidecolumn','Regional');
-						
+						$("#mainData").jqxGrid('hidecolumn','ProgCode');
 						$("#mainData").jqxGrid('hidecolumn','Professional');
 						$("#mainData").jqxGrid('hidecolumn','PSM');
 						$("#mainData").jqxGrid('hidecolumn','TotThesis');
@@ -547,7 +549,8 @@
 			
 			{ text: 'Regional?', columngroup: 'General', datafield: 'Regional', align: 'center', width: 98, filterable: true,rendered: toolTip, editable: false},
 			<!--{ text: 'Reg. Edit', columngroup: 'General', datafield: 'RegEdit',  width: 93, filterable: true,rendered: toolTip, hidden: true, editable:false,cellsrenderer: regeditrender},-->
-				
+
+			{ text: 'Program', columngroup: 'General', datafield: 'ProgCode', width: 93, editable: false,filtertype: 'input',filterable: true, cellbeginedit: cellbeginedit,  cellsrenderer: cellsrenderer, rendered: toolTip },
 			{ text: 'Plan', columngroup: 'General', datafield: 'Plan', width: 93, editable: false,filtertype: 'input',filterable: true, cellbeginedit: cellbeginedit,  cellsrenderer: cellsrenderer, rendered: toolTip },
 			{ text: 'Sub-plan', columngroup: 'General', datafield: 'Subplan', width: 93, editable: false, cellbeginedit: cellbeginedit,  cellsrenderer: cellsrenderer, rendered: toolTip},
 			{ text: 'Plan Type', columngroup: 'General', datafield: 'Plan Type', width: 75, editable: false, cellbeginedit: cellbeginedit,  cellsrenderer: cellsrenderer, rendered: toolTip},
@@ -580,8 +583,8 @@
 			{ text: 'UCF Online', columngroup: 'General', datafield: 'Online', columntype: 'checkbox', width: 75,filterable: false, cellbeginedit: cellbeginedit, rendered: toolTip},
 			{ text: 'STEM', columngroup: 'General', datafield: 'STEM', columntype: 'checkbox', width: 75,filterable: false, cellbeginedit: cellbeginedit, rendered: toolTip},
 
-			{ text: 'Plan Name Extra', columngroup: 'General', datafield: 'PlanLongName', columntype: 'input', hidden: grad_hide, width: 140,filterable: true, cellbeginedit: cellbeginedit, rendered: toolTip},
-			{ text: 'SubPlan Name Extra', columngroup: 'General', datafield: 'SubPlanLongName', columntype: 'input', hidden: grad_hide, width: 95,filterable: true, cellbeginedit: cellbeginedit, rendered: toolTip},			
+			{ text: 'Program/Plan Extra', columngroup: 'General', datafield: 'PlanLongName', columntype: 'input', hidden: grad_hide, width: 144,filterable: true, cellbeginedit: cellbeginedit, rendered: toolTip},
+			{ text: 'SubPlan Name Extra', columngroup: 'General', datafield: 'SubPlanLongName', columntype: 'input', hidden: grad_hide, width: 99,filterable: true, cellbeginedit: cellbeginedit, rendered: toolTip},			
 
 			//alert(grad_set);
 			{ text: 'Mrkt. Rate Tuition', columngroup: 'GraduateStudies', datafield: 'MTR', columntype: 'checkbox', hidden: grad_hide, width: 75,filterable: false, cellbeginedit: regbeginedit, rendered: toolTip},			
@@ -732,7 +735,8 @@
 					$("#mainData").jqxGrid('showcolumn','Access');
 					$("#mainData").jqxGrid('showcolumn','FLVC');
 					$("#mainData").jqxGrid('showcolumn','loadas');
-					
+
+					$("#mainData").jqxGrid('hidecolumn','ProgCode');
 					$("#mainData").jqxGrid('hidecolumn','Professional');
 					$("#mainData").jqxGrid('hidecolumn','PSM');
 					$("#mainData").jqxGrid('hidecolumn','MTR');
@@ -758,6 +762,7 @@
 					$("#mainData").jqxGrid('hidecolumn','Access');
 					$("#mainData").jqxGrid('hidecolumn','FLVC');
 
+					$("#mainData").jqxGrid('showcolumn','ProgCode');
 					$("#mainData").jqxGrid('showcolumn','Admission');
 					$("#mainData").jqxGrid('showcolumn','Professional');
 					$("#mainData").jqxGrid('showcolumn','PSM');
@@ -783,7 +788,8 @@
 				$("#mainData").jqxGrid('showcolumn','Access');
 				$("#mainData").jqxGrid('showcolumn','FLVC');
 				$("#mainData").jqxGrid('showcolumn','loadas');
-				
+
+				$("#mainData").jqxGrid('showcolumn','ProgCode');
 				$("#mainData").jqxGrid('showcolumn','Professional');
 				$("#mainData").jqxGrid('showcolumn','MTR');
 				$("#mainData").jqxGrid('showcolumn','CR');

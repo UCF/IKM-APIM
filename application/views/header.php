@@ -57,7 +57,8 @@
 <?php 
 
 
-$all_group = $this->config->item('all', 'main');
+$all_group = $this->config->item('all','main');
+$admin_group = $this->config->item('admin','main');
 
 
 //get user info
@@ -84,9 +85,9 @@ foreach($group as $ukey => $urow){
 				<li><a href="<?= site_url('/') ?>"><strong>Home</strong></a> 
 				
 				<li></li>
-				<?php if ($this->ion_auth->in_group($all_group)){ ?> <li><a href="<?= site_url('auth') ?>"><strong>User Management</strong></a></li>
+				<?php if ($this->ion_auth->in_group($admin_group)){ ?> <li><a href="<?= site_url('auth') ?>"><strong>User Management</strong></a></li>
 				<?php } ?>
-				<li><a href="<?= site_url('main/feedback') ?>"><strong>Feedback</strong></a></li>
+				<li><a href="http://ucf.qualtrics.com//SE/?SID=SV_4Iz9c9tU3Tve9Jb" target="_blanK"><strong>Feedback</strong></a></li>
 				
 				<span id="logged">Logged in as: <span class="logged"><?php echo $name; ?></span><span>  
 				(<a href="<?= site_url('auth/logout') ?>"><strong>Logout</strong></a>)</span></span>

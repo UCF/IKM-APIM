@@ -19,6 +19,7 @@ class General_model extends CI_Model
 		$this->db->from('Academic_Plans');
 		$this->db->join($this->tables['strategic_emphasis'],$this->tables['strategic_emphasis'].'.CIP = Academic_Plans.CIP_Code','left');
 		$this->db->join('Degree_Name','Degree_Name.Degree = Academic_Plans.Degree','left');
+		$this->db->join('Acad_Prog_Lookup','Acad_Prog_Lookup.Acad_Plan = Academic_Plans.Acad_Plan','left');
 		$this->db->where('Plan_Type !=','MIN');
 		if($college != '%'){
 			$this->db->like('College',$college, 'none', FALSE);
@@ -29,21 +30,17 @@ class General_model extends CI_Model
 		if($status != '%'){
 			$this->db->like('Status',$status, 'none', FALSE);
 		}
-		//$this->db->order_by($var_order,$order);
 
 		$query = $this->db->get();        
 		return $query;
 
 	}
 	function subplan_all($plan,$status='%'){
-		
-		//$this->db->distinct('*');
+	
 		$this->db->from('Sub_Plans');
 		$this->db->like('Acad_plan',$plan,'none',FALSE);
 		$this->db->like('Status',$status,'none',FALSE);
-		/*$this->db->like('level-description','ALL','none');*/
-		/*$this->db->order_by($var_order,$order);*/
-
+		
 		$query = $this->db->get();        
 		return $query;
 
@@ -57,6 +54,7 @@ class General_model extends CI_Model
 		
 	}
 	function get_access($plan){
+		$this->db->select('Acad_Prog,Acad_Plan,Prg_Access');
 		$this->db->from('Acad_Prog_Lookup');
 		$this->db->like('Acad_Plan',$plan,'none',FALSE);
 		$query = $this->db->get();
@@ -91,7 +89,7 @@ class General_model extends CI_Model
 		return $query;
 	}
 	function get_all_plans_cip($cip,$career){
-		$this->db->select('DISTINCT Acad_Plan, UCF_Name');
+		$this->db->select('Acad_Plan, UCF_Name');
 		$this->db->from('Academic_Plans');
 		$this->db->where('Plan_Type !=','MIN');
 		$this->db->like('CIP_Code',$cip,'none',FALSE);

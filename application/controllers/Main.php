@@ -536,6 +536,7 @@ class Main extends CI_Controller {
 		foreach ($plan_data->result() as $key => $row){
 			$id++;			
 			$access = '';
+			$prog = '';
 			$status_change = '';
 			$avail = true;
 			$regional = '';
@@ -573,16 +574,21 @@ class Main extends CI_Controller {
 				}			
 			}
 			
-			//print_r($loadas_arr);
+		
 		
 			
-			//get the access information
-			$access_data = $this->General_model->get_access($row->Acad_Plan);
+			//get the access and Acad_Prog information
+			/*$access_data = $this->General_model->get_access($row->Acad_Plan);
 			if($access_data->num_rows()){
 				//return one row
 				$arow = $access_data->row();			
 				$access = $arow->Prg_Access;
-			} 
+				$prog = $arow->Acad_Prog;
+			}*/ 
+			
+			//set the prog and access codes
+			$access = $row->Prg_Access;
+			$prog = $row->Acad_Prog;
 			
 			//set status change date for Inactives and Suspends only
 			if($row->Status == 'I' || $row->Status == 'S'){ 
@@ -710,6 +716,7 @@ class Main extends CI_Controller {
 			
 			$item = array(	"id" => $id,
 					"Plan"=> $row->Acad_Plan,
+					"ProgCode" => $prog,
 					"PlanLongName"=> $plan_long_name,
 					"DeptLongName"=> $dept_long_name,
 					"SubPlanLongName" => '',
@@ -902,6 +909,7 @@ class Main extends CI_Controller {
 					
 					$sub_item = array("id" => $id,
 							  "Plan"=> $sub_row->Acad_Plan,
+							  "ProgCode" => $prog,
 							  "PlanLongName"=> $plan_long_name,
 							  "DeptLongName"=> $dept_long_name,
 							  "SubPlanLongName"=>$sub_long_name,
@@ -973,13 +981,12 @@ class Main extends CI_Controller {
 		//convert to json and escape any weird chracters
 		$final_data = json_encode($fixed, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
 	
+		//clear the array from memory
+		empty($itemlist);
+		
 		header('Content-Type: text/plain');
 		echo  $final_data;
-		
-		
-		//echo  '{"total":"1","page":"1","records":"' . $result_count . '","rows":' . $final_data . '}';
-		/*$data  = json_encode($itemlist);
-		echo '{"totalCount":"' . $result_count . '","period":"' . $term_name . '","results":' . $data . '}';*/
+	
 	}
 	public function tooltip(){
 		$data = $this->input->get('tip');

@@ -7,6 +7,7 @@
 */
 
 $config['all'] = array('Admin','All');
+$config['admin'] = array('Admin');
 
 
 /** tables - make them portable incase main tables change**/
