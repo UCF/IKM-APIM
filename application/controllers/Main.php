@@ -565,20 +565,18 @@ class Main extends CI_Controller {
 			 */
 			if($cip_check != $row->CIP_Code){
 				$unique_plans_name = $this->General_model->get_all_plans_cip($row->CIP_Code,$row->Career);
-				if($unique_plans_name->num_rows()){
 					foreach($unique_plans_name->result() as $cip_key => $cip_row){
 						//add to array
 						$loadas_arr[] = $cip_row->UCF_Name;
 				
 						//get the subplans
 						$unique_subplans_name = $this->General_model->get_all_subplans_cip($cip_row->Acad_Plan);
-						if($unique_subplans_name->num_rows()){
+						//if($unique_subplans_name->num_rows()){
 							foreach($unique_subplans_name->result() as $sub_n_key => $sub_n_row){
 								$loadas_arr[] = $sub_n_row->UCF_Name;
 							}
-						}
+						//}
 					}
-				}
 				
 				$cip_check = $row->CIP_Code;
 			}
