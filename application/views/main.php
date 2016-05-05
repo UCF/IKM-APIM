@@ -237,11 +237,14 @@
 					return false;
 				}
 
-			//for Application
+			//for Addmissions
 			if(data.check == 9 && data.Career == 'UGRD' && (datafield == 'PlanLongName' || datafield == 'SubPlanLongName')){
 					return true;
+				} else if (data.check == 9 && data.Career == 'UGRD') { 
+					return false; 
 				}
-			if(data.check == 9 && data.Career == 'GRAD' && (datafield == 'PlanLongName' || datafield == 'SubPlanLongName')){
+			
+			if(data.check == 9 && data.Career == 'GRAD' ){
 					return false;
 				}
 
@@ -431,7 +434,7 @@
 
 				$("#mainData").jqxGrid('hidecolumn','DeptLongName');
 
-				if ($.inArray("Admisson",groups) != -1){
+				if ($.inArray("Admissions",groups) != -1){
 					} else {
 						$("#mainData").jqxGrid('hidecolumn','PlanLongName');
 						$("#mainData").jqxGrid('hidecolumn','SubPlanLongName');
@@ -749,6 +752,12 @@
 					$("#mainData").jqxGrid('hidecolumn','TotDissert');
 					
 					$("#mainData").jqxGrid('hidecolumn','DeptLongName');
+
+					if ($.inArray("Admissions",groups) != -1){
+					} else {
+						$("#mainData").jqxGrid('hidecolumn','PlanLongName');
+						$("#mainData").jqxGrid('hidecolumn','SubPlanLongName');
+					}
 				}
 			}
 

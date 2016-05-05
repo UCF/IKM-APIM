@@ -511,7 +511,7 @@ class Main extends CI_Controller {
 						if($urow->name == 'FLVC'){ $auth = 6; }
 						if($urow->name == 'Registrar'){ $auth = 7; }
 						if($urow->name == 'Regional'){ $auth = 8; }
-						if($urow->name == 'Admissions'){ $auth = 4; } //read only for right now		
+						if($urow->name == 'Admissions'){ $auth = 9; } //read only for right now		
 						
 					}
 					$college_get = $this->General_model->colleges();
@@ -533,6 +533,7 @@ class Main extends CI_Controller {
 				}
 			}
 		
+			
 		foreach ($plan_data->result() as $key => $row){
 			$id++;			
 			$access = '';
@@ -542,6 +543,7 @@ class Main extends CI_Controller {
 			$regional = '';
 			$loadas_arr = array();
 			$loadas_arr[] ='';
+			$cip_check = '';
 			
 			//set the regional data vars
 			$altamonte = 0;
@@ -558,23 +560,28 @@ class Main extends CI_Controller {
 			$valenciawest = 0;
 			
 			//get the unique plan subplans (based on cip) and add do some array work for addition to final json 
-			$unique_plans_name = $this->General_model->get_all_plans_cip($row->CIP_Code,$row->Career);
-			if($unique_plans_name->num_rows()){
-				foreach($unique_plans_name->result() as $cip_key => $cip_row){
-					//add to array
-					$loadas_arr[] = $cip_row->UCF_Name;
-					
-					//get the subplans
-					$unique_subplans_name = $this->General_model->get_all_subplans_cip($cip_row->Acad_Plan);
-					if($unique_subplans_name->num_rows()){
-						foreach($unique_subplans_name->result() as $sub_n_key => $sub_n_row){
-							$loadas_arr[] = $sub_n_row->UCF_Name;	
-						}						
+			/* check cip of plan against cip_check var; if different run to get new loas vars
+			 * i
+			 */
+			if($cip_check != $row->CIP_Code){
+				$unique_plans_name = $this->General_model->get_all_plans_cip($row->CIP_Code,$row->Career);
+				if($unique_plans_name->num_rows()){
+					foreach($unique_plans_name->result() as $cip_key => $cip_row){
+						//add to array
+						$loadas_arr[] = $cip_row->UCF_Name;
+				
+						//get the subplans
+						$unique_subplans_name = $this->General_model->get_all_subplans_cip($cip_row->Acad_Plan);
+						if($unique_subplans_name->num_rows()){
+							foreach($unique_subplans_name->result() as $sub_n_key => $sub_n_row){
+								$loadas_arr[] = $sub_n_row->UCF_Name;
+							}
+						}
 					}
-				}			
+				}
+				
+				$cip_check = $row->CIP_Code;
 			}
-			
-		
 		
 			
 			//get the access and Acad_Prog information

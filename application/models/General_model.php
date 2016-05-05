@@ -15,7 +15,8 @@ class General_model extends CI_Model
 	}
 
 	function acadplan_all($order,$var_order,$college='%',$career='%',$status='%'){
-	
+		
+		$this->db->select('Academic_Plans.Acad_Plan,College,Cancelled_Year,Term,UCF_Name,AcadOrg,AcadOrgDescr,Level,Career,Status,Plan_Type,Academic_Plans.Degree,CIP_Code,HEGIS_Code,Acad_Prog,Prg_Access,AREA');
 		$this->db->from('Academic_Plans');
 		$this->db->join($this->tables['strategic_emphasis'],$this->tables['strategic_emphasis'].'.CIP = Academic_Plans.CIP_Code','left');
 		$this->db->join('Degree_Name','Degree_Name.Degree = Academic_Plans.Degree','left');
@@ -36,7 +37,8 @@ class General_model extends CI_Model
 
 	}
 	function subplan_all($plan,$status='%'){
-	
+		
+		$this->db->select('Sub_Plans.Acad_Plan,Cancelled_Year,Term,UCF_Name,Sub_Plan,Status,Sub_Pl_Typ,HEGIS_Code,');
 		$this->db->from('Sub_Plans');
 		$this->db->like('Acad_plan',$plan,'none',FALSE);
 		$this->db->like('Status',$status,'none',FALSE);
@@ -101,7 +103,7 @@ class General_model extends CI_Model
 		
 	}
 	function get_all_subplans_cip($plan){
-		$this->db->select('DISTINCT Acad_Plan, Sub_Plan, UCF_Name');
+		$this->db->select(' Acad_Plan, Sub_Plan, UCF_Name');
 		$this->db->from('Sub_Plans');
 		$this->db->like('Acad_plan',$plan,'none',FALSE);
 		$this->db->like('Status','A','none',FALSE);
