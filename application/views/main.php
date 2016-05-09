@@ -89,10 +89,17 @@
 		var url = "../main/data_main"; //location for the first data pull
 		var grad_hide = false; //set the default hide - will be reset if necessary by role
 
+		$('#filterstats').hide();
+
 		//setting the types for the column names
 		var source =
 		{
 		    datatype: "json",
+		    id: 'id',
+		    url: url,
+		    cache: false,
+	        pagenum: 0,
+	        /*data: { status: $('#status-check').val() },*/
 		    datafields: [
 				{ name: 'College',type: 'string'},{ name: 'CIP', type:'string'},
 				{ name: 'HEGIS',type: 'string'},{ name: 'Plan',type: 'string'},
@@ -131,10 +138,6 @@
 				{ name: 'loadasnames' }
 		    ],
 		    
-		    id: 'id',
-		    url: url,
-		    cache: false,
-	        pagenum: 0,
 		    updaterow: function (rowid, rowdata, commit) {
 
 			//set this to false which wi
@@ -396,6 +399,8 @@
 			
 		}
 		var addfilter = function () {
+			$('#filterstats').show();
+			
 		     var filtergroup = new $.jqx.filter();
 		     var Careerfiltergroup = new $.jqx.filter();
 		     var Statusfiltergroup = new $.jqx.filter();
@@ -522,6 +527,8 @@
 		     $("#mainData").jqxGrid('addfilter', 'Status', Statusfiltergroup);
 		     // apply the filters.
 		     $("#mainData").jqxGrid('applyfilters');
+
+		     $('#filterstats').hide();
 			
 		 }
 		 
@@ -564,7 +571,7 @@
 			{ text: 'Susp./Inact. Date', align: 'center', columngroup: 'General', datafield: 'StatusChange', width: 99, editable: false, cellbeginedit: cellbeginedit,  cellsrenderer: cellsrenderer, rendered: toolTip},		
 			{ text: 'Access', columngroup: 'General', datafield: 'Access', width: 80, editable: false, cellclassname: accessback, cellbeginedit: cellbeginedit,  cellsrenderer: cellsrenderer, rendered: toolTip},
 			{ text: 'Admission', columngroup: 'General', datafield: 'Admission', columntype: 'checkbox', width: 70,filterable: false, cellbeginedit: cellbeginedit, rendered: toolTip},
-			{ text: 'Load As', columngroup: 'General',datafield: 'loadas', cellbeginedit: cellbeginedit, width: 160, columntype: "dropdownlist",
+			{ text: 'Load As', columngroup: 'General',datafield: 'loadas', cellbeginedit: cellbeginedit, width: 160, columntype: "dropdownlist", rendered: toolTip,
 				initeditor: function (row, cellvalue, editor, celltext, cellwidth, cellheight) {
 					var array = new Array();
 					var selectedIndex = -1;
@@ -720,8 +727,11 @@
 				$("#mainData").jqxGrid('removefilter', 'Subplan');
 			}					
 		});
+
 		
 		$( "#pcareer" ).change(function() {	
+
+			
 			
 			$("#mainData").jqxGrid('removefilter', 'Career');
 			
@@ -820,6 +830,8 @@
 			
 			// apply the filters.
 			$("#mainData").jqxGrid('applyfilters');			
+
+		
 			
 		});
 
@@ -846,7 +858,11 @@
 			$("#mainData").jqxGrid('addfilter', 'Status', filtergroup);
 			
 			// apply the filters.
-			$("#mainData").jqxGrid('applyfilters');			
+			$("#mainData").jqxGrid('applyfilters');
+
+			//potential future
+			/*source.data = {"status": $('#status-check').val()};
+			$("#mainData").jqxGrid("updatebounddata");*/
 			
 		});
 		$('#clearfilterbutton').click(function () {
@@ -954,6 +970,7 @@
  
 <div class="container">	
 	<div id="data-section">
+		<div id="filterstats">Filtering....</div>
 		<div id="mainData"></div>
 		<div id="mainGridPager"></div>
 	</div>

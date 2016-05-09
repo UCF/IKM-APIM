@@ -482,8 +482,11 @@ class Main extends CI_Controller {
 		
 		$career = $this->input->get('career');
 		if($career == '') { $career = '%'; }
+		
+		$status = $this->input->get('status');
+		if($status == '') { $status = '%'; }
 				
-		$plan_data = $this->General_model->acadplan_all('ASC','Acad_Plan',$college,$career);	
+		$plan_data = $this->General_model->acadplan_all('ASC','Acad_Plan',$college,$career,$status);	
 				
 		$itemlist = array();
 		$id = 0;
