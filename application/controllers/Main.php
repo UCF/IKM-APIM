@@ -910,9 +910,9 @@ class Main extends CI_Controller {
 						$totDoc = $subplan_extra_row->Total_Doctoral;
 						$totDissert = $subplan_extra_row->Total_Dissertation;
 						$loadas = $subplan_extra_row->Show_As;
-						$main = $plan_extra_row->Main_Campus;
-						$rosen = $plan_extra_row->Rosen_Campus;
-						$nona = $plan_extra_row->Lake_Nona_Campus;
+						$main = $subplan_extra_row->Main_Campus;
+						$rosen = $subplan_extra_row->Rosen_Campus;
+						$nona = $subplan_extra_row->Lake_Nona_Campus;
 					}				
 					
 					$sub_item = array("id" => $id,
