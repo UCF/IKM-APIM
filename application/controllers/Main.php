@@ -484,7 +484,7 @@ class Main extends CI_Controller {
 		if($career == '') { $career = '%'; }
 		
 		$status = $this->input->get('status');
-		if($status == '') { $status = '%'; }
+		if($status == '') { $status = 'A'; }
 				
 		$plan_data = $this->General_model->acadplan_all('ASC','Acad_Plan',$college,$career,$status);	
 				
@@ -788,7 +788,7 @@ class Main extends CI_Controller {
 			
 			
 			//get the Subs associated with the plans
-			$sub_plan_data = $this->General_model->subplan_all($row->Acad_Plan);
+			$sub_plan_data = $this->General_model->subplan_all($row->Acad_Plan,$status);
 			
 			if($sub_plan_data->num_rows()){			
 				foreach($sub_plan_data->result() as $sub_key => $sub_row){

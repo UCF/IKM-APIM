@@ -99,7 +99,7 @@
 		    url: url,
 		    cache: false,
 	        pagenum: 0,
-	        /*data: { status: $('#status-check').val() },*/
+	        data: { status: $('#status-check').val() },
 		    datafields: [
 				{ name: 'College',type: 'string'},{ name: 'CIP', type:'string'},
 				{ name: 'HEGIS',type: 'string'},{ name: 'Plan',type: 'string'},
@@ -399,7 +399,7 @@
 			
 		}
 		var addfilter = function () {
-			$('#filterstats').show();
+			
 			
 		     var filtergroup = new $.jqx.filter();
 		     var Careerfiltergroup = new $.jqx.filter();
@@ -408,19 +408,19 @@
 		     var filter_or_operator = 1;
 		     var filtervalue = $('#pcoll').val();
 		     var filtervalue2 = $('#pcareer').val();
-		     var filtervalue3 = $('#status-check').val();
+		     //var filtervalue3 = $('#status-check').val();
 		     var filtercondition = 'contains';
 		     
 		     var filter1 = filtergroup.createfilter('stringfilter', filtervalue, filtercondition);
 		     var filter2 = filtergroup.createfilter('stringfilter', filtervalue2, filtercondition);
-		     var filter3 = filtergroup.createfilter('stringfilter', filtervalue3, filtercondition);
+		     //var filter3 = filtergroup.createfilter('stringfilter', filtervalue3, filtercondition);
 
 			 //hide suspend term column
-		     if(filtervalue3 == 'A'){
+		     /*if(filtervalue3 == 'A'){
 					$("#mainData").jqxGrid('hidecolumn','StatusChange');
 				} else {
 					$("#mainData").jqxGrid('showcolumn','StatusChange');
-				}
+				}*/
 				
 			 //filter for grad vs ungrad first entry
 			 if (filtervalue2 == 'UGRD'){
@@ -524,11 +524,10 @@
 		     // add the filters.
 		     $("#mainData").jqxGrid('addfilter', 'College', filtergroup);
 		     $("#mainData").jqxGrid('addfilter', 'Career', Careerfiltergroup);
-		     $("#mainData").jqxGrid('addfilter', 'Status', Statusfiltergroup);
+		     //$("#mainData").jqxGrid('addfilter', 'Status', Statusfiltergroup);
+		     
 		     // apply the filters.
 		     $("#mainData").jqxGrid('applyfilters');
-
-		     $('#filterstats').hide();
 			
 		 }
 		 
@@ -636,15 +635,15 @@
                   	{ text: 'Other Locations', align: 'center', name: 'OtherLocations' }
 		    ],
 		    ready: function () {			
-				addfilter();
-
-				var rowscount = $("#mainData").jqxGrid('getdatainformation').rowscount;                   
+		    	var rowscount = $("#mainData").jqxGrid('getdatainformation').rowscount;                   
 				$('#mainData').jqxGrid({ pagesizeoptions: ['15', '30', '50', '100']});
 				
 				//unhide the regional edit column for regional users		
 				if ($.inArray("Regional",groups) > -1) { 
 		 			$("#mainData").jqxGrid('showcolumn','RegEdit');
 				} 
+				
+				addfilter();				
 			}				
 		}); 
 	
@@ -839,7 +838,7 @@
 			
 			$("#mainData").jqxGrid('removefilter', 'Status');
 			
-			var filtergroup = new $.jqx.filter();
+			/*var filtergroup = new $.jqx.filter();
 			var filter_or_operator = 1;
 			var filtervalue = $('#status-check').val();
 			var filtercondition = 'contains';
@@ -858,17 +857,46 @@
 			$("#mainData").jqxGrid('addfilter', 'Status', filtergroup);
 			
 			// apply the filters.
-			$("#mainData").jqxGrid('applyfilters');
+			$("#mainData").jqxGrid('applyfilters');*/
 
 			//potential future
-			/*source.data = {"status": $('#status-check').val()};
-			$("#mainData").jqxGrid("updatebounddata");*/
+			source.data = {"status": $('#status-check').val()};
+			$("#mainData").jqxGrid('updatebounddata','filter');
+
+			//reset the filter based on the selection items
+			/* var filtergroup = new $.jqx.filter();
+		     var Collegefiltergroup = new $.jqx.filter();
+		     var Careerfiltergroup = new $.jqx.filter();
+		     
+		     var filter_or_operator = 1;
+		     var filtervalue = $('#pcoll').val();
+		     var filtervalue2 = $('#pcareer').val();
+		     var filtercondition = 'contains';
+		     
+		     var filter1 = filtergroup.createfilter('stringfilter', filtervalue, filtercondition);
+		     var filter2 = filtergroup.createfilter('stringfilter', filtervalue2, filtercondition);
+		     //var filter3 = filtergroup.createfilter('stringfilter', filtervalue3, filtercondition);
+		     
+		     filtergroup.addfilter(filter_or_operator, filter1);
+		     Careerfiltergroup.addfilter(filter_or_operator, filter2);
+		     //Statusfiltergroup.addfilter(filter_or_operator, filter3);
+		     
+		     //alert(filtervalue2);
+		     // add the filters.
+		     $("#mainData").jqxGrid('addfilter', 'College', filtergroup);
+		     $("#mainData").jqxGrid('addfilter', 'Career', Careerfiltergroup);
+		     //$("#mainData").jqxGrid('addfilter', 'Status', Statusfiltergroup);
+		     // apply the filters.
+		     
+		     $("#mainData").jqxGrid('applyfilters');*/
+			
 			
 		});
 		$('#clearfilterbutton').click(function () {
 		  		//remove only the column filters.
 				
 				//filters not to touch if initiated
+				//Subplan is for UCF Online filter since it's subplan level
 				var Restricted = ["College","Career","Subplan","Status"];
 
 				//get the applied filters
