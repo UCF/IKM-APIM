@@ -281,6 +281,9 @@
 			if(data.check == 7 && (data.Career == 'GRAD' || data.Career == 'PROF')){
 					return false;
 				}
+			if(data.check == 7 && datafield != 'ReAdmit'){
+				return false;
+			}
 
 			//for regional
 			if(data.check == 8){ return false; }
