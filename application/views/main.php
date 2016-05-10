@@ -334,6 +334,9 @@
 				} else {
 					return false;
 				}
+			if(data.check == 4){
+					return false;
+				}
 			
 		};
 				
