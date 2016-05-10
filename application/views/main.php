@@ -275,10 +275,10 @@
 				}
 
 			//for registrar
-			if(data.check == 7 && (data.Career == 'UGRD' || data.Career == 'PROF') && datafield == 'ReAdmit'){
+			if(data.check == 7 && data.Career == 'UGRD' && datafield == 'ReAdmit'){
 					return true;
 				}
-			if(data.check == 7 && (data.Career == 'GRAD' || data.Career == 'PROF') && datafield != 'ReAdmit'){
+			if(data.check == 7 && (data.Career == 'GRAD' || data.Career == 'PROF')){
 					return false;
 				}
 
