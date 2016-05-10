@@ -317,6 +317,10 @@
 		var regbeginedit = function (row, datafield, columntype, value,defaultHtml) {
 			var data = $('#mainData').jqxGrid('getrowdata', row);
 			
+			if(data.check == 4){
+				return false;
+			}
+			
 			if(data.Career == 'UGRD' && datafield == 'MTR'){
 				return false;
 			} 
@@ -334,9 +338,7 @@
 				} else {
 					return false;
 				}
-			if(data.check == 4){
-					return false;
-				}
+			
 			
 		};
 				

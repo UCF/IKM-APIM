@@ -399,9 +399,8 @@ class Main extends CI_Controller {
 						$up_batch_value = $batch[$db_column];
 						$up_batch = array($db_column => $up_batch_value);						
 						$this->General_model->update_plan_extra($plan,$up_batch);
-					} else {
-						
-						$this->General_model->update_plan_extra($plan,$batch);
+					} else {						
+						//$this->General_model->update_plan_extra($plan,$batch);
 					}
 													
 				} else {
