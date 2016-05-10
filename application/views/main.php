@@ -398,8 +398,7 @@
 					})   			
 			
 		}
-		var addfilter = function () {
-			
+		var addfilter = function () {			
 			
 		     var filtergroup = new $.jqx.filter();
 		     var Careerfiltergroup = new $.jqx.filter();
@@ -518,8 +517,9 @@
 			
 		     filtergroup.addfilter(filter_or_operator, filter1);
 		     Careerfiltergroup.addfilter(filter_or_operator, filter2);
-		     Statusfiltergroup.addfilter(filter_or_operator, filter3);
-		     
+		     //Statusfiltergroup.addfilter(filter_or_operator, filter3);
+
+	
 		     //alert(filtervalue2);
 		     // add the filters.
 		     $("#mainData").jqxGrid('addfilter', 'College', filtergroup);
