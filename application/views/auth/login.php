@@ -19,7 +19,7 @@
 <body>
 	<div id="header"></div>
 	<div id="title">
-		<h1> Academic Program Inventory Manager</h1>
+		<h1> Academic Program Inventory Master</h1>
 	</div>
 	<div id="login">
 	
