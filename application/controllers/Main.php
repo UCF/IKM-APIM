@@ -891,7 +891,7 @@ class Main extends CI_Controller {
 						$orient = 0;
 						$online = 0;
 						$psm = 0;
-						$stem = 0;
+						
 						$mtr = 0;
 						$cr = 0;
 						$professional = 0;
@@ -915,7 +915,7 @@ class Main extends CI_Controller {
 						$online = $subplan_extra_row->Online;
 						$orient = $subplan_extra_row->Orientation;
 						$psm = $subplan_extra_row->psm;
-						$stem = $subplan_extra_row->STEM;	
+							
 						$professional = $subplan_extra_row->professional;				
 						$mtr = $subplan_extra_row->MTR;
 						$cr = $subplan_extra_row->cost_recovery;
