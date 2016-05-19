@@ -151,6 +151,13 @@ class General_model extends CI_Model
 
 		return $query;
 	}
+	function get_stem_cips(){
+		$this->db->select('*');
+		$this->db->from($this->tables['stem_cip']);
+		$query = $this->db->get();
+	
+		return $query;
+	}
 	function plan_locations($plan){
 		$this->db->select('*');
 		$this->db->from($this->tables['plan_regional_link']);

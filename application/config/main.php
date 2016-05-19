@@ -18,6 +18,7 @@ $config['tables']['tracking']			      = 'APIM_Tracking';
 $config['tables']['regional_locations']		  = 'APIM_Regional_Locations';
 $config['tables']['plan_regional_link']		  = 'APIM_Plan_Regional_Link';
 $config['tables']['subplan_regional_link']	  = 'APIM_Plan_SubPlan_Regional_Link';
+$config['tables']['stem_cip']					= 'APIM_STEM_CIPS';
 
 
 /** Tool Tips **/

@@ -472,6 +472,7 @@ class Main extends CI_Controller {
 	public function data_main()
 	{
 		$final_data = '';
+		$stem_cip = array();
 		
 		//get user information
 		$user = $this->ion_auth->user()->row();
@@ -536,7 +537,14 @@ class Main extends CI_Controller {
 				}
 			}
 		
-			
+		//make an array for the stem cips
+		$stem = $this->General_model->get_stem_cips();
+		foreach ($stem->result() as $st_key => $st_row){
+			$stem_cip[] = $st_row->CIP2;			
+		}
+		
+		//print_r($stem_cip);
+		
 		foreach ($plan_data->result() as $key => $row){
 			$id++;			
 			$access = '';
@@ -547,6 +555,8 @@ class Main extends CI_Controller {
 			$loadas_arr = array();
 			$loadas_arr[] ='';
 			$cip_check = '';
+			$cip_stem_check = '';
+			$stem = '';
 			
 			//set the regional data vars
 			$altamonte = 0;
@@ -601,6 +611,14 @@ class Main extends CI_Controller {
 			//set status change date for Inactives and Suspends only
 			if($row->Status == 'I' || $row->Status == 'S'){ 
 				$status_change = ucfirst(strtolower($row->Cancelled_Year)); 
+			}
+			
+			//get the first two characters of cip for stem match
+			$cip_stem_check = substr($row->CIP_Code,0,2);
+			if(in_array($cip_stem_check,$stem_cip)) {
+				$stem = 1;
+			} else {
+				$stem = 0;				
 			}
 			
 			//check for and set Regional flag with the custom system library
@@ -662,7 +680,6 @@ class Main extends CI_Controller {
 				$orient = 0;
 				$online = 0;
 				$psm = 0;
-				$stem = 0;
 				$mtr = 0;
 				$cr = 0;
 				$professional = 0;
@@ -689,8 +706,7 @@ class Main extends CI_Controller {
 				$flvc = $plan_extra_row->FLVC;
 				$orient = $plan_extra_row->Orientation;
 				$online = $plan_extra_row->Online;
-				$psm = $plan_extra_row->psm;
-				$stem = $plan_extra_row->STEM;	
+				$psm = $plan_extra_row->psm;	
 				$professional = $plan_extra_row->professional;				
 				$mtr = $plan_extra_row->MTR;
 				$cr = $plan_extra_row->cost_recovery;

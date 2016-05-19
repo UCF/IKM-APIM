@@ -598,7 +598,7 @@
 			{ text: 'Readmit', columngroup: 'General', datafield: 'ReAdmit', columntype: 'checkbox', width: 67,filterable: false, cellbeginedit: cellbeginedit, rendered: toolTip},
 			{ text: 'FLVC Transient', columngroup: 'General', datafield: 'FLVC', columntype: 'checkbox', width: 55,filterable: false, cellbeginedit: cellbeginedit, rendered: toolTip},
 			{ text: 'UCF Online', columngroup: 'General', datafield: 'Online', columntype: 'checkbox', width: 75,filterable: false, cellbeginedit: cellbeginedit, rendered: toolTip},
-			{ text: 'STEM', columngroup: 'General', datafield: 'STEM', columntype: 'checkbox', width: 75,filterable: false, cellbeginedit: cellbeginedit, rendered: toolTip},
+			{ text: 'STEM', columngroup: 'General', datafield: 'STEM', columntype: 'checkbox', width: 75,filterable: false, editable: false, cellbeginedit: cellbeginedit, rendered: toolTip},
 
 			{ text: 'Program/Plan Extra', columngroup: 'General', datafield: 'PlanLongName', columntype: 'input', hidden: grad_hide, width: 144,filterable: true, cellbeginedit: cellbeginedit, rendered: toolTip},
 			{ text: 'SubPlan Name Extra', columngroup: 'General', datafield: 'SubPlanLongName', columntype: 'input', hidden: grad_hide, width: 99,filterable: true, cellbeginedit: cellbeginedit, rendered: toolTip},			
