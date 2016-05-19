@@ -569,7 +569,7 @@
 
 			{ text: 'Program', columngroup: 'General', datafield: 'ProgCode', width: 93, editable: false,filtertype: 'input',filterable: true, cellbeginedit: cellbeginedit,  cellsrenderer: cellsrenderer, rendered: toolTip },
 			{ text: 'Plan', columngroup: 'General', datafield: 'Plan', width: 93, editable: false,filtertype: 'input',filterable: true, cellbeginedit: cellbeginedit,  cellsrenderer: cellsrenderer, rendered: toolTip },
-			{ text: 'Sub-plan', columngroup: 'General', datafield: 'Subplan', width: 93, editable: false, cellbeginedit: cellbeginedit,  cellsrenderer: cellsrenderer, rendered: toolTip},
+			{ text: 'SubPlan', columngroup: 'General', datafield: 'Subplan', width: 93, editable: false, cellbeginedit: cellbeginedit,  cellsrenderer: cellsrenderer, rendered: toolTip},
 			{ text: 'Plan Type', columngroup: 'General', datafield: 'Plan Type', width: 75, editable: false, cellbeginedit: cellbeginedit,  cellsrenderer: cellsrenderer, rendered: toolTip},
 			{ text: 'Degree', columngroup: 'General', datafield: 'Degree', renderer: info,  width: 70, editable: false, cellbeginedit: cellbeginedit,  cellsrenderer: cellsrenderer, rendered: toolTip},
 			{ text: 'Career', columngroup: 'General', datafield: 'Career', renderer: info,  width: 70, editable: false, cellbeginedit: cellbeginedit,  cellsrenderer: cellsrenderer, rendered: toolTip},
@@ -595,13 +595,13 @@
 
                 }
             },
-			{ text: 'Re-Admit', columngroup: 'General', datafield: 'ReAdmit', columntype: 'checkbox', width: 67,filterable: false, cellbeginedit: cellbeginedit, rendered: toolTip},
+			{ text: 'Readmit', columngroup: 'General', datafield: 'ReAdmit', columntype: 'checkbox', width: 67,filterable: false, cellbeginedit: cellbeginedit, rendered: toolTip},
 			{ text: 'FLVC Transient', columngroup: 'General', datafield: 'FLVC', columntype: 'checkbox', width: 55,filterable: false, cellbeginedit: cellbeginedit, rendered: toolTip},
 			{ text: 'UCF Online', columngroup: 'General', datafield: 'Online', columntype: 'checkbox', width: 75,filterable: false, cellbeginedit: cellbeginedit, rendered: toolTip},
 			{ text: 'STEM', columngroup: 'General', datafield: 'STEM', columntype: 'checkbox', width: 75,filterable: false, cellbeginedit: cellbeginedit, rendered: toolTip},
 
 			{ text: 'Program/Plan Extra', columngroup: 'General', datafield: 'PlanLongName', columntype: 'input', hidden: grad_hide, width: 144,filterable: true, cellbeginedit: cellbeginedit, rendered: toolTip},
-			{ text: 'Sub-plan Name Extra', columngroup: 'General', datafield: 'SubPlanLongName', columntype: 'input', hidden: grad_hide, width: 99,filterable: true, cellbeginedit: cellbeginedit, rendered: toolTip},			
+			{ text: 'SubPlan Name Extra', columngroup: 'General', datafield: 'SubPlanLongName', columntype: 'input', hidden: grad_hide, width: 99,filterable: true, cellbeginedit: cellbeginedit, rendered: toolTip},			
 
 			//alert(grad_set);
 			{ text: 'Mrkt. Rate Tuition', columngroup: 'GraduateStudies', datafield: 'MTR', columntype: 'checkbox', hidden: grad_hide, width: 75,filterable: false, cellbeginedit: regbeginedit, rendered: toolTip},			
@@ -619,7 +619,7 @@
 			//Regional fields
 			{ text: 'Lake Nona', columngroup: 'OtherLocations', datafield: 'NONA', columntype: 'checkbox', hidden: true, width: 75,filterable: false, cellbeginedit: regbeginedit, rendered: toolTip},
 			{ text: 'Rosen', columngroup: 'OtherLocations', datafield: 'ROSEN', columntype: 'checkbox', hidden: true, width: 75,filterable: false, cellbeginedit: regbeginedit, rendered: toolTip},
-			{ text: 'Main Campus', columngroup: 'OtherLocations', datafield: 'MAIN', columntype: 'checkbox', hidden: true, width: 75,filterable: false, cellbeginedit: regbeginedit, rendered: toolTip},
+			{ text: 'Orlando', columngroup: 'OtherLocations', datafield: 'MAIN', columntype: 'checkbox', hidden: true, width: 75,filterable: false, cellbeginedit: regbeginedit, rendered: toolTip},
 			
 			{ text: 'Altamonte Springs', columngroup: 'RegionalCampus', datafield: 'ALTSPRNG', columntype: 'checkbox', hidden: true, width: 75,filterable: false, cellbeginedit: regbeginedit, rendered: toolTip},
 			{ text: 'Cocoa', columngroup: 'RegionalCampus', datafield: 'COCOA', columntype: 'checkbox', hidden: true, width: 75,filterable: false, cellbeginedit: regbeginedit, rendered: toolTip},
@@ -927,7 +927,7 @@
 
 	<div id="page_title">Welcome</div>
 	
-	<div id="page_summary">"Welcome to the Academic Program Inventory Managment System! 
+	<div id="page_summary">"Welcome to the Academic Program Inventory Master! 
 	</div>
 <div id="option_area">	
 	<div id="area1">
