@@ -156,8 +156,8 @@
 			}
 
 			//stuff for updating rows 151-185
-			var updata = "update=true&cellchange=" + prev_cellName + "&plan=" + rowdata.Plan + "&adm=" + rowdata.Admission + "&subplan=" + rowdata.Subplan + "&planlongname=" + rowdata.PlanLongName + "&subplanlongname=" + rowdata.SubPlanLongName;
-			updata = updata + "&flvc=" + rowdata.FLVC + "&readmit=" + rowdata.ReAdmit + "&online=" + rowdata.Online +"&orient=" + rowdata.Orientation + "&deptlongname=" + rowdata.DeptLongName;
+			var updata = "update=true&cellchange=" + prev_cellName + "&plan=" + rowdata.Plan + "&adm=" + rowdata.Admission + "&subplan=" + encodeURIComponent(rowdata.Subplan) + "&planlongname=" + encodeURIComponent(rowdata.PlanLongName) + "&subplanlongname=" + encodeURIComponent(rowdata.SubPlanLongName);
+			updata = updata + "&flvc=" + rowdata.FLVC + "&readmit=" + rowdata.ReAdmit + "&online=" + rowdata.Online +"&orient=" + rowdata.Orientation + "&deptlongname=" + encodeURIComponent(rowdata.DeptLongName);
 			updata = updata + "&psm=" + rowdata.PSM + "&mtr=" + rowdata.MTR + "&cr=" + rowdata.CR + "&stem=" + rowdata.STEM +"&professional=" + rowdata.Professional + "&totThesis=" + rowdata.TotThesis + "&totNonThesis=" + rowdata.TotNonThesis;
 			updata = updata + "&tot6971=" + rowdata.Tot6971 + "&totCert=" + rowdata.TotCert + "&totDoc=" + rowdata.TotDoc +"&totDissert=" + rowdata.TotDissert;
 			updata = updata + "&ALTSPRNG=" + rowdata.ALTSPRNG + "&COCOA=" + rowdata.COCOA + "&DAYTONA=" + rowdata.DAYTONA +"&LEESBURG=" + rowdata.LEESBURG;

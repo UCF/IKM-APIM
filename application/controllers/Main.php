@@ -284,6 +284,7 @@ class Main extends CI_Controller {
 			$valencia = $this->input->get('VALENCIA');
 			$osceola= $this->input->get('OSCEOLA');
 			$metrowest = $this->input->get('METROWEST');*/
+			
 	
 			//datetime creation
 			$date = date("Y-m-d H:i:s");
