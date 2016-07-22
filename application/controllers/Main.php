@@ -272,7 +272,7 @@ class Main extends CI_Controller {
 			$loadas = urldecode($this->input->get('loadas'));
 			$main_campus = $this->input->get('main');
 			$rosen_campus = $this->input->get('rosen');
-			$nona_campus = $this->input->get('lakenona');
+			$nona_campus = $this->input->get('nona');
 			/*$altspring = $this->input->get('ALTSPRING');
 			$daytona = $this->input->get('COCOA');
 			$daytona = $this->input->get('DAYTONA');

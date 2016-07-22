@@ -35,11 +35,11 @@ function __construct()
 			//get the uri call
 			$filters = $this->uri->uri_to_assoc(3);
 			
+			if(!isset($filters['status'])){ echo "missing status: e.g. status/all"; exit; }			
 				
 			//parse the url filters
 			if($filters['college'] == 'all') { $college = '%'; } else { $college = strtoupper($filters['college']); }	
 			if($filters['career'] == 'all') { $career = '%'; } else { $career = strtoupper($filters['career']); }
-			
 			if($filters['status'] == 'all') { $status = '%'; } else { $status = strtoupper($filters['status']); }
 			
 			//fix status a bit
@@ -53,11 +53,15 @@ function __construct()
 				case 'SUSPENDED':
 					$status = 'S';
 					break;
+				case '%':
+					break;
+					//status is already set in this case
 				default:
 					$status = 'A';
 			}
-					
-			$plan_data = $this->General_model->acadplan_all('ASC','Acad_Plan',$college,$career,$status);	
+			
+			
+			$plan_data = $this->General_model->acadplan_all('ASC','Acad_Plan',$college,$career,$status);	//main query
 					
 			$itemlist = array();
 			$id = 0;
@@ -77,6 +81,7 @@ function __construct()
 				$region_item = array();
 				$meta_data = array();
 				$meta = array();
+				$active_locations = array();
 				
 				//set the regional data vars
 				$altamonte = 0;
@@ -210,6 +215,9 @@ function __construct()
 					$totDissert = 0;				
 					$recent = '';
 					$plan_long_name = '';
+					$main = '0';
+					$rosen = '0';
+					$nona = '0';
 				} else {
 					$plan_extra_row = $plan_extra->row();
 					$plan_long_name = $plan_extra_row->Long_Name;
@@ -228,7 +236,10 @@ function __construct()
 					$totDoc = $plan_extra_row->Total_Doctoral;
 					$totDissert = $plan_extra_row->Total_Dissertation;
 					$tot6971 = $plan_extra_row->Total_Thesis6971;
-					$totCert = $plan_extra_row->Total_Grad_Certificate;			
+					$totCert = $plan_extra_row->Total_Grad_Certificate;
+					$main = $plan_extra_row->Main_Campus;
+					$rosen = $plan_extra_row->Rosen_Campus;
+					$nona = $plan_extra_row->Lake_Nona_Campus;
 	
 					$recent = $plan_extra_row->Recent_Change;
 					//$timestamp = strtotime($plan_extra_row->Recent_Change);
@@ -237,7 +248,7 @@ function __construct()
 				}
 				
 				//subplan fun
-				$sub_data = $this->General_model->subplan_all($row->Acad_Plan);
+				$sub_data = $this->General_model->subplan_all($row->Acad_Plan,$status);
 				if($sub_data->num_rows()){
 					$subplan = "Yes";
 						
@@ -292,10 +303,26 @@ function __construct()
 						"TotNonThesis" => $totNonThesis,
 						"TotCert" => $totCert,
 						"TotDoc" => $totDoc,
-						"TotDissert" => $totDissert
+						"TotDissert" => $totDissert,
+						"MAIN" => $main,
+						"ROSEN" => $rosen,
+						"NONA" => $nona
 				);
 				$meta[] = $meta_data;
 				
+				//get only the active locations
+				if($main == 1){ $active_locations[] = "Main"; }
+				if($online == 1){ $active_locations[] = "Online"; }
+				if($rosen == 1){ $active_locations[] = "Rosen"; }
+				if($nona == 1){ $active_locations[] = "NONA"; }
+								
+				//go through the regional and add the "1"S to the actives
+				foreach($region_item as $camp_key => $camp_row){
+					if($camp_row == 1){
+						$active_locations[] = $camp_key;
+					}	
+				}
+								
 				$item = array(	
 						"id" => $id,
 						"Plan"=> $row->Acad_Plan,
@@ -310,6 +337,7 @@ function __construct()
 						"HEGIS" => $row->HEGIS_Code,
 	                    "Meta Data"=> $meta,
 						"Regional Campuses" => $campuses,
+						"Active Locations" => $active_locations, //array of active locations
 						"SubPlans" => $sub_plans
 					);
 				$itemlist[] = $item;
@@ -336,6 +364,7 @@ function __construct()
 			$meta = array();
 			$meta_data = array();
 			$campuses = array();
+			$active_locations = array();
 			$termStartShort = '';
 			$statusStartShort = '';
 			$status_change = '';
@@ -454,6 +483,9 @@ function __construct()
 				$tot6971 = 0;
 				$totDissert = 0;
 				$sub_long_name = '';
+				$main = '0';
+				$rosen = '0';
+				$nona = '0';
 			} else {
 				$subplan_extra_row = $subplan_extra->row();
 				$sub_long_name = $subplan_extra_row->Long_Name;
@@ -472,6 +504,9 @@ function __construct()
 				$totCert = $subplan_extra_row->Total_Grad_Certificate;
 				$totDoc = $subplan_extra_row->Total_Doctoral;
 				$totDissert = $subplan_extra_row->Total_Dissertation;
+				$main = $subplan_extra_row->Main_Campus;
+				$rosen = $subplan_extra_row->Rosen_Campus;
+				$nona = $subplan_extra_row->Lake_Nona_Campus;
 			}
 			
 			//put the regionals in  own sublevels
@@ -517,28 +552,33 @@ function __construct()
 					"TotCert" => $totCert,
 					"TotDoc" => $totDoc,
 					"TotDissert" => $totDissert,
-					"ALTSPRNG" => $altamonte,
-					"COCOA" => $cocoa,
-					"DAYTONA" => $daytona,
-					"LEESBURG" => $leesburg,
-					"MELBOURNE" => $melbourne,
-					"OCALA" => $ocala,
-					"PALMBAY" => $palmbay,
-					"LAKEMARY" => $sanford,
-					"SOUTHLAKE" => $southlake,
-					"OSCEOLA" => $valenciaosce,
-					"METROWEST" => $valenciawest,
-					"VALENCIA" => $valenciaeast
+					"MAIN" => $main,
+					"ROSEN" => $rosen,
+					"NONA" => $nona
 		
 			);
 			$meta[] = $meta_data;
+			
+			//get only the active locations
+			if($main == 1){ $active_locations[] = "Main"; }
+			if($online == 1){ $active_locations[] = "Online"; }
+			if($rosen == 1){ $active_locations[] = "Rosen"; }
+			if($nona == 1){ $active_locations[] = "NONA"; }
+			
+			//go through the regional and add the "1"S to the actives
+			foreach($region_item as $camp_key => $camp_row){
+				if($camp_row == 1){
+					$active_locations[] = $camp_key;
+				}
+			}
 			
 			$sub_item = array(
 				"Subplan"=> $sub_row->Sub_Plan,
 				"Subplan_Name" => $sub_row->UCF_Name,
 				"HEGIS" => $sub_row->HEGIS_Code,
 				"Meta Data"=> $meta,
-				"Regional Campuses" => $campuses				
+				"Regional Campuses" => $campuses,
+				"Active Locations" => $active_locations, //array of active locations
 			);
 			
 			$itemlist[] = $sub_item;		
