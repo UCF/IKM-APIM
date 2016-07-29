@@ -115,7 +115,7 @@ function __construct()
 				if($access_data->num_rows()){
 					//return one row
 					$arow = $access_data->row();			
-					$access = $arow->Prg_Access;
+					$access = trim($arow->Prg_Access);
 				} 
 				
 				//set status change date for Inactives and Suspends only

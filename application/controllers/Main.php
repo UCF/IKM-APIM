@@ -605,7 +605,7 @@ class Main extends CI_Controller {
 			}*/ 
 			
 			//set the prog and access codes
-			$access = $row->Prg_Access;
+			$access = trim($row->Prg_Access);
 			$prog = $row->Acad_Prog;
 			
 			//set status change date for Inactives and Suspends only
