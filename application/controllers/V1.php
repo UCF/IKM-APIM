@@ -35,7 +35,10 @@ function __construct()
 			//get the uri call
 			$filters = $this->uri->uri_to_assoc(3);
 			
-			if(!isset($filters['status'])){ echo "missing status: e.g. status/all"; exit; }			
+			if(!isset($filters['status'])){ echo "missing status: e.g. status/all"; exit; }
+			if(!isset($filters['college'])){ echo "missing status: e.g. college/all"; exit; }
+			if(!isset($filters['career'])){ echo "missing status: e.g. career/all"; exit; }
+			if(!isset($filters['location'])){ echo "missing location: e.g. location/all"; exit; }
 				
 			//parse the url filters
 			if($filters['college'] == 'all') { $college = '%'; } else { $college = strtoupper($filters['college']); }	
@@ -311,9 +314,9 @@ function __construct()
 				$meta[] = $meta_data;
 				
 				//get only the active locations
-				if($main == 1){ $active_locations[] = "Main"; }
-				if($online == 1){ $active_locations[] = "Online"; }
-				if($rosen == 1){ $active_locations[] = "Rosen"; }
+				if($main == 1){ $active_locations[] = "MAIN"; }
+				if($online == 1){ $active_locations[] = "ONLINE"; }
+				if($rosen == 1){ $active_locations[] = "ROSEN"; }
 				if($nona == 1){ $active_locations[] = "NONA"; }
 								
 				//go through the regional and add the "1"S to the actives
@@ -348,6 +351,12 @@ function __construct()
 			
 			//fix utf-8 issue with MSSQL
 			$fixed = $this->corelib->utf8_converter($itemlist);
+			
+			//do some work if location flag is set
+			//check if location is not all, if it is then continue.  If not, dive into the array and scrub plans/sublans that don't match location
+			if($filters['location'] == 'all') { } else { 
+				$fixed = $this->location($fixed,$filters['location']);
+			}
 	
 			//convert to json and escape any weird chracters
 			$final_data = json_encode($fixed, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
@@ -355,6 +364,121 @@ function __construct()
 			header('Content-Type: text/plain');
 			echo  $final_data;
 		}
+	public function location($main_array,$locat){
+		/* Complicated way to grab the locations from the already made output and keep the structure */
+		
+		//new array 
+		$new_output = array();
+		$subplan_unset = array();  //place keys that don't have the location here to be removed later
+		$subplan_set = array();
+		$plan_check = FALSE;
+		$subplan_macro_check = FALSE;
+		
+		$keys = array_keys($main_array); //grab the array keys
+				
+		for($i = 0; $i < count($main_array); $i++) {
+			$plan_check = FALSE;
+			$subplan_macro_check = FALSE;
+
+		    foreach($main_array[$keys[$i]] as $key => $value) {
+		    	if ($key == 'Plan'){ $plan = $value; }
+		        
+		    	/*look in subplans first. If subplan has the location, then we know the top level plan HAS to be kept for the sake of the structure.  This is for situations where the plan does
+		    	/* match the location, but a subplan does*/
+		    	
+		    	if($key == 'Meta Data' && $value[0]['SubPlan'] == 'Yes'){ 
+		    		$subplan_macro_check = TRUE;
+		    		//echo "<br />".$plan; 
+		    		//echo "<br />subs--><br />";
+					//look in subplan array later
+		    	} else {
+			    	//look for location in plan and set plan check to true
+			    	if($key == 'Active Locations' && $subplan_macro_check === FALSE && is_array($value)){
+			        	if(in_array($locat, $value)) { 
+			        		
+			        		//move the plan that has the location into the new array
+			        		if(empty($new_output)){
+			        			$new_output = array_slice($main_array,$keys[$i],1);	
+			        		} else {
+			        			array_push($new_output,array_slice($main_array,$keys[$i],1));
+			        		}
+			        	}
+			    	}
+		    	}
+		    	
+		    	//dive into subplans
+		    	if($key == 'SubPlans' && $subplan_macro_check === TRUE && is_array($value)){	    		
+		    		$subkeys = array_keys($value); //grab the array keys
+		    		unset($subplan_unset);
+		    		unset($subplan_set);
+	    		
+		    		for($s = 0; $s < count($value); $s++) {						
+		    			
+						foreach($value[$subkeys[$s]] as $skey => $svalue) {							
+							$subplan_micro_check = FALSE; //location keep for each possible subplan						
+							
+							//if($skey == 'Subplan'){ echo $svalue.'-'.$subkeys[$s].'--'; }
+							
+							if($skey == 'Active Locations'){
+								//print_r($svalue);
+								
+								if(in_array($locat, $svalue)) {
+									$subplan_micro_check = TRUE;
+									$subplan_set[] =  $subkeys[$s];
+								} 
+								
+								if(!in_array($locat, $svalue)){
+									$subplan_unset[] =  $subkeys[$s]; //keys that need to be removed
+								}
+								
+								//echo $subplan_micro_check;
+								//echo "<br />";
+							}
+							
+						}
+						
+					}
+
+					//echo "^<br />";
+					if(!isset($subplan_set)) { $subplan_macro_check = FALSE; }
+					
+					if($subplan_macro_check === TRUE){
+
+						//remove the subplans that don't belong if subplans unset is set. i.e. at least one subplan is not in location
+						if(isset($subplan_unset)){
+							//using new output now
+							foreach($subplan_unset as $un_key => $un_value){
+							
+								unset($main_array[$keys[$i]]['SubPlans'][$un_value]);
+							}
+							
+						}
+						
+						//check of new output has been made and then manipuate as needed
+						if(empty($new_output)){
+							$new_output = array_slice($main_array,$keys[$i],1);
+						} else {
+							array_push($new_output,array_slice($main_array,$keys[$i],1));
+						}
+											
+						
+					}					
+					
+					
+		    	}
+		   
+		    }
+		   
+		}
+		
+		//print_r($new_output);
+		//print_r($main_array[3]);
+		//echo "<br /><br />";
+		//print_r($main_array);
+		
+		return $new_output;
+		
+	}
 	public function subplan($sub_plan_data,$acad_plan){
 		foreach($sub_plan_data->result() as $sub_key => $sub_row){
 			
@@ -560,9 +684,9 @@ function __construct()
 			$meta[] = $meta_data;
 			
 			//get only the active locations
-			if($main == 1){ $active_locations[] = "Main"; }
-			if($online == 1){ $active_locations[] = "Online"; }
-			if($rosen == 1){ $active_locations[] = "Rosen"; }
+			if($main == 1){ $active_locations[] = "MAIN"; }
+			if($online == 1){ $active_locations[] = "ONLINE"; }
+			if($rosen == 1){ $active_locations[] = "ROSEN"; }
 			if($nona == 1){ $active_locations[] = "NONA"; }
 			
 			//go through the regional and add the "1"S to the actives

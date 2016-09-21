@@ -4,7 +4,8 @@
     <title id='Description'>Grid with Create, Remove and Update commands.</title>
     <meta name="description" content="AngularJS DataTable with Add, Remove and Update of rows." />	
     <link rel="stylesheet" href="../../../jqwidgets/styles/jqx.base.css" type="text/css" />
-    <script type="text/javascript" src="../../../scripts/angular.min.js"></script> <script type="text/javascript" src="../../../scripts/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="../../../scripts/angular.min.js"></script>
+    <script type="text/javascript" src="../../../scripts/jquery-1.11.1.min.js"></script>
     <script type="text/javascript" src="../../../jqwidgets/jqxcore.js"></script>
     <script type="text/javascript" src="../../../jqwidgets/jqxbuttons.js"></script>
     <script type="text/javascript" src="../../../jqwidgets/jqxscrollbar.js"></script>
@@ -14,7 +15,8 @@
     <script type="text/javascript" src="../../../jqwidgets/jqxdata.js"></script> 
     <script type="text/javascript" src="../../../jqwidgets/jqxtooltip.js"></script> 
     <script type="text/javascript" src="../../../jqwidgets/jqxinput.js"></script> 
-    <script type="text/javascript" src="../../../scripts/demos.js"></script><script type="text/javascript" src="../../../jqwidgets/jqxangular.js"></script>
+    <script type="text/javascript" src="../../../scripts/demos.js"></script>
+    <script type="text/javascript" src="../../../jqwidgets/jqxangular.js"></script>
     <script type="text/javascript">
         var demoApp = angular.module("demoApp", ["jqwidgets"]); 
         demoApp.controller("demoController", function ($scope) {                
@@ -229,6 +231,6 @@
     </script>
 </head>
  <body ng-controller="demoController">
-      <jqx-data-table jqx-on-row-begin-edit="rowBeginEdit(edit)" jqx-on-row-select="rowSelect(event)" jqx-on-row-un-select="rowUnselect(event)" jqx-on-row-end-edit="rowEndEdit(event)" jqx-settings="gridSettings"></jqx-data-table>
+      <jqx-data-table jqx-on-row-begin-edit="rowBeginEdit(edit)" jqx-on-row-select="rowSelect(event)" jqx-on-row-unselect="rowUnselect(event)" jqx-on-row-end-edit="rowEndEdit(event)" jqx-settings="gridSettings"></jqx-data-table>
 </body>
 </html>

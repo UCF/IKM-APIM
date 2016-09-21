@@ -211,6 +211,7 @@
                                     <strong>pinnedWidth</strong> - sets what the width of a tabbedGroup will be after
                                                                                         it is pinned.
                                 </li>
+                                <li><strong>popupContentSize</strong> - sets the size of the content part of an autoHideGroup's pop-up. Applicable to autoHideGroups and tabbedGroups (in this case, the property takes effect after a tabbedGroup is pinned).</li>
                                 <li>
                                     <strong>position</strong> - sets the initial position of a floatGroup. The position
                                                                                         property is an object with the following properties:<ul>
@@ -602,6 +603,40 @@ $('#jqxDockingLayout').jqxDockingLayout({ width: 800, height: 600, layout: layou
 });</code></pre>
                             <div style="padding-bottom: 5px;">
                                 <em>Try it:</em> <a target="_blank" href="https://www.jqwidgets.com/jseditor/?key=jqxdockinglayout-dock-event">Bind to the dock event by type: jqxDockingLayout.
+                                </a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="documentation-option-type-click">
+                        <span id='Span15'>floatGroupClosed</span>
+                    </td>
+                    <td>
+                        <span>Event</span>
+                    </td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td colspan='3' style='width: 100%'>
+                        <div class="documentation-option-description property-content" style="display: none;">
+                            <p>
+                                This event is triggered when a floatGroup has been closed.
+                            </p>
+                            <h4>
+                                Code examples
+                            </h4>
+                            <p>
+                                Bind to the <code>floatGroupClosed</code> event by type: jqxDockingLayout.
+                            </p>
+                            <pre><code>$('#jqxDockingLayout').on('floatGroupClosed', function (event) {
+    var args = event.args,
+        element = args.element, // the jqxWindow that represents the float group
+        floatGroup = args.floatGroup; // the layout object of the float group
+});</code></pre>
+                            <div style="padding-bottom: 5px;">
+                                <em>Try it:</em> <a target="_blank" href="https://www.jqwidgets.com/jseditor/?key=jqxdockinglayout-dock-event">
+                                    Bind to the floatGroupClosed event by type: jqxDockingLayout.
                                 </a>
                             </div>
                         </div>

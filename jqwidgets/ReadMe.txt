@@ -141,7 +141,8 @@
   The mobile examples are located in the /mobiledemos directory
   The php & mysql integration demos are located in the /phpdemos and demos/php directories. 
   All php integration samples use and require the Northwind Database(/phpdemos/Northwind.MySQL5.sql).  
-  Any examples that use Ajax need to be on a Web Server in order to work correctly. 
+  Any examples that use Ajax need to be on a Web Server/LocalHost in order to work correctly. 
+  Run any Typescript or Angular JS 2 examples on a Web Server/LocalHost.
 
 3.Documentation
 

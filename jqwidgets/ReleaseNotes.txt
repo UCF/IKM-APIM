@@ -1,4 +1,85 @@
 ﻿*********************************************
+* jQWidgets v4.2.1 Release, Aug-26-2016     *
+*********************************************
+
+What's Fixed:
+
+- Fixed issues in Angular 2 and Typescript Examples.
+- Fixed an issue in jqxScheduler regarding the legend area rendering.
+- Fixed an issue in jqxScheduler regarding the auto-height behavior.
+- Fixed an issue in jqxRibbon regarding the scrolling behavior.
+- Fixed an issue in jqxProgressBar regarding the value updates.
+
+*********************************************
+* jQWidgets v4.2.0 Release, Aug-24-2016     *
+*********************************************
+What's New:
+
+- Typescript Definitions.
+- AngularJS 2.0 Components.
+- More than 150 Examples about New Typescript and AngularJS 2.0
+- jQuery 3.1.0 support.
+- jqxGrid Grouping Aggregates.
+- New layout options in jqxLayout and jqxDockingLayout widgets. It is not possible to set the size of the content part of an autoHideGroup's pop-up.
+- New jqxDockingLayout event - "floatGroupClosed", which is triggered when a float group has been closed.
+
+What's Fixed:
+
+- Fixed an issue in jqxGrid regarding the getrowid method results.
+- Fixed an issue in jqxGrid regarding the data export of aggregates when selection mode is set to "checkbox".
+- Fixed an issue in jqxGrid regarding the initwidget callback function parameters.
+- Fixed an issue in jqxGrid regarding the data export rendering when some columns is pinned.
+- Fixed an issue in jqxGrid regarding the jqxDateTimeInput editor when editing begins with key press.
+- Fixed an issue in jqxGrid regarding the jqxDateTimeInput editor selection positioning.
+- Fixed an issue in jqxDateTimeInput regarding the AM/PM editing.
+- Fixed an issue in jqxKanban regarding the rendering when kanban items overflow and the kanban widget is resized.
+- Fixed an issue in jqxComboBox regarding the showArrow property when it is set dynamically.
+- Fixed an issue in jqxScheduler regarding the auto-height of monthView cells.
+- Fixed an issue in jqxBarGauge regarding the dynamic changing of values.
+- Fixed an issue in jqxKanban regarding the dynamic changing of resources property.
+- Fixed an issue in jqxRibbon regarding the "reorder" event being called incorrectly and causing an error to be thrown in jqxDockingLayout.
+- Fixed an issue in jqxLayout/jqxDockingLayout occurring when resizing groups with relatively small width/height.
+- Fixed an issue in jqxDockingLayout resulting in content of docked float groups not being loaded by the method "loadLayout".
+
+*********************************************
+* jQWidgets v4.1.2 Release, April-28-2016   *
+*********************************************
+
+What's New:
+
+9 new Interactive/Template demos
+
+What's Fixed:
+
+- Fixed an issue in jqxResponse regarding Microsoft Edge browser detection.
+- Fixed an issue in jqxKanban regarding the updateItem method when itemRenderer is implemented. 
+- Fixed an issue in jqxScheduler regarding the ICAL export after appointment is updated.
+- Fixed an issue in jqxScheduler regarding same Ids of rows and appointments.
+- Fixed an issue in jqxGrid regarding the rendering of textboxes in filter row.
+- Fixed an issue in jqxGrid regarding the handlekeyboardnavigation function. It's now called only if the key event is raised by jqxGrid or some of its inner HTML elements.
+- Fixed an issue in jqxGrid regarding the cell hover when there are pinned columns and horizontal bar was moved.
+- Fixed an issue in jqxListBox regarding the "render" method call.
+- Fixed an issue in jqxCalendar regarding the stepMonths property behavior.
+- Fixed an issue in jqxDropDownButton regarding the drop down's auto-closing behavior when there is another drop down widget inside it.
+
+Breaking Changes:
+
+- Added watermark in major widgets for non-commercial & evaluation versions. Non-commercial users may request a production build without the watermark by writing to sales@jqwidgets.com.
+- Renamed save-file.php to dataexport.php.
+
+*********************************************
+* jQWidgets v4.1.1 Release, March-28-2016   *
+*********************************************
+
+What's Fixed:
+
+- Fixed an issue in jqxDropDownList regarding autoDropDownHeight property.
+- Fixed an issue in jqxDockingLayout regarding the floating windows layout.
+- Fixed an issue in jqxBarGauge regarding the precision property.
+- Fixed an issue in jqxDataTable regarding the deleteRow method.
+- Fixed an issue in jqxScrollBar regarding its rendering in Chrome when the browser is ran on a PC with Touch screen.
+
+*********************************************
 * jQWidgets v4.1.0 Release, March-10-2016   *
 *********************************************
 

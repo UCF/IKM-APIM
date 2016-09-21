@@ -74,6 +74,7 @@
 	}
 
 	$(document).ready(function () {
+
 		//get the tooltips for later
 	    var tips = <?php echo json_encode($tips, JSON_PRETTY_PRINT); ?>;
 
@@ -644,7 +645,7 @@
 		    ],
 		    ready: function () {			
 		    	var rowscount = $("#mainData").jqxGrid('getdatainformation').rowscount;                   
-				$('#mainData').jqxGrid({ pagesizeoptions: ['15', '30', '50', '100']});
+				$('#mainData').jqxGrid({ pagesizeoptions: ['20', '30', '50', '100']});
 				
 				//unhide the regional edit column for regional users		
 				if ($.inArray("Regional",groups) > -1) { 
@@ -678,8 +679,9 @@
 			});
 
 		$("#csvExport").click(function () {
-		        exportinfo = $("#mainData").jqxGrid('exportdata', 'csv');			
-				download(exportinfo, 'Exported Data', 'text/plain');
+		        exportinfo = $("#mainData").jqxGrid('exportdata', 'csv');
+		        var now = new Date()
+				download(exportinfo, 'APIM_Exported_Data.csv', 'text/csv');
 		    });
 	    
 		$("#xlsExport").click(function () {

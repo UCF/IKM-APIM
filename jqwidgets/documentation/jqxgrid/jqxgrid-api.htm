@@ -400,7 +400,7 @@ $('#jqxGrid').jqxGrid({ columnmenuopening: function (menu, datafield, height) {
                         <td colspan='3' style='width: 100%'>
                             <div class="documentation-option-description property-content" style="display: none;">
                                 <p>
-                                    Callback called when a column menu is opening. You can use it for changing the size of the menu or cancelling the opening. Three params are passed - menu, datafield and menu's height. If you return false, the opening will be cancelled.
+                                    Callback called when a column menu is closing. Three params are passed - menu, datafield and menu's height. If you return false, the closing will be cancelled.
                                 </p>
                                 <h4>Code example</h4>
                                 <p>
@@ -470,7 +470,7 @@ $('#jqxGrid').jqxGrid({ cellhover: function (cellhtmlElement, x, y) {
                         <td colspan='3' style='width: 100%'>
                             <div class="documentation-option-description property-content" style="display: none;">
                                 <p>
-                                    Enables or disables the delete of a cell/row values by using the "delete" key.
+                                    Enables or disables the delete of a cell/row values by using the "delete" key. The property has effect when <code>editable</code> property is set to true, a row or cell is selected and the user presses the Del key.
                                 </p>
                                 <h4>Code example</h4>
                                 <p>
@@ -1475,6 +1475,39 @@ $(&quot;#jqxgrid&quot;).jqxGrid(
                     </tr>
                     <tr>
                         <td class="documentation-option-type-click">
+                            <span id='Span87'>showgroupaggregates</span>
+                        </td>
+                        <td>
+                            <span>Boolean</span>
+                        </td>
+                        <td>
+                            false
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan='3' style='width: 100%'>
+                            <div class="documentation-option-description property-content" style="display: none;">
+                                <p>(requires jqxgrid.aggregates.js and jqxgrid.grouping.js)</p>
+                                <p>
+                                    Shows or hides the aggregates in Grid groups.
+                                </p>
+                                <h4>Code example</h4>
+                                <p>
+                                    Set the <code>showgroupaggregates</code> property.
+                                </p>
+                                <pre><code>$('#jqxGrid').jqxGrid({ showgroupaggregates: true}); </code></pre>
+                                <p>
+                                    Get the <code>showgroupaggregates</code> property.
+                                </p>
+                                <pre><code>var showgroupaggregates = $('#jqxGrid').jqxGrid('showgroupaggregates'); </code></pre>
+                                <div style="padding-bottom: 5px;">
+                                    <em>Try it:</em> <a target="_blank" href="http://jsfiddle.net/jqwidgets/nxn074pn/">showgroupaggregates is set to true</a>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="documentation-option-type-click">
                             <span id='Span27'>showeverpresentrow</span>
                         </td>
                         <td>
@@ -1890,7 +1923,7 @@ $(&quot;#jqxgrid&quot;).jqxGrid(
                         <td>
                             <span>Number</span>
                         </td>
-                        <td>25
+                        <td>30
                         </td>
                     </tr>
                     <tr>
@@ -2062,7 +2095,7 @@ $("#jqxGrid").jqxGrid(
                         <td>
                             <span>Number/String</span>
                         </td>
-                        <td>28
+                        <td>34
                         </td>
                     </tr>
                     <tr>
@@ -2095,7 +2128,7 @@ $("#jqxGrid").jqxGrid(
                         <td>
                             <span>Number</span>
                         </td>
-                        <td>25
+                        <td>28
                         </td>
                     </tr>
                     <tr>
@@ -3244,6 +3277,86 @@ $("#jqxgrid").jqxGrid(
                                 <pre><code>var editmode = $('#jqxGrid').jqxGrid('editmode'); </code></pre>
                                 <div style="padding-bottom: 5px;">
                                     <em>Try it:</em> <a target="_blank" href="http://jsfiddle.net/jqwidgets/5aGqc/">editmode is set to 'dblclick'</a>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="documentation-option-type-click">
+                            <span id='Span139'>filter</span>
+                        </td>
+                        <td>
+                            <span>Function</span>
+                        </td>
+                        <td>
+                            null
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan='3' style='width: 100%'>
+                            <div class="documentation-option-description property-content" style="display: none;">
+                                <p>(requires jqxgrid.filter.js)</p>
+                                <p>
+                                    Custom Filtering function. It overrides the built-in Filtering. When the user filters, the Grid calls this function, when it is implemented. The function is expected to return a boolean value or undefined. 
+                                </p>
+                                cellValue, rowData, dataField, filterGroup, defaultFilterResult
+                                <ul>
+                                    <li>cellValue - current cell's value.</li>
+                                    <li>rowData - JSON object which contains the current row's data.</li>
+                                    <li>dataField - filter column's field.</li>
+                                    <li>filterGroup - group of filters.</li>
+                                    <li>defaultFilterResult - the default filter result.</li>
+                                </ul>
+
+                                <h4>Code example</h4>
+                                <p>
+                                    Set the <code>filter</code> property.
+                                </p>
+                                <pre><code>
+$("#jqxgrid").jqxGrid(
+{
+    width: 850,
+    source: dataAdapter,
+    filterable: true,
+    // cellValue - cell's current value, row data - row's data, data field - column's data field, filterGroup - group of filters, defaultFilterResult - the built-in boolean evaluated result-
+    filter: function(cellValue, rowData, dataField, filterGroup, defaultFilterResult)
+    {
+        // implements a custom filter for the "name" field. 
+        if (dataField === "name") {
+            var filters = filterGroup.getfilters();
+            for (var i = 0; i < filters.length; i++) {
+                var filter = filters[i];
+                var filterValue = filter.value;
+                var filterCondition = filter.condition;
+                var filterType = filter.type;
+                if (cellValue.indexOf("Antoni") >= 0) {
+                    return true;
+                }
+                if (cellValue.indexOf("Nancy") >= 0) {
+                    return true;
+                }
+            }
+            return false;
+        }
+    },
+    selectionmode: 'multiplecellsextended',
+    columns: [
+        { text: 'Name', columntype: 'textbox', filtertype: 'input', datafield: 'name', width: 215 },
+        {
+            text: 'Product', filtertype: 'checkedlist', datafield: 'productname', width: 220
+        },
+        { text: 'Available', datafield: 'available', columntype: 'checkbox', filtertype: 'bool', width: 67 },
+        { text: 'Ship Date', datafield: 'date', filtertype: 'range', width: 210, cellsalign: 'right', cellsformat: 'd' },
+        { text: 'Qty.', datafield: 'quantity', filtertype: 'number',  cellsalign: 'right' }
+    ]
+});                                
+                                </code></pre>
+                                <p>
+                                    Get the <code>filter</code> property.
+                                </p>
+                                <pre><code>var filter = $('#jqxGrid').jqxGrid('filter'); </code></pre>
+                                <div style="padding-bottom: 5px;">
+                                    <em>Try it:</em> <a target="_blank" href="http://jsfiddle.net/jqwidgets/bn4okvy3/2/">filter is set to custom function</a>
                                 </div>
                             </div>
                         </td>

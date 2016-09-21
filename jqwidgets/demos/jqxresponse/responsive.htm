@@ -11,37 +11,29 @@
             background: #5cb85c;
             color: #fff;
         }
-
         .row .big {
             background: #5cb85c;
         }
-
         .row .medium {
             background: #293955;
         }
-
         .row .small {
             background: #00a0da;
         }
-
         .row .x-small {
             background: #f0ad4e;
         }
-
         .row {
             overflow: auto;
         }
-
         table {
             margin-top: 30px;
             margin-bottom: 30px;
         }
-
         td {
             padding: 5px;
             border: 1px solid #aaa;
         }
-
         #currentWidth {
             position: absolute;
             top: 10px;
@@ -54,9 +46,9 @@
             var response = new $.jqx.response();
             var padding = {
                 left: 5,
-                top: 15,
+                top: 5,
                 right: 5,
-                bottom: 15
+                bottom: 5
             };
             var margin = {
                 left: 0,
@@ -66,9 +58,9 @@
             };
             var breakPointPadding = {
                 left: 0,
-                top: 15,
+                top: 5,
                 right: 0,
-                bottom: 15
+                bottom: 5
             };
             var breakPointMargin = {
                 left: 0,
@@ -76,7 +68,6 @@
                 right: 0,
                 bottom: 0
             };
-
             response.responsive({
                 container: $("#row"),
                 deviceTypes: "Desktop, Tablet, Phone",
@@ -172,7 +163,6 @@
             <td>3 rows, 2 columns</td>
             <td>6 rows, 1 column</td>
         </tr>
-
         <tr>
             <td>>=1170px</td>
             <td>>=970px</td>
@@ -193,7 +183,6 @@
             <td>1 row, 3 columns</td>
             <td>3 rows, 1 column</td>
         </tr>
-
         <tr>
             <td>>=970px</td>
             <td>>=0px</td>
@@ -209,7 +198,6 @@
             <td>1 row, 2 columns</td>
             <td>2 rows, 1 column</td>
         </tr>
-
         <tr>
             <td>>=750px</td>
             <td>>=0px</td>
@@ -224,7 +212,6 @@
             <td>1 row, 3 columns, 2 columns with Offset</td>
             <td>2 rows, 1 column</td>
         </tr>
-
         <tr>
             <td>>=970px</td>
             <td>>=0px</td>
@@ -242,7 +229,6 @@
             <td>3 rows, 2 columns, ".small" CSS class applied to all columns.</td>
             <td>6 rows, 1 column, ".x-small" CSS class applied to all columns.</td>
         </tr>
-
         <tr>
             <td>>=1170px</td>
             <td>>=970px</td>

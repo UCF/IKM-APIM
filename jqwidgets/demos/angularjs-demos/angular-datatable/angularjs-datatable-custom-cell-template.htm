@@ -22,10 +22,10 @@
         .directive('jqxName', function () {
             return {
                 replace: true,
-                template: "<a style='color: orange;'></a>",
+                template: "<a target='_blank' style='color: orange;'></a>",
                 link: function link(scope, element, attrs) {
                     element.html(attrs.value);
-                    element[0].href = "www.jqwidgets.com";
+                    element[0].href = "http://www.jqwidgets.com";
                 }
             }
         });
