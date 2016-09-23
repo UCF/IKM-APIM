@@ -45,6 +45,11 @@ function __construct()
 			if($filters['career'] == 'all') { $career = '%'; } else { $career = strtoupper($filters['career']); }
 			if($filters['status'] == 'all') { $status = '%'; } else { $status = strtoupper($filters['status']); }
 			
+			//capitalize locations
+			if(isset($filters['location'])){
+				$filters['location'] = strtoupper($filters['location']);
+			}
+			
 			//fix status a bit
 			switch($status){
 				case 'ACTIVE':
@@ -354,7 +359,7 @@ function __construct()
 			
 			//do some work if location flag is set
 			//check if location is not all, if it is then continue.  If not, dive into the array and scrub plans/sublans that don't match location
-			if($filters['location'] == 'all') { } else { 
+			if($filters['location'] == 'ALL') { } else { 
 				$fixed = $this->location($fixed,$filters['location']);
 			}
 	
