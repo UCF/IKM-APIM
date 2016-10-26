@@ -250,8 +250,8 @@ class Main extends CI_Controller {
 			//get vars coming in from form and set them accordingly
 			$plan = $this->input->get('plan');
 			$subplan = $this->input->get('subplan');
-			$planlongname = $this->input->get('planlongname');
-			$subplanlongname = $this->input->get('subplanlongname');
+			$planlongname =  str_replace("'","''",$this->input->get('planlongname'));  //put a double apostrophe in for single to support Master's in MSSQL DB
+			$subplanlongname = str_replace("'","''",$this->input->get('subplanlongname'));  //put a double apostrophe in for single to support Master's in MSSQL DB
 			$deptlongname = $this->input->get('deptlongname');
 			$admiss = $this->input->get('adm');
 			$readmit = $this->input->get('readmit');
