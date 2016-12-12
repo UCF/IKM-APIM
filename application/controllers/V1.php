@@ -364,7 +364,7 @@ function __construct()
 			}
 	
 			//convert to json and escape any weird chracters
-			$final_data = json_encode($fixed, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+			$final_data = json_encode($fixed, JSON_UNESCAPED_UNICODE |  JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT); // DON'T JSON_UNESCAPED_SLASHES ON MAIN OUTPUT - WIll break.  ONLY HERE
 		
 			header('Content-Type: text/plain');
 			echo  $final_data;
