@@ -9,9 +9,9 @@ function __construct()
 		header('Access-Control-Allow-Methods: GET, POST, PATCH, PUT, DELETE, OPTIONS');
 		header('Access-Control-Allow-Headers: Origin, Content-Type, X-Auth-Token'); // allow certain headers
 		header("Cache-Control: no-store, no-cache, must-revalidate");
-        	header("Cache-Control: post-check=0, pre-check=0", false);
-        	header("Pragma: no-cache");
-        	header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
+       	header("Cache-Control: post-check=0, pre-check=0", false);
+       	header("Pragma: no-cache");
+       	header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
 
 		parent::__construct();
 		
@@ -35,6 +35,7 @@ function __construct()
 			//get the uri call
 			$filters = $this->uri->uri_to_assoc(3);
 			
+						
 			if(!isset($filters['status'])){ echo "missing status: e.g. status/all"; exit; }
 			if(!isset($filters['college'])){ echo "missing status: e.g. college/all"; exit; }
 			if(!isset($filters['career'])){ echo "missing status: e.g. career/all"; exit; }
@@ -223,9 +224,9 @@ function __construct()
 					$totDissert = 0;				
 					$recent = '';
 					$plan_long_name = '';
-					$main = '0';
-					$rosen = '0';
-					$nona = '0';
+					$main = 0;
+					$rosen = 0;
+					$nona = 0;
 				} else {
 					$plan_extra_row = $plan_extra->row();
 					$plan_long_name = $plan_extra_row->Long_Name;
@@ -238,13 +239,13 @@ function __construct()
 					$stem = $plan_extra_row->STEM;	
 					$professional = $plan_extra_row->professional;				
 					$mtr = $plan_extra_row->MTR;
-					$totThesis = $plan_extra_row->Total_Thesis;
-					$totNonThesis = $plan_extra_row->Total_NonThesis;
-					$tot6971 = $plan_extra_row->Total_Thesis6971;
-					$totDoc = $plan_extra_row->Total_Doctoral;
-					$totDissert = $plan_extra_row->Total_Dissertation;
-					$tot6971 = $plan_extra_row->Total_Thesis6971;
-					$totCert = $plan_extra_row->Total_Grad_Certificate;
+					$totThesis = (int)$plan_extra_row->Total_Thesis;
+					$totNonThesis = (int)$plan_extra_row->Total_NonThesis;
+					$tot6971 = (int)$plan_extra_row->Total_Thesis6971;
+					$totDoc = (int)$plan_extra_row->Total_Doctoral;
+					$totDissert = (int)$plan_extra_row->Total_Dissertation;
+					$tot6971 = (int)$plan_extra_row->Total_Thesis6971;
+					$totCert = (int)$plan_extra_row->Total_Grad_Certificate;
 					$main = $plan_extra_row->Main_Campus;
 					$rosen = $plan_extra_row->Rosen_Campus;
 					$nona = $plan_extra_row->Lake_Nona_Campus;
@@ -259,8 +260,6 @@ function __construct()
 				$sub_data = $this->General_model->subplan_all($row->Acad_Plan,$status);
 				if($sub_data->num_rows()){
 					$subplan = "Yes";
-						
-					$sub_plans = $this->subplan($sub_data,$row->Acad_Plan);
 				}
 				
 				//fix certs
@@ -281,14 +280,14 @@ function __construct()
 						"METROWEST" => $valenciawest,
 						"VALENCIA" => $valenciaeast
 				);
-				$campuses[] = $region_item;
+				$campuses[] = $region_item; /*****/
 				
 				$meta_data = array(
+						"PlanLongName"=> $plan_long_name,
 						"TermStart"=> ucfirst(strtolower($row->Term)),
 						"TermStartShort" => $termStartShort,
 						"Regional"=> $regional,
 						"SubPlan"=> $subplan,
-						"PlanLongName"=> $plan_long_name,
 						"Stratemph"=> $row->AREA,						
 						"Plan Type" => '',
 						"Degree" => $row->Degree,						
@@ -317,6 +316,14 @@ function __construct()
 						"NONA" => $nona
 				);
 				$meta[] = $meta_data;
+				
+				if($subplan == "Yes"){
+				
+					$sub_plans = $this->subplan($sub_data,$row->Acad_Plan,$filters,$meta_data);
+				} else {
+					
+					$sub_plans = array();
+				}
 				
 				//get only the active locations
 				if($main == 1){ $active_locations[] = "MAIN"; }
@@ -350,6 +357,53 @@ function __construct()
 					);
 				$itemlist[] = $item;
 				
+				//FOR CSV OUTPUT
+				if(isset($filters['out']) && $filters['out'] == 'csv'){
+					$item_csv = array(
+							"Plan"=> $row->Acad_Plan,
+							"PlanName"=> $row->UCF_Name,
+							"CollegeShort" => $row->College,
+							"College_Full" => $college_name_full,
+							"DeptShort" => $row->AcadOrg,
+							"Dept_Full" => $row->AcadOrgDescr,
+							"Career" => $row->Career,
+							"Level" => $row->Level,
+							"CIP" => $row->CIP_Code
+					);
+					$hegis_item = array(
+							"HEGIS" => $row->HEGIS_Code
+					);
+					$subplan_holder = array(
+							"Subplan"=> '',
+							"Subplan_Name" => ''
+					);
+					
+					if($meta_data["SubPlan"] == "Yes"){
+						$subcheck = 1;
+					} else {
+						$subcheck = 0;
+					}
+					
+					unset($meta_data["SubPlan"]);
+					
+					$final_plan_csv = array_merge($item_csv,$subplan_holder,$meta_data,$region_item);
+					$csv_itemlist[] = $final_plan_csv;
+					//print_r($final_plan_csv);
+					
+					//dealing with subplans
+					if($subcheck == 1){ 
+						foreach($sub_plans as $value){
+							
+							$final_plan_csv = array_merge($item_csv,$value);
+							$csv_itemlist[] = $final_plan_csv;
+							//print_r($final_plan_csv);
+						}
+					}
+					
+					//print_r($final_plan_csv);
+													
+				}
+				
 			}
 			
 			$result_count = count($itemlist);
@@ -362,132 +416,101 @@ function __construct()
 			if($filters['location'] == 'ALL') { } else { 
 				$fixed = $this->location($fixed,$filters['location']);
 			}
-	
+			
 			//convert to json and escape any weird chracters
 			$final_data = json_encode($fixed, JSON_UNESCAPED_UNICODE |  JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT); // DON'T JSON_UNESCAPED_SLASHES ON MAIN OUTPUT - WIll break.  ONLY HERE
-		
+			
 			header('Content-Type: text/plain');
-			echo  $final_data;
-		}
-	public function location($main_array,$locat){
-		/* Complicated way to grab the locations from the already made output and keep the structure */
-		
-		//new array 
-		$new_output = array();
-		$subplan_unset = array();  //place keys that don't have the location here to be removed later
-		$subplan_set = array();
-		$plan_check = FALSE;
-		$subplan_macro_check = FALSE;
-		
-		$keys = array_keys($main_array); //grab the array keys
+			
+			//check of json out was overridden by csv
+			if(isset($filters['out']) && $filters['out'] == 'csv'){
+						
+				// Create a stream opening it with read / write mode
+				$stream = fopen('data://text/plain,' . "", 'w+');
 				
-		for($i = 0; $i < count($main_array); $i++) {
-			$plan_check = FALSE;
-			$subplan_macro_check = FALSE;
+				// Iterate over the data, writting each line to the text stream
+				foreach ($csv_itemlist as $val) {
+				    fputcsv($stream, $val);
+				}
+				
+				// Rewind the stream
+				rewind($stream);
+				
+				// You can now echo it's content
+				echo stream_get_contents($stream);
+				
+				// Close the stream 
+				fclose($stream);
+				
+			} else {
+				echo  $final_data;
+				
+			}
+		}
+	public function location ($input_array, $locat){
+		/* Complicated procedure to return plans/subplans by requested location
+		 * First pass is to scrub sub=plans that don't match the location and flag its parent plan
+		 * Second pass finds top plans that match the location AND that were not flagged before - scrubs the rest
+		 */
+		
+		$plan_keep = array(); //hold plans of subplans that match
+		$main_array = $input_array;
+		
+		//PASS #1 - Subplan cleanse of non-matching locations
+		foreach($main_array as $key => &$topvalue){
 
-		    foreach($main_array[$keys[$i]] as $key => $value) {
-		    	if ($key == 'Plan'){ $plan = $value; }
-		        
-		    	/*look in subplans first. If subplan has the location, then we know the top level plan HAS to be kept for the sake of the structure.  This is for situations where the plan does
-		    	/* match the location, but a subplan does*/
-		    	
-		    	if($key == 'Meta Data' && $value[0]['SubPlan'] == 'Yes'){ 
-		    		$subplan_macro_check = TRUE;
-		    		//echo "<br />".$plan; 
-		    		//echo "<br />subs--><br />";
-					//look in subplan array later
-		    	} else {
-			    	//look for location in plan and set plan check to true
-			    	if($key == 'Active Locations' && $subplan_macro_check === FALSE && is_array($value)){
-			        	if(in_array($locat, $value)) { 
-			        		
-			        		//move the plan that has the location into the new array
-			        		if(empty($new_output)){
-			        			$new_output = array_slice($main_array,$keys[$i],1);	
-			        		} else {
-			        			array_push($new_output,array_slice($main_array,$keys[$i],1));
-			        		}
-			        	}
-			    	}
-		    	}
-		    	
-		    	//dive into subplans
-		    	if($key == 'SubPlans' && $subplan_macro_check === TRUE && is_array($value)){	    		
-		    		$subkeys = array_keys($value); //grab the array keys
-		    		unset($subplan_unset);
-		    		unset($subplan_set);
-	    		
-		    		for($s = 0; $s < count($value); $s++) {						
-		    			
-						foreach($value[$subkeys[$s]] as $skey => $svalue) {							
-							$subplan_micro_check = FALSE; //location keep for each possible subplan						
-							
-							//if($skey == 'Subplan'){ echo $svalue.'-'.$subkeys[$s].'--'; }
-							
-							if($skey == 'Active Locations'){
-								//print_r($svalue);
-								
-								if(in_array($locat, $svalue)) {
-									$subplan_micro_check = TRUE;
-									$subplan_set[] =  $subkeys[$s];
-								} 
-								
-								if(!in_array($locat, $svalue)){
-									$subplan_unset[] =  $subkeys[$s]; //keys that need to be removed
-								}
-								
-								//echo $subplan_micro_check;
-								//echo "<br />";
-							}
-							
-						}
-						
-					}
+			$plan_id = $topvalue['Plan'];
 
-					//echo "^<br />";
-					if(!isset($subplan_set)) { $subplan_macro_check = FALSE; }
-					
-					if($subplan_macro_check === TRUE){
-
-						//remove the subplans that don't belong if subplans unset is set. i.e. at least one subplan is not in location
-						if(isset($subplan_unset)){
-							//using new output now
-							foreach($subplan_unset as $un_key => $un_value){
-							
-								unset($main_array[$keys[$i]]['SubPlans'][$un_value]);
-							}
-							
-						}
-						
-						//check of new output has been made and then manipuate as needed
-						if(empty($new_output)){
-							$new_output = array_slice($main_array,$keys[$i],1);
-						} else {
-							array_push($new_output,array_slice($main_array,$keys[$i],1));
-						}
-											
-						
-					}					
-					
-					
-		    	}
-		   
-		    }
-		   
+			foreach($topvalue['SubPlans'] as $skey => &$subplan){
+				$subplan_id = $subplan['Subplan'];
+				
+				if(!in_array($locat, $subplan['Active Locations'])) {
+					//get the non matching subplans out and put the top level plan key in the do not touch array					
+					unset($input_array[$key]['SubPlans'][$skey]);
+				} else {
+					$plan_keep[] = $key;
+				}
+				
+				//array_values($input_array[$key]['SubPlans']);
+			}
 		}
 		
-		//print_r($new_output);
-		//print_r($main_array[3]);
-		//echo "<br /><br />";
-		//print_r($main_array);
+		$plan_arr = $input_array;
+		//PASS #2 - Cleanse non-matching plans EXCEPT those that are attached to matchng subs from above
+		foreach($plan_arr as $key => &$topvalue){
 		
-		return $new_output;
+			$plan_id = $topvalue['Plan'];
+	
+				if(!in_array($key, $plan_keep)){
+					if(!in_array($locat, $topvalue['Active Locations'])) {
+						//get the non matching subplans out and put the top level plan key in the do not touch array
+						unset($input_array[$key]);
+					} 
+				}
+		}
+	
+		//fix_keys is to reset the array keys after all the resetting done above.
+		function fix_keys($array) {
+		    $numberCheck = false;
+		    foreach ($array as $k => $val) {
+		        if (is_array($val)) $array[$k] = fix_keys($val); //recurse
+		        if (is_numeric($k)) $numberCheck = true;
+		    }
+		    if ($numberCheck === true) {
+		        return array_values($array);
+		    } else {
+		        return $array;
+		    }
+		}
+		
+		return fix_keys($input_array);
+		//echo '<pre>', print_r($input_array), '</pre>';
 		
 	}
-	public function subplan($sub_plan_data,$acad_plan){
+	public function subplan($sub_plan_data,$acad_plan,$filters,$plan_meta){
 		foreach($sub_plan_data->result() as $sub_key => $sub_row){
 			
-			$sub_regional = '';
+			$sub_regional = 'No';
 			$adm = array('true','false');
 			$admk = array_rand($adm);
 			$meta = array();
@@ -612,9 +635,9 @@ function __construct()
 				$tot6971 = 0;
 				$totDissert = 0;
 				$sub_long_name = '';
-				$main = '0';
-				$rosen = '0';
-				$nona = '0';
+				$main = 0;
+				$rosen = 0;
+				$nona = 0;
 			} else {
 				$subplan_extra_row = $subplan_extra->row();
 				$sub_long_name = $subplan_extra_row->Long_Name;
@@ -627,12 +650,12 @@ function __construct()
 				$stem = $subplan_extra_row->STEM;
 				$professional = $subplan_extra_row->professional;
 				$mtr = $subplan_extra_row->MTR;
-				$totThesis = $subplan_extra_row->Total_Thesis;
-				$totNonThesis = $subplan_extra_row->Total_NonThesis;
-				$tot6971 = $subplan_extra_row->Total_Thesis6971;
-				$totCert = $subplan_extra_row->Total_Grad_Certificate;
-				$totDoc = $subplan_extra_row->Total_Doctoral;
-				$totDissert = $subplan_extra_row->Total_Dissertation;
+				$totThesis = (int)$subplan_extra_row->Total_Thesis;
+				$totNonThesis = (int)$subplan_extra_row->Total_NonThesis;
+				$tot6971 = (int)$subplan_extra_row->Total_Thesis6971;
+				$totCert = (int)$subplan_extra_row->Total_Grad_Certificate;
+				$totDoc = (int)$subplan_extra_row->Total_Doctoral;
+				$totDissert = (int)$subplan_extra_row->Total_Dissertation;
 				$main = $subplan_extra_row->Main_Campus;
 				$rosen = $subplan_extra_row->Rosen_Campus;
 				$nona = $subplan_extra_row->Lake_Nona_Campus;
@@ -660,11 +683,14 @@ function __construct()
 					"SubPlanLongName"=>$sub_long_name,
 					"TermStart"=> ucfirst(strtolower($sub_row->Term)),
 					"TermStartShort" => $termStartShort,
-					"Regional"=>$sub_regional,					
+					"Regional"=>$sub_regional,
+					"Stratemph"=> $plan_meta["Stratemph"],
+					"Plan Type" => $sub_row->Sub_Pl_Typ,
+					"Degree" => $plan_meta["Degree"],
 					"Status" => $sub_row->Status,
 					"StatusChangeTerm" => $status_change,
 					"StatusChangeTermShort" => $statusStartShort,
-					"Plan Type" => $sub_row->Sub_Pl_Typ,
+					"Access"=> $plan_meta["Access"],
 					"Admission" => $admission,
 					"ReAdmit" => $readmit,
 					"FLVC" => $flvc,
@@ -710,7 +736,22 @@ function __construct()
 				"Active Locations" => $active_locations, //array of active locations
 			);
 			
-			$itemlist[] = $sub_item;		
+			//FOR CSV OUTPUT
+			if(isset($filters['out']) && $filters['out'] == 'csv'){
+				$sub_item_csv = array(
+						"Subplan"=> $sub_row->Sub_Plan,
+						"Subplan_Name" => $sub_row->UCF_Name
+				);
+				
+				//remove some elements to make columns line up
+				//unset($meta_data[])
+				$final_csv = array_merge($sub_item_csv, $meta_data, $region_item);
+					
+				$itemlist[] = $final_csv;
+			} else {
+			
+				$itemlist[] = $sub_item;
+			}
 		}
 		
 		return $itemlist;
