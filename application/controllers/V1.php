@@ -69,8 +69,9 @@ function __construct()
 					$status = 'A';
 			}
 			
+			$api_check = TRUE;
 			
-			$plan_data = $this->General_model->acadplan_all('ASC','Acad_Plan',$college,$career,$status);	//main query
+			$plan_data = $this->General_model->acadplan_all('ASC','Acad_Plan',$college,$career,$status,$api_check);	//main query
 					
 			$itemlist = array();
 			$id = 0;
@@ -86,6 +87,7 @@ function __construct()
 				$regional = 'No';
 				$subplan = 'No';
 				$sub_plans = '';
+				$level = '';
 				$campuses = array();
 				$region_item = array();
 				$meta_data = array();
@@ -152,7 +154,9 @@ function __construct()
 					$college_name_full = $coll_row->College_Name;					
 				}
 				
-			
+				//set level
+				if(empty($row->Level)){ } else { $level = $row->Level; }
+				
 				
 				//check for and set Regional flag with the custom system library
 				$plan_regions = $this->corelib->plan_locations($row->Acad_Plan);
@@ -215,6 +219,7 @@ function __construct()
 					$psm = 0;
 					$stem = 0;
 					$mtr = 0;
+					$asbs = 0;
 					$professional = 0;
 					$totThesis = 0;
 					$totNonThesis = 0;
@@ -236,6 +241,7 @@ function __construct()
 					$orient = $plan_extra_row->Orientation;
 					$online = $plan_extra_row->Online;
 					$psm = $plan_extra_row->psm;
+					$asbs = $plan_extra_row->asbs_articulation;
 					$stem = $plan_extra_row->STEM;	
 					$professional = $plan_extra_row->professional;				
 					$mtr = $plan_extra_row->MTR;
@@ -289,7 +295,7 @@ function __construct()
 						"Regional"=> $regional,
 						"SubPlan"=> $subplan,
 						"Stratemph"=> $row->AREA,						
-						"Plan Type" => '',
+						"Plan Type" => $row->Plan_Type,
 						"Degree" => $row->Degree,						
 						"Status" => $row->Status,
 						"StatusChangeTerm" => $status_change,
@@ -298,6 +304,7 @@ function __construct()
 						"Admission" => $admission,
 						"ReAdmit" => $readmit,
 						"FLVC" => $flvc,
+						"ASBS" => $asbs,
 						"Online" => $online,
 						"Orientation" => $orient,
 						"PSM" => $psm,
@@ -347,7 +354,7 @@ function __construct()
 						"DeptShort" => $row->AcadOrg,
 						"Dept_Full" => $row->AcadOrgDescr,
 						"Career" => $row->Career,
-						"Level" => $row->Level,
+						"Level" => $level,
 						"CIP" => $row->CIP_Code,
 						"HEGIS" => $row->HEGIS_Code,
 	                    "Meta Data"=> $meta,
@@ -622,6 +629,7 @@ function __construct()
 				$admission = 0;
 				$readmit = 0;
 				$flvc = 0;
+				$asbs = 0;
 				$orient = 0;
 				$online = 0;
 				$psm = 0;
@@ -645,6 +653,7 @@ function __construct()
 				$readmit = $subplan_extra_row->Readmit;
 				$flvc = $subplan_extra_row->FLVC;
 				$online = $subplan_extra_row->Online;
+				$asbs = $subplan_extra_row->asbs_articulation;
 				$orient = $subplan_extra_row->Orientation;
 				$psm = $subplan_extra_row->psm;
 				$stem = $subplan_extra_row->STEM;
@@ -694,6 +703,7 @@ function __construct()
 					"Admission" => $admission,
 					"ReAdmit" => $readmit,
 					"FLVC" => $flvc,
+					"ASBS" => $asbs,
 					"Orientation" => $orient,
 					"Online" => $online,
 					"PSM" => $psm,

@@ -14,14 +14,19 @@ class General_model extends CI_Model
 
 	}
 
-	function acadplan_all($order,$var_order,$college='%',$career='%',$status='%'){
+	function acadplan_all($order,$var_order,$college='%',$career='%',$status='%',$api_check=FALSE){
 		
 		$this->db->select('Academic_Plans.Acad_Plan,College,Cancelled_Year,Term,UCF_Name,AcadOrg,AcadOrgDescr,Level,Career,Status,Plan_Type,Academic_Plans.Degree,CIP_Code,HEGIS_Code,Acad_Prog,Prg_Access,AREA');
 		$this->db->from('Academic_Plans');
 		$this->db->join($this->tables['strategic_emphasis'],$this->tables['strategic_emphasis'].'.CIP = Academic_Plans.CIP_Code','left');
 		$this->db->join('Degree_Name','Degree_Name.Degree = Academic_Plans.Degree','left');
 		$this->db->join('Acad_Prog_Lookup','Acad_Prog_Lookup.Acad_Plan = Academic_Plans.Acad_Plan','left');
-		$this->db->where('Plan_Type !=','MIN');
+		
+		//only show minors if it's the API
+		if($api_check === FALSE){
+			$this->db->not_like('Plan_Type','MIN','none', FALSE);
+		}
+		
 		if($college != '%'){
 			$this->db->like('College',$college, 'none', FALSE);
 		}

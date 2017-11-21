@@ -54,6 +54,7 @@ class Corelib {
 				'STEM' => 'STEM',
 				'Professional' => 'professional',
 				'MTR' =>  'MTR',
+				'ASBS' => 'asbs_articulation',
 				'CR' => 'cost_recovery',
 				'TotThesis' => 'Total_Thesis',
 				'Tot6971' => 'Total_Thesis6971',

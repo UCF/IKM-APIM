@@ -35,6 +35,7 @@ $config['Tips'] = array(
 		'Professional' => 'Degrees that are not considered research focused, but instead prepare students for careers outside of academia.',
 		'Plan' => 'Official PeopleSoft Plan code.',
 		'SubPlan' => 'Official PeopleSoft SubPlan code (where applicable).',
+		'AS:BS Articulated' => 'Articulated AS to BS',
 		'Plan' => 'Official PeopleSoft code for the academic Plan.',
 		'SubPlan' => 'Official PeopleSoft code for the academic SubPlan.',
 		'Plan Type' => 'Is the Plan or SubPlan a track (TRK) or specialization(SPC).',

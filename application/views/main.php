@@ -112,7 +112,7 @@
 				{ name: 'PSM', type: 'boolean'},{ name: 'STEM', type: 'boolean'},
 				{ name: 'Professional', type: 'boolean'},{ name: 'MTR', type: 'boolean'},
 				{ name: 'recentchange', type: 'date'},{ name: 'Regional',type: 'string'},
-				{ name: 'Online', type: 'boolean' },{ name:'avail', type: 'boolean' },
+				{ name: 'Online', type: 'boolean' },{ name:'avail', type: 'boolean' }, { name:'ASBS', type: 'boolean' }, 
 				{ name: 'TotThesis', type: 'string' },{ name:'TotNonThesis', type: 'string' },
 				{ name: 'TotCert', type: 'string' },{ name:'TotDoc', type: 'string' },
 				{ name: 'TotDissert', type: 'string' },{ name:'Tot6971', type: 'string' },
@@ -158,7 +158,7 @@
 
 			//stuff for updating rows 151-185
 			var updata = "update=true&cellchange=" + prev_cellName + "&plan=" + rowdata.Plan + "&adm=" + rowdata.Admission + "&subplan=" + encodeURIComponent(rowdata.Subplan) + "&planlongname=" + encodeURIComponent(rowdata.PlanLongName) + "&subplanlongname=" + encodeURIComponent(rowdata.SubPlanLongName);
-			updata = updata + "&flvc=" + rowdata.FLVC + "&readmit=" + rowdata.ReAdmit + "&online=" + rowdata.Online +"&orient=" + rowdata.Orientation + "&deptlongname=" + encodeURIComponent(rowdata.DeptLongName);
+			updata = updata + "&flvc=" + rowdata.FLVC + "&asbs=" + rowdata.ASBS + "&readmit=" + rowdata.ReAdmit + "&online=" + rowdata.Online +"&orient=" + rowdata.Orientation + "&deptlongname=" + encodeURIComponent(rowdata.DeptLongName);
 			updata = updata + "&psm=" + rowdata.PSM + "&mtr=" + rowdata.MTR + "&cr=" + rowdata.CR + "&stem=" + rowdata.STEM +"&professional=" + rowdata.Professional + "&totThesis=" + rowdata.TotThesis + "&totNonThesis=" + rowdata.TotNonThesis;
 			updata = updata + "&tot6971=" + rowdata.Tot6971 + "&totCert=" + rowdata.TotCert + "&totDoc=" + rowdata.TotDoc +"&totDissert=" + rowdata.TotDissert;
 			updata = updata + "&ALTSPRNG=" + rowdata.ALTSPRNG + "&COCOA=" + rowdata.COCOA + "&DAYTONA=" + rowdata.DAYTONA +"&LEESBURG=" + rowdata.LEESBURG;
@@ -210,8 +210,7 @@
 			
 			var data = $('#mainData').jqxGrid('getrowdata', row);
 
-			//set the planlong and subplan long false for now
-			
+			//set the planlong and subplan long false for now	
 						
 			if(data.avail == false || data.check == 4){ //check for Regional, read-only, or orientation - they only get to see data
 				return false;
@@ -228,7 +227,7 @@
 			}
 
 			//stop grad from editing certain fields that don't belong to them
-			var gradRestricted = ["FLVC","Online","loadas","loadasnames","ReAdmit","Mrkt. Rate Tuition","Cost Recovery"];
+			var gradRestricted = ["FLVC","Online","ASBS","loadas","loadasnames","ReAdmit","Mrkt. Rate Tuition","Cost Recovery"];
 
 			//stop ugrad college folks from editing certain fields
 			var ugradRestricted = ["FLVC","Online","Mrkt. Rate Tuition","Cost Recovery","PlanLongName","SubPlanLongName"];
@@ -241,7 +240,7 @@
 					return false;
 				}
 
-			//for Addmissions
+			//for Admissions
 			if(data.check == 9 && data.Career == 'UGRD' && (datafield == 'PlanLongName' || datafield == 'SubPlanLongName')){
 					return true;
 				} else if (data.check == 9 && data.Career == 'UGRD') { 
@@ -288,7 +287,11 @@
 
 			//for regional
 			if(data.check == 8){ return false; }
-
+			
+			/*if(data.Career == 'UGRD' && (datafield == 'NONA' || datafield == 'ROSEN' || datafield == 'MAIN')){
+				return true;
+			}*/
+			
 			//open up for all group
 			if(data.check == 3){
 				return true;
@@ -333,9 +336,10 @@
 				return false;
 				} 
 			
-			if(data.check == 8 && (datafield == 'NONA' || datafield == 'ROSEN')){
+			/*if(data.check == 8 && (datafield == 'NONA' || datafield == 'ROSEN' || datafield == 'MAIN')){
 				return false;
-			}
+			}*/
+			
 			
 			if(data.check == 8 || data.check == 3){
 					return true;				
@@ -461,6 +465,7 @@
 				$("#mainData").jqxGrid('hidecolumn','ReAdmit');
 				$("#mainData").jqxGrid('hidecolumn','Access');
 				$("#mainData").jqxGrid('hidecolumn','FLVC');
+				$("#mainData").jqxGrid('hidecolumn','ASBS');
 
 				$("#mainData").jqxGrid('showcolumn','ProgCode');
 				$("#mainData").jqxGrid('showcolumn','Professional');
@@ -507,6 +512,7 @@
 						$("#mainData").jqxGrid('hidecolumn','ReAdmit');
 						$("#mainData").jqxGrid('hidecolumn','Access');
 						$("#mainData").jqxGrid('hidecolumn','FLVC');
+						$("#mainData").jqxGrid('hidecolumn','ASBS');
 						$("#mainData").jqxGrid('hidecolumn','Regional');
 						$("#mainData").jqxGrid('hidecolumn','ProgCode');
 						$("#mainData").jqxGrid('hidecolumn','Professional');
@@ -600,6 +606,7 @@
 			{ text: 'FLVC Transient', columngroup: 'General', datafield: 'FLVC', columntype: 'checkbox', width: 55,filterable: false, cellbeginedit: cellbeginedit, rendered: toolTip},
 			{ text: 'UCF Online', columngroup: 'General', datafield: 'Online', columntype: 'checkbox', width: 75,filterable: false, cellbeginedit: cellbeginedit, rendered: toolTip},
 			{ text: 'UCF STEM', columngroup: 'General', datafield: 'STEM', columntype: 'checkbox', width: 75,filterable: false, editable: false, cellbeginedit: cellbeginedit, rendered: toolTip},
+			{ text: 'AS:BS Articulated', columngroup: 'General', datafield: 'ASBS', columntype: 'checkbox', width: 95,filterable: false, editable: true, cellbeginedit: cellbeginedit, rendered: toolTip},
 
 			{ text: 'Program/Plan Extra', columngroup: 'General', datafield: 'PlanLongName', columntype: 'input', hidden: grad_hide, width: 144,filterable: true, cellbeginedit: cellbeginedit, rendered: toolTip},
 			{ text: 'SubPlan Name Extra', columngroup: 'General', datafield: 'SubPlanLongName', columntype: 'input', hidden: grad_hide, width: 99,filterable: true, cellbeginedit: cellbeginedit, rendered: toolTip},			
@@ -617,11 +624,12 @@
 			{ text: 'Professional', columngroup: 'GraduateStudies', datafield: 'Professional', columntype: 'checkbox', hidden: grad_hide, width: 75,filterable: false, cellbeginedit: gradbeginedit, rendered: toolTip, rendered: toolTip},
 			{ text: 'PSM', columngroup: 'GraduateStudies', datafield: 'PSM', columntype: 'checkbox', width: 75,filterable: false, cellbeginedit: gradbeginedit, rendered: toolTip},
 				
-			//Regional fields
-			{ text: 'Lake Nona', columngroup: 'OtherLocations', datafield: 'NONA', columntype: 'checkbox', hidden: true, width: 75,filterable: false, cellbeginedit: regbeginedit, rendered: toolTip},
-			{ text: 'Rosen', columngroup: 'OtherLocations', datafield: 'ROSEN', columntype: 'checkbox', hidden: true, width: 75,filterable: false, cellbeginedit: regbeginedit, rendered: toolTip},
-			{ text: 'Orlando', columngroup: 'OtherLocations', datafield: 'MAIN', columntype: 'checkbox', hidden: true, width: 75,filterable: false, cellbeginedit: regbeginedit, rendered: toolTip},
+	
+			{ text: 'Main', columngroup: 'OtherLocations', datafield: 'MAIN', columntype: 'checkbox', hidden: false, width: 75,filterable: false, cellbeginedit: cellbeginedit, rendered: toolTip},
+			{ text: 'Lake Nona', columngroup: 'OtherLocations', datafield: 'NONA', columntype: 'checkbox', hidden: false, width: 75,filterable: false, cellbeginedit: cellbeginedit, rendered: toolTip},
+			{ text: 'Rosen', columngroup: 'OtherLocations', datafield: 'ROSEN', columntype: 'checkbox', hidden: false, width: 75,filterable: false, cellbeginedit: cellbeginedit, rendered: toolTip},
 			
+			//Regional fields
 			{ text: 'Altamonte Springs', columngroup: 'RegionalCampus', datafield: 'ALTSPRNG', columntype: 'checkbox', hidden: true, width: 75,filterable: false, cellbeginedit: regbeginedit, rendered: toolTip},
 			{ text: 'Cocoa', columngroup: 'RegionalCampus', datafield: 'COCOA', columntype: 'checkbox', hidden: true, width: 75,filterable: false, cellbeginedit: regbeginedit, rendered: toolTip},
 			{ text: 'Daytona', columngroup: 'RegionalCampus', datafield: 'DAYTONA', columntype: 'checkbox', hidden:true, width: 75,filterable: false, cellbeginedit: regbeginedit, rendered: toolTip},
@@ -757,6 +765,9 @@
 					$("#mainData").jqxGrid('showcolumn','Access');
 					$("#mainData").jqxGrid('showcolumn','FLVC');
 					$("#mainData").jqxGrid('showcolumn','loadas');
+					$("#mainData").jqxGrid('showcolumn','NONA');
+					$("#mainData").jqxGrid('showcolumn','ROSEN');
+					$("#mainData").jqxGrid('showcolumn','MAIN');
 
 					$("#mainData").jqxGrid('hidecolumn','ProgCode');
 					$("#mainData").jqxGrid('hidecolumn','Professional');
@@ -805,6 +816,9 @@
 					$("#mainData").jqxGrid('showcolumn','PlanLongName');
 					$("#mainData").jqxGrid('showcolumn','SubPlanLongName');
 					$("#mainData").jqxGrid('showcolumn','DeptLongName');
+					$("#mainData").jqxGrid('showcolumn','NONA');
+					$("#mainData").jqxGrid('showcolumn','ROSEN');
+					$("#mainData").jqxGrid('showcolumn','MAIN');
 				}
 					
 			}	
@@ -816,6 +830,9 @@
 				$("#mainData").jqxGrid('showcolumn','Access');
 				$("#mainData").jqxGrid('showcolumn','FLVC');
 				$("#mainData").jqxGrid('showcolumn','loadas');
+				$("#mainData").jqxGrid('showcolumn','NONA');
+				$("#mainData").jqxGrid('showcolumn','ROSEN');
+				$("#mainData").jqxGrid('showcolumn','MAIN');
 
 				$("#mainData").jqxGrid('showcolumn','ProgCode');
 				$("#mainData").jqxGrid('showcolumn','Professional');

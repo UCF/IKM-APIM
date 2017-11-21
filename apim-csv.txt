@@ -1,0 +1,27 @@
+id,Plan,PlanName,CollegeShort,College_Full,DeptShort,Dept_Full,Career,Level,CIP,HEGIS,"Meta Data","Regional Campuses","Active Locations",SubPlans
+1,CJEXECCERT,"Criminal Justice Executive",COHPA,"College of Health and Public Affairs","CRIM JUST","Criminal Justice",GRAD,Certificate,43.0104,---,Array,Array,Array,
+2,COMMDIS-MA,"Communication Sciences and Disorders (MA)",COHPA,"College of Health and Public Affairs","COMM DIS","Communicative Disorders",GRAD,Masters,51.0204,12.20,Array,Array,Array,Array
+3,CORRLD,"Corrections Leadership",COHPA,"College of Health and Public Affairs","CRIM JUST","Criminal Justice",GRAD,Certificate,43.0104,GC.21.11,Array,Array,Array,
+4,CRIMANACER,"Crime Analysis",COHPA,"College of Health and Public Affairs","CRIM JUST","Criminal Justice",GRAD,Certificate,43.0104,GC.21.05,Array,Array,Array,
+5,CRIMJUS-MS,"Criminal Justice (MS)",COHPA,"College of Health and Public Affairs","CRIM JUST","Criminal Justice",GRAD,Masters,43.0104,21.05,Array,Array,Array,Array
+6,CRIMJUSPHD,"Criminal Justice (PhD)",COHPA,"College of Health and Public Affairs","CRIM JUST","Criminal Justice",GRAD,Doctoral,43.0104,---,Array,Array,Array,
+7,EMGTHMLSEC,"Emergency Management and Homeland Security",COHPA,"College of Health and Public Affairs","PUB ADM","Public Administration",GRAD,Certificate,44.0401,GC.21.13,Array,Array,Array,
+8,FNDRSNGCRT,Fundraising,COHPA,"College of Health and Public Affairs","PUB ADM","Public Administration",GRAD,Certificate,44.0401,---,Array,Array,Array,
+9,HCIADMCRT,"Health Information Administration",COHPA,"College of Health and Public Affairs","HLTHMGTINF ","Health Mgmt & Informatics ",GRAD,Certificate,51.0706,---,Array,Array,Array,
+10,HLCINFO-MS,"Health Care Informatics (MS) - Professional Science Master's",COHPA,"College of Health and Public Affairs",HLTHMGTINF,"Health Mgmt & Informatics",GRAD,Masters,51.0706,12.48,Array,Array,Array,
+11,HLTHSCI-MS,"Health Sciences (MS)",COHPA,"College of Health and Public Affairs",HLTHMGTINF,"Health Mgmt & Informatics",GRAD,Masters,51.0000,12.02,Array,Array,Array,Array
+12,JUVJUSTLD,"Juvenile Justice Leadership",COHPA,"College of Health and Public Affairs","CRIM JUST","Criminal Justice",GRAD,Certificate,43.0104,GC.21.10,Array,Array,Array,
+13,MEDSPLPATH,"Medical Speech-Language Pathology",COHPA,"College of Health and Public Affairs","COMM DIS","Communicative Disorders",GRAD,Certificate,51.0204,GC.12.19,Array,Array,Array,
+14,MILSOCWKCR,"Military Social Work",COHPA,"College of Health and Public Affairs","SOC WORK","Social Work",GRAD,Certificate,44.0701,---,Array,Array,Array,
+15,NONPRFTMNM,"Nonprofit Management (MNM)",COHPA,"College of Health and Public Affairs","PUB ADM","Public Administration",GRAD,Masters,52.0206,21.15,Array,Array,Array,Array
+16,NONPROFMGM,"Nonprofit Management",COHPA,"College of Health and Public Affairs","PUB ADM","Public Administration",GRAD,Certificate,52.0206,GC.21.03,Array,Array,Array,Array
+17,POLICELD,"Police Leadership",COHPA,"College of Health and Public Affairs","CRIM JUST","Criminal Justice",GRAD,Certificate,43.0104,GC.21.09,Array,Array,Array,
+18,PT-DPT,"Doctor of Physical Therapy (DPT)",COHPA,"College of Health and Public Affairs",PT,"Physical Therapy",GRAD,Doctoral,51.2308,12.42,Array,Array,Array,
+19,PUBADM-MPA,"Public Administration (MPA)",COHPA,"College of Health and Public Affairs","PUB ADM","Public Administration",GRAD,Masters,44.0401,21.02,Array,Array,Array,Array
+20,PUBADMCERT,"Public Administration",COHPA,"College of Health and Public Affairs","PUB ADM","Public Administration",GRAD,Certificate,44.0401,GC.21.02,Array,Array,Array,
+21,PUBAFF-PHD,"Public Affairs (PhD)",COHPA,"College of Health and Public Affairs",DEANCOHPA,"Dean's Office COHPA",GRAD,Doctoral,44.9999,21.90,Array,Array,Array,Array
+22,RCHADM-CRT,"Research Administration",COHPA,"College of Health and Public Affairs","PUB ADM ","Public Administration",GRAD,Certificate,44.9999,---,Array,Array,Array,
+23,RCHADM-MRA,"Master in Research Administration (MRA)",COHPA,"College of Health and Public Affairs","PUB ADM","Public Administration",GRAD,Masters,44.9999,21.84,Array,Array,Array,
+24,SOCWK-MSW,"Social Work (MSW)",COHPA,"College of Health and Public Affairs","SOC WORK","Social Work",GRAD,Masters,44.0701,21.04,Array,Array,Array,Array
+25,URB-REG,"Urban and Regional Planning",COHPA,"College of Health and Public Affairs","PUB ADM","Public Administration",GRAD,Certificate,44.0401,GC.21.01,Array,Array,Array,
+26,URBREG-MS,"Urban and Regional Planning (MS)",COHPA,"College of Health and Public Affairs","PUB ADM","Public Administration",GRAD,Masters,04.0301,21.24,Array,Array,Array,

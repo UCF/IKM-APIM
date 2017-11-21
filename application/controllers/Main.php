@@ -23,7 +23,10 @@ class Main extends CI_Controller {
 		$this->lang->load('auth');
 		$this->load->config('main', TRUE);
 	}
-	
+	public function test()
+	{
+		
+	}
 	public function index()
 	{
 		//$this->load->view('main');
@@ -257,6 +260,7 @@ class Main extends CI_Controller {
 			$readmit = $this->input->get('readmit');
 			$flvc = $this->input->get('flvc');
 			$orient = $this->input->get('orient');
+			$asbs = $this->input->get('asbs');
 			$online = $this->input->get('online');
 			$psm = $this->input->get('psm');
 			$stem = $this->input->get('stem');
@@ -295,6 +299,7 @@ class Main extends CI_Controller {
 			if($readmit == 'true'){ $readmit = 1; } else { $readmit = 0; }
 			if($orient == 'true'){ $orient = 1; } else { $orient = 0; }
 			if($online == 'true'){ $online = 1; } else { $online = 0; }
+			if($asbs == 'true'){ $asbs = 1; } else { $asbs = 0; }
 			if($psm == 'true'){ $psm = 1; } else { $psm = 0; }
 			if($stem == 'true'){ $stem = 1; } else { $stem = 0; }
 			if($professional == 'true'){ $professional = 1; } else { $professional = 0; }
@@ -318,6 +323,7 @@ class Main extends CI_Controller {
 			if($cell_under_change != ''){
 				//get the official column name under change.  reverse this later from above $batch
 				$db_column = $this->corelib->column_name($cell_under_change);
+				
 			}
 			
 			//get the current advanced values for the plan 
@@ -334,6 +340,7 @@ class Main extends CI_Controller {
 							'psm' => $psm,
 							'STEM' => $stem,
 							'MTR' => $mtr,
+							'asbs_articulation' => $asbs,
 							'cost_recovery' => $cr,
 							'professional' => $professional,
 							'Total_Thesis' => $totThesis,
@@ -422,6 +429,7 @@ class Main extends CI_Controller {
 							'psm' => $psm,
 							'STEM' => $stem,
 							'MTR' => $mtr,
+							'asbs_articulation' => $asbs,
 							'cost_recovery' => $cr,
 							'professional' => $professional,
 							'Total_Thesis' => $totThesis,
@@ -471,6 +479,9 @@ class Main extends CI_Controller {
 	}
 	public function data_main()
 	{
+		ini_set('max_execution_time', 300);
+		
+		
 		$final_data = '';
 		$stem_cip = array();
 		
@@ -679,6 +690,7 @@ class Main extends CI_Controller {
 				$flvc = 0;
 				$orient = 0;
 				$online = 0;
+				$asbs = 0;
 				$psm = 0;
 				$mtr = 0;
 				$cr = 0;
@@ -706,6 +718,7 @@ class Main extends CI_Controller {
 				$flvc = $plan_extra_row->FLVC;
 				$orient = $plan_extra_row->Orientation;
 				$online = $plan_extra_row->Online;
+				$asbs = $plan_extra_row->asbs_articulation;
 				$psm = $plan_extra_row->psm;	
 				$professional = $plan_extra_row->professional;				
 				$mtr = $plan_extra_row->MTR;
@@ -768,6 +781,7 @@ class Main extends CI_Controller {
 					"ReAdmit" => $readmit,
 					"FLVC" => $flvc,
 					"Online" => $online,
+					"ASBS" => $asbs,
 					"Orientation" => $orient,
 					"PSM" => $psm,
 					"STEM" => $stem,
@@ -891,7 +905,7 @@ class Main extends CI_Controller {
 						$orient = 0;
 						$online = 0;
 						$psm = 0;
-						
+						$asbs = 0;
 						$mtr = 0;
 						$cr = 0;
 						$professional = 0;
@@ -915,7 +929,7 @@ class Main extends CI_Controller {
 						$online = $subplan_extra_row->Online;
 						$orient = $subplan_extra_row->Orientation;
 						$psm = $subplan_extra_row->psm;
-							
+						$asbs = $subplan_extra_row->asbs_articulation;	
 						$professional = $subplan_extra_row->professional;				
 						$mtr = $subplan_extra_row->MTR;
 						$cr = $subplan_extra_row->cost_recovery;
@@ -961,6 +975,7 @@ class Main extends CI_Controller {
 							  "FLVC" => $flvc,
 							  "Orientation" => $orient,
 							  "Online" => $online,
+							  "ASBS" => $asbs,
 							  "PSM" => $psm,
 							  "STEM" => $stem,
 							  "Professional" => $professional,
@@ -1058,4 +1073,5 @@ class Main extends CI_Controller {
 		$data['title'] = 'IKM - Academic Program Inventory Manager - Feeback Form';
 		$this->load->view('feedback', $data);		
 	}
+
 }
