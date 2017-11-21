@@ -289,7 +289,7 @@ function __construct()
 				$campuses[] = $region_item; /*****/
 				
 				$meta_data = array(
-						"PlanLongName"=> $plan_long_name,
+						"PlanLongName"=> trim($plan_long_name),
 						"TermStart"=> ucfirst(strtolower($row->Term)),
 						"TermStartShort" => $termStartShort,
 						"Regional"=> $regional,
@@ -738,7 +738,7 @@ function __construct()
 			}
 			
 			$sub_item = array(
-				"Subplan"=> $sub_row->Sub_Plan,
+				"Subplan"=> trim($sub_row->Sub_Plan),
 				"Subplan_Name" => $sub_row->UCF_Name,
 				"HEGIS" => $sub_row->HEGIS_Code,
 				"Meta Data"=> $meta,
