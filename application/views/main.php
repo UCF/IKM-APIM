@@ -124,6 +124,7 @@
 				{ name: 'MAIN', type: 'boolean'},
 				{ name: 'ROSEN', type: 'boolean'},
 				{ name: 'NONA', type: 'boolean'},
+				{ name: 'ONLINELOCATION', type: 'boolean'},
 				{ name: 'ALTSPRNG', type: 'boolean'},
 				{ name: 'COCOA', type: 'boolean'},
 				{ name: 'DAYTONA', type: 'boolean'},
@@ -227,10 +228,10 @@
 			}
 
 			//stop grad from editing certain fields that don't belong to them
-			var gradRestricted = ["FLVC","Online","ASBS","loadas","loadasnames","ReAdmit","Mrkt. Rate Tuition","Cost Recovery"];
+			var gradRestricted = ["FLVC","Online","ASBS","loadas","loadasnames","ReAdmit","Mrkt. Rate Tuition","Cost Recovery","Online"];
 
 			//stop ugrad college folks from editing certain fields
-			var ugradRestricted = ["FLVC","Online","Mrkt. Rate Tuition","Cost Recovery","PlanLongName","SubPlanLongName"];
+			var ugradRestricted = ["FLVC","Online","Mrkt. Rate Tuition","Cost Recovery","PlanLongName","SubPlanLongName","Online"];
 			
 			if(data.check == 2 && gradRestricted.indexOf(datafield) != -1){
 					return false;
@@ -628,6 +629,7 @@
 			{ text: 'Main', columngroup: 'OtherLocations', datafield: 'MAIN', columntype: 'checkbox', hidden: false, width: 75,filterable: false, cellbeginedit: cellbeginedit, rendered: toolTip},
 			{ text: 'Lake Nona', columngroup: 'OtherLocations', datafield: 'NONA', columntype: 'checkbox', hidden: false, width: 75,filterable: false, cellbeginedit: cellbeginedit, rendered: toolTip},
 			{ text: 'Rosen', columngroup: 'OtherLocations', datafield: 'ROSEN', columntype: 'checkbox', hidden: false, width: 75,filterable: false, cellbeginedit: cellbeginedit, rendered: toolTip},
+			{ text: 'Online', columngroup: 'OtherLocations', datafield: 'ONLINELOCATION', columntype: 'checkbox', hidden: false, width: 75,filterable: false, cellbeginedit: cellbeginedit, rendered: toolTip},
 			
 			//Regional fields
 			{ text: 'Altamonte Springs', columngroup: 'RegionalCampus', datafield: 'ALTSPRNG', columntype: 'checkbox', hidden: true, width: 75,filterable: false, cellbeginedit: regbeginedit, rendered: toolTip},
@@ -768,6 +770,7 @@
 					$("#mainData").jqxGrid('showcolumn','NONA');
 					$("#mainData").jqxGrid('showcolumn','ROSEN');
 					$("#mainData").jqxGrid('showcolumn','MAIN');
+					$("#mainData").jqxGrid('showcolumn','ONLINELOCATION');
 
 					$("#mainData").jqxGrid('hidecolumn','ProgCode');
 					$("#mainData").jqxGrid('hidecolumn','Professional');
@@ -819,6 +822,7 @@
 					$("#mainData").jqxGrid('showcolumn','NONA');
 					$("#mainData").jqxGrid('showcolumn','ROSEN');
 					$("#mainData").jqxGrid('showcolumn','MAIN');
+					$("#mainData").jqxGrid('showcolumn','ONLINELOCATION');
 				}
 					
 			}	
@@ -833,6 +837,7 @@
 				$("#mainData").jqxGrid('showcolumn','NONA');
 				$("#mainData").jqxGrid('showcolumn','ROSEN');
 				$("#mainData").jqxGrid('showcolumn','MAIN');
+				$("#mainData").jqxGrid('showcolumn','ONLINELOCATION');
 
 				$("#mainData").jqxGrid('showcolumn','ProgCode');
 				$("#mainData").jqxGrid('showcolumn','Professional');

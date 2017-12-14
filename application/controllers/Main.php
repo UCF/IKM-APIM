@@ -708,6 +708,7 @@ class Main extends CI_Controller {
 				$main = '';
 				$rosen = '';
 				$nona = '';
+				$online_location = '';
 			} else {
 				$plan_extra_row = $plan_extra->row();
 				$plan_long_name = $plan_extra_row->Long_Name;
@@ -733,7 +734,7 @@ class Main extends CI_Controller {
 				$main = $plan_extra_row->Main_Campus;
 				$rosen = $plan_extra_row->Rosen_Campus;
 				$nona = $plan_extra_row->Lake_Nona_Campus;
-				
+				$online_location = $plan_extra_row->Online_Location;
 				$recent = $plan_extra_row->Recent_Change;
 				//$timestamp = strtotime($plan_extra_row->Recent_Change);
 				//$recent = date('m/d/yyy', $timestamp);
@@ -797,6 +798,7 @@ class Main extends CI_Controller {
 					"MAIN" => $main,
 					"ROSEN" => $rosen,
 					"NONA" => $nona,
+					"ONLINELOCATION" => $online_location,
 					"ALTSPRNG" => $altamonte,
 					"COCOA" => $cocoa,
 					"DAYTONA" => $daytona,
@@ -920,6 +922,7 @@ class Main extends CI_Controller {
 						$main = '';
 						$rosen = '';
 						$nona = '';
+						$online_location = '';
 					} else {
 						$subplan_extra_row = $subplan_extra->row();
 						$sub_long_name = $subplan_extra_row->Long_Name;
@@ -943,6 +946,7 @@ class Main extends CI_Controller {
 						$main = $subplan_extra_row->Main_Campus;
 						$rosen = $subplan_extra_row->Rosen_Campus;
 						$nona = $subplan_extra_row->Lake_Nona_Campus;
+						$online_location = $subplan_extra_row->Online_Location;
 					}				
 					
 					$sub_item = array("id" => $id,
@@ -990,6 +994,7 @@ class Main extends CI_Controller {
 							  "MAIN" => $main,
 							  "ROSEN" => $rosen,
 							  "NONA" => $nona,
+							  "ONLINELOCATION" => $online_location,
 							  "ALTSPRNG" => $altamonte,
 							  "COCOA" => $cocoa,
 							  "DAYTONA" => $daytona,

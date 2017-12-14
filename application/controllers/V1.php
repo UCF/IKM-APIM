@@ -232,6 +232,7 @@ function __construct()
 					$main = 0;
 					$rosen = 0;
 					$nona = 0;
+					$online_location = 0;
 				} else {
 					$plan_extra_row = $plan_extra->row();
 					$plan_long_name = $plan_extra_row->Long_Name;
@@ -255,6 +256,7 @@ function __construct()
 					$main = $plan_extra_row->Main_Campus;
 					$rosen = $plan_extra_row->Rosen_Campus;
 					$nona = $plan_extra_row->Lake_Nona_Campus;
+					$online_location = $plan_extra_row->Online_Location;
 	
 					$recent = $plan_extra_row->Recent_Change;
 					//$timestamp = strtotime($plan_extra_row->Recent_Change);
@@ -305,7 +307,7 @@ function __construct()
 						"ReAdmit" => $readmit,
 						"FLVC" => $flvc,
 						"ASBS" => $asbs,
-						"Online" => $online,
+						"UCFOnline" => $online,
 						"Orientation" => $orient,
 						"PSM" => $psm,
 						"STEM" => $stem,
@@ -334,7 +336,7 @@ function __construct()
 				
 				//get only the active locations
 				if($main == 1){ $active_locations[] = "MAIN"; }
-				if($online == 1){ $active_locations[] = "ONLINE"; }
+				if($online_location == 1){ $active_locations[] = "ONLINE"; }
 				if($rosen == 1){ $active_locations[] = "ROSEN"; }
 				if($nona == 1){ $active_locations[] = "NONA"; }
 								
@@ -646,6 +648,7 @@ function __construct()
 				$main = 0;
 				$rosen = 0;
 				$nona = 0;
+				$online_location = 0;
 			} else {
 				$subplan_extra_row = $subplan_extra->row();
 				$sub_long_name = $subplan_extra_row->Long_Name;
@@ -668,6 +671,7 @@ function __construct()
 				$main = $subplan_extra_row->Main_Campus;
 				$rosen = $subplan_extra_row->Rosen_Campus;
 				$nona = $subplan_extra_row->Lake_Nona_Campus;
+				$online_location = $subplan_extra_row->Online_Location;
 			}
 			
 			//put the regionals in  own sublevels
@@ -705,7 +709,7 @@ function __construct()
 					"FLVC" => $flvc,
 					"ASBS" => $asbs,
 					"Orientation" => $orient,
-					"Online" => $online,
+					"UCFOnline" => $online,
 					"PSM" => $psm,
 					"STEM" => $stem,
 					"Professional" => $professional,
@@ -726,7 +730,7 @@ function __construct()
 			
 			//get only the active locations
 			if($main == 1){ $active_locations[] = "MAIN"; }
-			if($online == 1){ $active_locations[] = "ONLINE"; }
+			if($online_location == 1){ $active_locations[] = "ONLINE"; }
 			if($rosen == 1){ $active_locations[] = "ROSEN"; }
 			if($nona == 1){ $active_locations[] = "NONA"; }
 			
