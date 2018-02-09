@@ -68,6 +68,15 @@ class General_model extends CI_Model
 
 		return $query;
 	}
+	function ucf_online_find($plan){
+		$this->db->select('Sub_Plans.Acad_Plan');
+		$this->db->from('Sub_Plans');
+		$this->db->like('Acad_plan',$plan,'none',FALSE);
+		$this->db->like('Sub_plan','Z%','none',FALSE);
+		
+		$query = $this->db->get();        
+		return $query;
+	}
 	function colleges($filter='%'){
 		$this->db->from('College_Name');
 		

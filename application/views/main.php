@@ -111,7 +111,7 @@
 				{ name: 'ReAdmit', type: 'boolean'},{ name: 'FLVC', type: 'boolean'},
 				{ name: 'PSM', type: 'boolean'},{ name: 'STEM', type: 'boolean'},
 				{ name: 'Professional', type: 'boolean'},{ name: 'MTR', type: 'boolean'},
-				{ name: 'recentchange', type: 'date'},{ name: 'Regional',type: 'string'},
+				{ name: 'recentchange', type: 'date'},{ name: 'Regional',type: 'string'},{ name: 'OnlineBOG', type: 'boolean' },
 				{ name: 'Online', type: 'boolean' },{ name:'avail', type: 'boolean' }, { name:'ASBS', type: 'boolean' }, 
 				{ name: 'TotThesis', type: 'string' },{ name:'TotNonThesis', type: 'string' },
 				{ name: 'TotCert', type: 'string' },{ name:'TotDoc', type: 'string' },
@@ -159,7 +159,7 @@
 
 			//stuff for updating rows 151-185
 			var updata = "update=true&cellchange=" + prev_cellName + "&plan=" + rowdata.Plan + "&adm=" + rowdata.Admission + "&subplan=" + encodeURIComponent(rowdata.Subplan) + "&planlongname=" + encodeURIComponent(rowdata.PlanLongName) + "&subplanlongname=" + encodeURIComponent(rowdata.SubPlanLongName);
-			updata = updata + "&flvc=" + rowdata.FLVC + "&asbs=" + rowdata.ASBS + "&readmit=" + rowdata.ReAdmit + "&online=" + rowdata.Online +"&orient=" + rowdata.Orientation + "&deptlongname=" + encodeURIComponent(rowdata.DeptLongName);
+			updata = updata + "&flvc=" + rowdata.FLVC + "&asbs=" + rowdata.ASBS + "&readmit=" + rowdata.ReAdmit + "&online=" + rowdata.Online + "&onlinebog=" + rowdata.OnlineBOG +"&orient=" + rowdata.Orientation + "&deptlongname=" + encodeURIComponent(rowdata.DeptLongName);
 			updata = updata + "&psm=" + rowdata.PSM + "&mtr=" + rowdata.MTR + "&cr=" + rowdata.CR + "&stem=" + rowdata.STEM +"&professional=" + rowdata.Professional + "&totThesis=" + rowdata.TotThesis + "&totNonThesis=" + rowdata.TotNonThesis;
 			updata = updata + "&tot6971=" + rowdata.Tot6971 + "&totCert=" + rowdata.TotCert + "&totDoc=" + rowdata.TotDoc +"&totDissert=" + rowdata.TotDissert;
 			updata = updata + "&ALTSPRNG=" + rowdata.ALTSPRNG + "&COCOA=" + rowdata.COCOA + "&DAYTONA=" + rowdata.DAYTONA +"&LEESBURG=" + rowdata.LEESBURG;
@@ -180,10 +180,17 @@
 		                url: upURL,
 		                data: updata,
 						cache: false,
-		                success: function (updata, status, xhr) {
-		                					
-		                    // update command is executed.
-							commit(true);
+		                success: function (result) {
+		                	
+							//parse the return (xhr) only display alert if there was an error
+
+							if (result.output != 'Error'){
+								// update command is executed.
+								commit(true);
+							} else {
+								commit(false);
+								alert(result.msg);
+							}
 							
 							//refresh the table if the plan name has changed
 							if(updateAll){ 
@@ -228,10 +235,10 @@
 			}
 
 			//stop grad from editing certain fields that don't belong to them
-			var gradRestricted = ["FLVC","Online","ASBS","loadas","loadasnames","ReAdmit","Mrkt. Rate Tuition","Cost Recovery","Online"];
+			var gradRestricted = ["FLVC","Online","ASBS","loadas","loadasnames","ReAdmit","Mrkt. Rate Tuition","Cost Recovery","Online","OnlineBOG"];
 
 			//stop ugrad college folks from editing certain fields
-			var ugradRestricted = ["FLVC","Online","Mrkt. Rate Tuition","Cost Recovery","PlanLongName","SubPlanLongName","Online"];
+			var ugradRestricted = ["FLVC","Online","Mrkt. Rate Tuition","Cost Recovery","PlanLongName","SubPlanLongName","Online","OnlineBOG"];
 			
 			if(data.check == 2 && gradRestricted.indexOf(datafield) != -1){
 					return false;
@@ -260,10 +267,10 @@
 				}
 			
 			//for online
-			if(data.check == 5 && datafield == 'Online'){
+			if(data.check == 5 && (datafield == 'Online' || datafield == 'OnlineBOG')){
 					return true;
 				}
-			if(data.check == 5 && datafield != 'Online'){
+			if(data.check == 5 && (datafield != 'Online' || datafield != 'OnlineBOG')){
 					return false;
 				}
 
@@ -482,7 +489,12 @@
 				
 				$("#mainData").jqxGrid('showcolumn','DeptLongName');	
 			}
-
+			
+			//specific for CDL to not show Primarily Online (BOG) to general users
+			if($.inArray("Online",groups) != -1 || $.inArray("All",groups) != -1 || $.inArray("Admin",groups) != -1){
+						$("#mainData").jqxGrid('showcolumn','OnlineBOG');
+					}
+					
 			//specific for orientation - HEGIS and regions
 			//no grad will be set because they will have their career hard set on entry
 			if ($.inArray("Orientation",groups) != -1 || $.inArray("Regional",groups) != -1 || $.inArray("All",groups) != -1) { 
@@ -606,6 +618,7 @@
 			{ text: 'Readmit', columngroup: 'General', datafield: 'ReAdmit', columntype: 'checkbox', width: 67,filterable: false, cellbeginedit: cellbeginedit, rendered: toolTip},
 			{ text: 'FLVC Transient', columngroup: 'General', datafield: 'FLVC', columntype: 'checkbox', width: 55,filterable: false, cellbeginedit: cellbeginedit, rendered: toolTip},
 			{ text: 'UCF Online', columngroup: 'General', datafield: 'Online', columntype: 'checkbox', width: 75,filterable: false, cellbeginedit: cellbeginedit, rendered: toolTip},
+			{ text: 'Primarily Online', columngroup: 'General', datafield: 'OnlineBOG', columntype: 'checkbox', width: 105,filterable: false, cellbeginedit: cellbeginedit, rendered: toolTip, hidden: true},
 			{ text: 'UCF STEM', columngroup: 'General', datafield: 'STEM', columntype: 'checkbox', width: 75,filterable: false, editable: false, cellbeginedit: cellbeginedit, rendered: toolTip},
 			{ text: 'AS:BS Articulated', columngroup: 'General', datafield: 'ASBS', columntype: 'checkbox', width: 95,filterable: false, editable: true, cellbeginedit: cellbeginedit, rendered: toolTip},
 
@@ -665,13 +678,14 @@
 				addfilter();				
 			}				
 		}); 
-	
+		
+
 		$("#mainData").on('cellbeginedit', function (event) {
 		        var args = event.args;
 		        var column = args.datafield;
 		        var value = args.value;
 
-		        prev_cellData =  value;
+		        prev_cellData =  value;           
 		        prev_cellName =  column;
 		        
 		    });

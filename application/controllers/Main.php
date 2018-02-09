@@ -262,6 +262,7 @@ class Main extends CI_Controller {
 			$orient = $this->input->get('orient');
 			$asbs = $this->input->get('asbs');
 			$online = $this->input->get('online');
+			$onlinebog = $this->input->get('onlinebog');
 			$psm = $this->input->get('psm');
 			$stem = $this->input->get('stem');
 			$professional = $this->input->get('professional');
@@ -299,6 +300,7 @@ class Main extends CI_Controller {
 			if($readmit == 'true'){ $readmit = 1; } else { $readmit = 0; }
 			if($orient == 'true'){ $orient = 1; } else { $orient = 0; }
 			if($online == 'true'){ $online = 1; } else { $online = 0; }
+			if($onlinebog == 'true'){ $onlinebog = 1; } else { $onlinebog = 0; }
 			if($asbs == 'true'){ $asbs = 1; } else { $asbs = 0; }
 			if($psm == 'true'){ $psm = 1; } else { $psm = 0; }
 			if($stem == 'true'){ $stem = 1; } else { $stem = 0; }
@@ -319,6 +321,16 @@ class Main extends CI_Controller {
 			if($osceola == 'true'){ $osceola = 1; } else { $osceolag = 0; }
 			if($metrowest == 'true'){ $metrowest = 1; } else { $metrowest = 0; }*/
 			
+			//check for primarily online flag.  if checked there cannot be any other Z plan's attached to parent plan
+			if($onlinebog == 1){
+				$online_chk = $this->General_model->ucf_online_find($plan);
+				if($online_chk->num_rows() != 0){
+					$results['output'] = 'Error';
+					$results['msg'] = 'Plan already has UCF Online Subplan(s) defined - cannot update!';
+					exit( json_encode( $results ) );
+
+				}
+			}
 			
 			if($cell_under_change != ''){
 				//get the official column name under change.  reverse this later from above $batch
@@ -336,6 +348,7 @@ class Main extends CI_Controller {
 							'FLVC' => $flvc,
 							'Orientation' => $orient,
 							'Online' => $online,
+							'Online_BOG' => $onlinebog,
 							'Recent_Change' => $date,
 							'psm' => $psm,
 							'STEM' => $stem,
@@ -425,6 +438,7 @@ class Main extends CI_Controller {
 							'FLVC' => $flvc,
 							'Orientation' => $orient,
 							'Online' => $online,
+							'Online_BOG' => $onlinebog,
 							'Recent_Change' => $date,
 							'psm' => $psm,
 							'STEM' => $stem,
@@ -690,6 +704,7 @@ class Main extends CI_Controller {
 				$flvc = 0;
 				$orient = 0;
 				$online = 0;
+				$onlinebog = 0;
 				$asbs = 0;
 				$psm = 0;
 				$mtr = 0;
@@ -719,6 +734,7 @@ class Main extends CI_Controller {
 				$flvc = $plan_extra_row->FLVC;
 				$orient = $plan_extra_row->Orientation;
 				$online = $plan_extra_row->Online;
+				$onlinebog = $plan_extra_row->Online_BOG;
 				$asbs = $plan_extra_row->asbs_articulation;
 				$psm = $plan_extra_row->psm;	
 				$professional = $plan_extra_row->professional;				
@@ -782,6 +798,7 @@ class Main extends CI_Controller {
 					"ReAdmit" => $readmit,
 					"FLVC" => $flvc,
 					"Online" => $online,
+					"OnlineBOG" => $onlinebog,
 					"ASBS" => $asbs,
 					"Orientation" => $orient,
 					"PSM" => $psm,
@@ -906,6 +923,7 @@ class Main extends CI_Controller {
 						$flvc = 0;
 						$orient = 0;
 						$online = 0;
+						$onlinebog = 0;
 						$psm = 0;
 						$asbs = 0;
 						$mtr = 0;
@@ -930,6 +948,7 @@ class Main extends CI_Controller {
 						$readmit = $subplan_extra_row->Readmit;
 						$flvc = $subplan_extra_row->FLVC;
 						$online = $subplan_extra_row->Online;
+						$onlinebog = $subplan_extra_row->Online_BOG;
 						$orient = $subplan_extra_row->Orientation;
 						$psm = $subplan_extra_row->psm;
 						$asbs = $subplan_extra_row->asbs_articulation;	
@@ -979,6 +998,7 @@ class Main extends CI_Controller {
 							  "FLVC" => $flvc,
 							  "Orientation" => $orient,
 							  "Online" => $online,
+							  "OnlineBOG" => $onlinebog,
 							  "ASBS" => $asbs,
 							  "PSM" => $psm,
 							  "STEM" => $stem,

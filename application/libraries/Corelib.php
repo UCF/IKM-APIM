@@ -50,6 +50,7 @@ class Corelib {
 				'FLVC' => 'FLVC',
 				'orient' => 'Orientation',
 				'Online' => 'Online',
+				'OnlineBOG' => 'Online_BOG',
 				'PSM' => 'psm',
 				'STEM' => 'STEM',
 				'Professional' => 'professional',
