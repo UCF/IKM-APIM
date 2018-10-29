@@ -1,0 +1,6 @@
+﻿
+#
+# Write a message for tag:
+#   4c226f646a
+# Lines starting with '#' will be ignored.
+
