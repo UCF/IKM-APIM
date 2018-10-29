@@ -121,6 +121,8 @@ function __construct()
 					
 				}
 				
+				//fix for blank strategic emphasis 
+				if($row->AREA == NULL){ $row->AREA = ""; }
 				
 				//get the access information
 				$access_data = $this->General_model->get_access($row->Acad_Plan);
@@ -281,6 +283,8 @@ function __construct()
 				//fix certs
 				if($row->Degree == 'CRT' || $row->Degree == 'CER'){ $row->Level = 'Certificate'; }
 				
+				
+					
 				//put the regionals in  own sublevels
 				$region_item = array(
 						"ALTSPRNG" => $altamonte,
