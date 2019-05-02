@@ -262,6 +262,7 @@ class Main extends CI_Controller {
 			$deptlongname = $this->input->get('deptlongname');
 			$admiss = $this->input->get('adm');
 			$readmit = $this->input->get('readmit');
+			$acm = $this->input->get('acm');
 			$flvc = $this->input->get('flvc');
 			$orient = $this->input->get('orient');
 			$asbs = $this->input->get('asbs');
@@ -301,6 +302,7 @@ class Main extends CI_Controller {
 			$date = date("Y-m-d H:i:s");
 			
 			//some cleanup of the checkboxes
+			if($acm == 'true'){ $acm = 1; } else { $acm = 0; }
 			if($flvc == 'true'){ $flvc = 1; } else { $flvc = 0; }
 			if($admiss == 'true'){ $admiss = 1; } else { $admiss = 0; }
 			if($readmit == 'true'){ $readmit = 1; } else { $readmit = 0; }
@@ -366,6 +368,7 @@ class Main extends CI_Controller {
 							'Acad_Plan' => $plan,
 							'Admission' => $admiss,
 							'Readmit' => $readmit,
+							'ACM' => $acm,
 							'FLVC' => $flvc,
 							'Orientation' => $orient,
 							'Online' => $online,
@@ -458,6 +461,7 @@ class Main extends CI_Controller {
 							'Sub_Plan' => $subplan,
 							'Admission' => $admiss,
 							'Readmit' => $readmit,
+							'ACM' => $acm,
 							'FLVC' => $flvc,
 							'Orientation' => $orient,
 							'Online' => $online,
@@ -565,6 +569,7 @@ class Main extends CI_Controller {
 						if($urow->name == 'FLVC'){ $auth = 6; }
 						if($urow->name == 'Registrar'){ $auth = 7; }
 						if($urow->name == 'Regional'){ $auth = 8; }
+						if($urow->name == 'ACM'){ $auth = 10; }
 						if($urow->name == 'APQ'){ $auth = 11; }
 						if($urow->name == 'Admissions'){ $auth = 9; } //read only for right now		
 						
@@ -731,6 +736,7 @@ class Main extends CI_Controller {
 			if(!$plan_extra->num_rows()){
 				$admission = 0;
 				$readmit = 0;
+				$acm = 0;
 				$flvc = 0;
 				$orient = 0;
 				$online = 0;
@@ -762,6 +768,7 @@ class Main extends CI_Controller {
 				$admission = $plan_extra_row->Admission;
 				$loadas = $plan_extra_row->Show_As;
 				$readmit = $plan_extra_row->Readmit;
+				$acm = $plan_extra_row->ACM;
 				$flvc = $plan_extra_row->FLVC;
 				$orient = $plan_extra_row->Orientation;
 				$online = $plan_extra_row->Online;
@@ -828,6 +835,7 @@ class Main extends CI_Controller {
 					"loadas" => $loadas,
 					"loadasnames" => $loadas_arr,
 					"ReAdmit" => $readmit,
+					"ACM" => $acm,
 					"FLVC" => $flvc,
 					"Online" => $online,
 					"OnlineBOG" => $onlinebog,
@@ -958,6 +966,7 @@ class Main extends CI_Controller {
 					if(!$subplan_extra->num_rows()){
 						$admission = 0;
 						$readmit = 0;
+						$acm = 0;
 						$flvc = 0;
 						$orient = 0;
 						$online = 0;
@@ -985,6 +994,7 @@ class Main extends CI_Controller {
 						$sub_long_name = $subplan_extra_row->Long_Name;
 						$admission = $subplan_extra_row->Admission;
 						$readmit = $subplan_extra_row->Readmit;
+						$acm = $subplan_extra_row->ACM;
 						$flvc = $subplan_extra_row->FLVC;
 						$online = $subplan_extra_row->Online;
 						$onlinebog = $subplan_extra_row->Online_BOG;
@@ -1035,6 +1045,7 @@ class Main extends CI_Controller {
 							  "loadas" => $loadas,
 							  "loadasnames" => $loadas_arr,
 							  "ReAdmit" => $readmit,
+							  "ACM" => $acm,
 							  "FLVC" => $flvc,
 							  "Orientation" => $orient,
 							  "Online" => $online,

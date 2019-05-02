@@ -222,6 +222,7 @@ function __construct()
 					$flvc = 0;
 					$orient = 0;
 					$online = 0;
+					$acm = 0;
 					$ncsara = 0;
 					$psm = 0;
 					$stem = 0;
@@ -245,6 +246,7 @@ function __construct()
 					$plan_extra_row = $plan_extra->row();
 					$plan_long_name = $plan_extra_row->Long_Name;
 					$admission = $plan_extra_row->Admission;
+					$acm = $plan_extra_row->ACM;
 					$readmit = $plan_extra_row->Readmit;
 					$flvc = $plan_extra_row->FLVC;
 					$orient = $plan_extra_row->Orientation;
@@ -320,6 +322,7 @@ function __construct()
 						"ReAdmit" => $readmit,
 						"FLVC" => $flvc,
 						"ASBS" => $asbs,
+						"ACM" => $acm,
 						"UCFOnline" => $online,
 						"NCSARA" => $ncsara,
 						"Orientation" => $orient,
@@ -656,6 +659,7 @@ function __construct()
 				$online = 0;
 				$ncsara = 0;
 				$psm = 0;
+				$acm = 0;
 				$stem = 0;
 				$mtr = 0;
 				$professional = 0;
@@ -676,6 +680,7 @@ function __construct()
 				$sub_long_name = $subplan_extra_row->Long_Name;
 				$admission = $subplan_extra_row->Admission;
 				$readmit = $subplan_extra_row->Readmit;
+				$acm = $subplan_extra_row->ACM;
 				$flvc = $subplan_extra_row->FLVC;
 				$online = $subplan_extra_row->Online;
 				$ncsara = $subplan_extra_row->NCSARA;
@@ -733,6 +738,7 @@ function __construct()
 					"ReAdmit" => $readmit,
 					"FLVC" => $flvc,
 					"ASBS" => $asbs,
+					"ACM" => $acm,
 					"Orientation" => $orient,
 					"UCFOnline" => $online,
 					"NCSARA" => $ncsara,

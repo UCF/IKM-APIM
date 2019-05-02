@@ -108,7 +108,7 @@
 				{ name: 'Plan Type',type: 'string'},{ name: 'Degree',type: 'string'},{ name: 'ProgCode',type: 'string'},
 				{ name: 'Dept.',type: 'string'},{ name: 'Status',type: 'string'},
 				{ name: 'Access',type: 'string'},{ name: 'Admission', type: 'boolean'},
-				{ name: 'ReAdmit', type: 'boolean'},{ name: 'FLVC', type: 'boolean'},
+				{ name: 'ReAdmit', type: 'boolean'},{ name: 'ACM', type: 'boolean'},{ name: 'FLVC', type: 'boolean'},
 				{ name: 'PSM', type: 'boolean'},{ name: 'STEM', type: 'boolean'},
 				{ name: 'Professional', type: 'boolean'},{ name: 'MTR', type: 'boolean'},
 				{ name: 'recentchange', type: 'date'},{ name: 'Regional',type: 'string'},{ name: 'OnlineBOG', type: 'boolean' }, { name: 'NCSARA', type: 'boolean' },
@@ -160,7 +160,7 @@
 
 			//stuff for updating rows 151-185
 			var updata = "update=true&cellchange=" + prev_cellName + "&plan=" + rowdata.Plan + "&adm=" + rowdata.Admission + "&subplan=" + encodeURIComponent(rowdata.Subplan) + "&planlongname=" + encodeURIComponent(rowdata.PlanLongName) + "&subplanlongname=" + encodeURIComponent(rowdata.SubPlanLongName);
-			updata = updata + "&flvc=" + rowdata.FLVC + "&asbs=" + rowdata.ASBS + "&readmit=" + rowdata.ReAdmit + "&online=" + rowdata.Online + "&onlinebog=" + rowdata.OnlineBOG +"&orient=" + rowdata.Orientation + "&deptlongname=" + encodeURIComponent(rowdata.DeptLongName);
+			updata = updata + "&flvc=" + rowdata.FLVC + "&acm=" + rowdata.ACM + "&asbs=" + rowdata.ASBS + "&readmit=" + rowdata.ReAdmit + "&online=" + rowdata.Online + "&onlinebog=" + rowdata.OnlineBOG +"&orient=" + rowdata.Orientation + "&deptlongname=" + encodeURIComponent(rowdata.DeptLongName);
 			updata = updata + "&psm=" + rowdata.PSM + "&mtr=" + rowdata.MTR + "&cr=" + rowdata.CR + "&stem=" + rowdata.STEM +"&professional=" + rowdata.Professional + "&totThesis=" + rowdata.TotThesis + "&totNonThesis=" + rowdata.TotNonThesis;
 			updata = updata + "&tot6971=" + rowdata.Tot6971 + "&totCert=" + rowdata.TotCert + "&totDoc=" + rowdata.TotDoc +"&totDissert=" + rowdata.TotDissert;
 			updata = updata + "&ALTSPRNG=" + rowdata.ALTSPRNG + "&COCOA=" + rowdata.COCOA + "&DAYTONA=" + rowdata.DAYTONA +"&LEESBURG=" + rowdata.LEESBURG;
@@ -274,7 +274,15 @@
 			if(data.check == 5 && (datafield != 'Online' || datafield != 'OnlineBOG')){
 					return false;
 				}
-
+			
+			//for ACM
+			if(data.check == 10 && (datafield == 'ACM')){
+					return true;
+				}
+			if(data.check == 10 && (datafield != 'ACM')){
+					return false;
+				}
+				
 			//for APQ
 			if(data.check == 11 && datafield == 'NCSARA'){
 					return true;
@@ -644,6 +652,7 @@
                 }
             },
 			{ text: 'Readmit', columngroup: 'General', datafield: 'ReAdmit', columntype: 'checkbox', width: 67,filterable: false, cellbeginedit: cellbeginedit, rendered: toolTip},
+			{ text: 'ACM', columngroup: 'General', datafield: 'ACM', columntype: 'checkbox', width: 65,filterable: false, cellbeginedit: cellbeginedit, rendered: toolTip},
 			{ text: 'FLVC Transient', columngroup: 'General', datafield: 'FLVC', columntype: 'checkbox', width: 65,filterable: false, cellbeginedit: cellbeginedit, rendered: toolTip},
 			{ text: 'UCF Online', columngroup: 'General', datafield: 'Online', columntype: 'checkbox', width: 75,filterable: false, cellbeginedit: cellbeginedit, rendered: toolTip},
 			{ text: 'Primarily Online', columngroup: 'General', datafield: 'OnlineBOG', columntype: 'checkbox', width: 105,filterable: false, cellbeginedit: cellbeginedit, rendered: toolTip, hidden: true},

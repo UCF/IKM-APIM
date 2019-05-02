@@ -53,6 +53,7 @@ $config['Tips'] = array(
 		'Admission' => 'Should the Plan or SubPlan be loaded on the requisite admissions form (Grad or Undergrad).',
 		'Readmit' => 'Should the Plan or SubPlan be loaded on the Readmission form.',
 		'Load As' => 'Use a different Plan from CIP group allow students to admit too.',
+		'ACM' => 'Is the Plan or Subplan available in the SREC Academic Common Market',
 		'FLVC Transient' => 'Is the Plan or SubPlan listed with the Florida Virtual Campus (FLVC).',
 		'UCF Online' => 'Is the Plan or SubPlan a UCF Online program.',		
 		'UCF STEM' => 'Is the Plan or SubPlan identified as a STEM area (Science, Technology, Engineering, and Math Education).',		
